@@ -1,17 +1,9 @@
-struct DimigoinKit {
-    var text = "Hello, World!"
-}
+import SwiftUI
+import Alamofire
+import SwiftyJSON
 
-public class publicClass {
-    public init() {}
-    public func a() {
-        print("!!!!!!!!!!!!!!!!!! hello this is in public class")
-    }
-}
-
-open class openClass {
-    public init() {}
-    public func a() {
-        print("!!!!!!!!!!!!!!!!!! hello this is in public class")
+public struct DimigoinKit {
+    init() {
+        
     }
 }
