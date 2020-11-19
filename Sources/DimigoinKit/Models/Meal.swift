@@ -45,8 +45,8 @@ public class MealAPI: ObservableObject {
         
     }
     public func getMeals(from weekDay: Weekday){
-        print("get meals from \(getFormattedDate(weekday: weekDay))")
-        let url = "https://api.dimigo.in/dimibobs/\(getFormattedDate(weekday: weekDay))"
+        print("get meals from \(get8DigitDateString(weekday: weekDay))")
+        let url = "https://api.dimigo.in/dimibobs/\(get8DigitDateString(weekday: weekDay))"
         AF.request(url, method: .get, encoding: JSONEncoding.default).responseData { response in
             let json = JSON(response.value ?? "")
             self.meals[weekDay.rawValue-1].breakfast = json["breakfast"].string ?? "급식 정보가 없습니다."
@@ -56,7 +56,7 @@ public class MealAPI: ObservableObject {
         }
     }
     public func getTodayMeal() -> Dimibob{
-        return meals[getIntDay()-1]
+        return meals[getTodayDayOfWeekInt()-1]
     }
     public func dubugMeal() {
         print(meals)
