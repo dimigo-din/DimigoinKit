@@ -8,8 +8,8 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import DimigoinKit
 
+/// Ingang Model
 public struct Ingang: Hashable, Codable {
     public init(idx: Int, day: String, title: String, time: Int, request_start_date: Int, request_end_date: Int, status: Bool, present: Int, max_user: Int){
         self.idx = idx
@@ -33,6 +33,7 @@ public struct Ingang: Hashable, Codable {
     public var max_user: Int?
 }
 
+/// Ingang Applicant Model
 public struct Applicant: Identifiable, Hashable, Codable {
     public init(idx: Int, name: String, grade: Int, klass: Int, number: Int, serial: Int){
         self.idx = idx
@@ -51,6 +52,7 @@ public struct Applicant: Identifiable, Hashable, Codable {
     public var serial: Int?
 }
 
+/// Ingang Status of request
 public enum IngangStatus: Int {
     case none = 0
     case success = 200
@@ -76,8 +78,11 @@ public class IngangAPI: ObservableObject {
         self.getApplicantList()
         self.getTickets()
     }
+    
+    /// EndPoint : https://api.dimigo.in/ingang/
+    /// 인강 목록 가져오기
     public func getIngangList() {
-        print("get ingang list")
+        LOG("get ingang list")
         self.ingangs = []
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.token)"
@@ -102,13 +107,18 @@ public class IngangAPI: ObservableObject {
                         self.ingangs.append(newIngang)
                     }
                 default:
-                    debugPrint(response)
+                    if debugMode {
+                        debugPrint(response)
+                    }
                     self.tokenAPI.refreshTokens()
                     self.getIngangList()
                 }
             }
         }
     }
+    
+    /// EndPoint : https://api.dimigo.in/ingang/
+    /// 개인 인강 신청 가능 정보(티켓 수) 가져오기
     public func getTickets() {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.token)"
@@ -123,17 +133,22 @@ public class IngangAPI: ObservableObject {
                     self.daily_request_count = json["daily_request_count"].int!
                     self.weekly_ticket_num = json["weekly_ticket_num"].int!
                     self.daily_ticket_num = json["daily_ticket_num"].int!
-                    print("get ticket status \(self.weekly_request_count) \(self.weekly_ticket_num)")
+                    LOG("get ticket status \(self.weekly_request_count) \(self.weekly_ticket_num)")
                 default:
-                    debugPrint(response)
+                    if debugMode {
+                        debugPrint(response)
+                    }
                     self.tokenAPI.refreshTokens()
                     self.getTickets()
                 }
             }
         }
     }
+    
+    /// EndPoint : https://api.dimigo.in/ingang/users/myklass
+    /// 우리반 인강 신청자 목록 가져오기
     public func getApplicantList() {
-        print("get applicant list")
+        LOG("get applicant list")
         self.applicants = []
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.token)"
@@ -162,8 +177,11 @@ public class IngangAPI: ObservableObject {
             }
         }
     }
+    
+    /// EndPoint : https://api.dimigo.in/ingang/
+    /// 인강신청하기
     public func applyIngang(idx: Int) -> IngangStatus{
-        print("apply ingang : \(idx)")
+        LOG("apply ingang : \(idx)")
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.token)"
         ]
@@ -177,36 +195,41 @@ public class IngangAPI: ObservableObject {
                 switch(status) {
                 case 200: //success
                     ingangStatus = .success
-                    print("인강 신청 성공 : 200")
+                    LOG("인강 신청 성공 : 200")
                 case 403: // 본인 학년&반 인강실이 아니거나 오늘(일주일)치 신청을 모두 했습니다.
                     ingangStatus = .usedAllTicket
-                    print("인강 신청 실패 : 403")
+                    LOG("인강 신청 실패 : 403")
                 case 404: //인강실 신청이 없습니다.
                     ingangStatus = .noIngang
-                    print("인강이 없음 : 404")
+                    LOG("인강이 없음 : 404")
                 case 405: // 신청 시간이 아닙니다
                     ingangStatus = .timeout
-                    print("인강 신청 기간이 아님 : 405")
+                    LOG("인강 신청 기간이 아님 : 405")
                 case 406: // 인강실 블랙리스트이므로 신청할 수 없습니다.
                     ingangStatus = .blacklisted
-                    print("인강 블랙리스트 : 406")
+                    LOG("인강 블랙리스트 : 406")
                 case 409: // 이미 신청을 했거나 신청인원이 꽉 찼습니다.
                     ingangStatus = .full
-                    print("인강 이미 신청: 409")
+                    LOG("인강 이미 신청: 409")
                 case 500:
                     ingangStatus = .timeout
-                    print("500")
+                    LOG("500")
                 default:
+                    if debugMode {
+                        debugPrint(response)
+                    }
                     self.tokenAPI.refreshTokens()
-//                    debugPrint(response)
                     ingangStatus = self.applyIngang(idx: idx)
                 }
             }
         }
         return ingangStatus
     }
+    
+    /// EndPoint : https://api.dimigo.in/ingang/[idx]
+    /// 인강취소하기
     public func cancelIngang(idx: Int) -> IngangStatus{
-        print("cancel ingang : \(idx)")
+        LOG("cancel ingang : \(idx)")
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.token)"
         ]
@@ -227,8 +250,10 @@ public class IngangAPI: ObservableObject {
                 case 405: // 신청 시간이 아닙니다
                     ingangStatus = .timeout
                 default:
+                    if debugMode {
+                        debugPrint(response)
+                    }
                     self.tokenAPI.refreshTokens()
-                    debugPrint(response)
                     ingangStatus = self.cancelIngang(idx: idx)
                 }
             }
@@ -236,26 +261,17 @@ public class IngangAPI: ObservableObject {
         return ingangStatus
     }
     
-    
+    /// ingang 디버그
     public func debugIngangs() {
         for ingang in self.ingangs {
-            print(ingang)
+            LOG(ingang)
         }
     }
 }
 
+/// 야자 1, 2타임 시간
 public let ingangTime = [
     "",
     "19:50 - 21:10",
     "21:30 - 22:30"
 ]
-
-//var dummyIngang:[Ingang] = [Ingang(idx: 1,
-//                                   day: "sd",
-//                                   title: "test",
-//                                   time: 1,
-//                                   request_start_date: 1,
-//                                   request_end_date: 1,
-//                                   status: true,
-//                                   present: 2,
-//                                   max_user: 3)]
