@@ -9,32 +9,34 @@ import SwiftUI
 import Alamofire
 import SwiftyJSON
 
+/// token의 존재 여부 (=로그인 이력)
 public enum TokenStatus {
     case exist
     case none
 }
 
-public struct Tokens: Codable, Identifiable {
-    public var id = UUID()
-    public var token: String = ""
-    public var refresh_token: String = ""
-}
-
 public class TokenAPI: ObservableObject {
-    @Published public var tokens = Tokens()
+    @Published public var token: String = ""
+    @Published public var refreshToken: String = ""
     @Published public var tokenStatus: TokenStatus = .none
+    
     private var id: String = ""
     private var password: String = ""
     
     public init() {
         checkTokenStatus()
     }
-    public func set(id: String, password: String) -> Void{
+    
+    /// ID와 Password를 설정
+    public func setIdPassword(id: String, password: String) -> Void{
         self.id = id
         self.password = password
     }
-    public func getTokens() -> Void{
-        print("get token")
+    
+    /// EndPoint: https://api.dimigo.in/auth/
+    /// 토큰 가져오기
+    public func getTokens() -> Void {
+        LOG("get token")
         let parameters: [String: String] = [
             "id": "\(self.id)",
             "password": "\(self.password)"
@@ -45,33 +47,69 @@ public class TokenAPI: ObservableObject {
                 switch(status) {
                 case 200:
                     let json = JSON(response.value!!)
-                    self.tokens.token = json["token"].string!
-                    self.tokens.refresh_token = json["refresh_token"].string!
+                    self.token = json["token"].string!
+                    self.refreshToken = json["refresh_token"].string!
                     self.debugToken()
                     self.saveTokens()
                     self.tokenStatus = .exist
                 default:
-                    print("get token failed")
-                    debugPrint(response)
+                    LOG("get token failed")
+                    if debugMode {
+                        debugPrint(response)
+                    }
                     self.tokenStatus = .none
                 }
             }
         }
     }
+    
+    /// EndPoint: https://api.dimigo.in/auth/token/refresh
+    /// 토큰 새로고침
+    public func refreshTokens() {
+        LOG("refresh tokens")
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(self.refreshToken)"
+        ]
+        let url = "https://api.dimigo.in/auth/token/refresh"
+        AF.request(url, method: .post, encoding: JSONEncoding.default, headers: headers).response { response in
+            if let status = response.response?.statusCode {
+                switch(status) {
+                case 200:
+                    let json = JSON(response.value!!)
+                    self.token = json["token"].string!
+                    self.refreshToken = json["refresh_token"].string!
+                    self.debugToken()
+                    self.saveTokens()
+                    self.tokenStatus = .exist
+                default:
+                    LOG("refresh token failed")
+                    self.refreshTokens()
+                }
+            }
+        }
+    }
+
+    /// 토큰 디버그 출력
     public func debugToken() {
-        print("token : \(tokens.token)")
-        print("refresh_token : \(tokens.refresh_token)")
+        LOG("token : \(token)")
+        LOG("refreshToken : \(refreshToken)")
     }
+    
+    /// 토큰 저장
     public func saveTokens() {
-        print("save tokens")
-        UserDefaults.standard.setValue(self.tokens.token, forKey: "token")
-        UserDefaults.standard.setValue(self.tokens.refresh_token, forKey: "refresh_token")
+        LOG("save tokens")
+        UserDefaults.standard.setValue(self.token, forKey: "token")
+        UserDefaults.standard.setValue(self.refreshToken, forKey: "refresh_token")
     }
+    
+    /// 저장된 토큰 로드
     public func loadTokens() {
-        print("load tokens")
-        self.tokens.token = UserDefaults.standard.string(forKey: "token") ?? ""
-        self.tokens.refresh_token = UserDefaults.standard.string(forKey: "refresh_token") ?? ""
+        LOG("load tokens")
+        self.token = UserDefaults.standard.string(forKey: "token") ?? ""
+        self.refreshToken = UserDefaults.standard.string(forKey: "refresh_token") ?? ""
     }
+    
+    /// 저장된 토큰의 여부검사 (=로그인 여부 검사)
     public func checkTokenStatus(){
         if UserDefaults.standard.string(forKey: "token") != nil {
             self.tokenStatus = .exist
@@ -80,33 +118,14 @@ public class TokenAPI: ObservableObject {
             tokenStatus = .none
         }
     }
+    
+    /// 저장된 토큰 삭제
     public func clearTokens() {
-        print("Remove tokens")
+        LOG("Remove tokens")
         UserDefaults.standard.removeObject(forKey: "token")
         UserDefaults.standard.removeObject(forKey: "refresh_token")
         self.tokenStatus = .none
     }
-    public func refreshTokens() {
-        print("refresh tokens")
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(self.tokens.refresh_token)"
-        ]
-        let url = "https://api.dimigo.in/auth/token/refresh"
-        AF.request(url, method: .post, encoding: JSONEncoding.default, headers: headers).response { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200:
-                    let json = JSON(response.value!!)
-                    self.tokens.token = json["token"].string!
-                    self.tokens.refresh_token = json["refresh_token"].string!
-                    self.debugToken()
-                    self.saveTokens()
-                    self.tokenStatus = .exist
-                default:
-                    self.tokenStatus = .none
-                }
-            }
-        }
-    }
+    
 }
 

@@ -39,7 +39,7 @@ public class UserAPI: ObservableObject {
     public func getUserData() {
         print("get User Data")
         let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(tokenAPI.tokens.token)"
+            "Authorization": "Bearer \(tokenAPI.token)"
         ]
         let url: String = "https://api.dimigo.in/user/jwt/"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
@@ -64,7 +64,7 @@ public class UserAPI: ObservableObject {
     public func getUserTicket() {
         print("get user ticket status")
         let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.tokens.token)"
+            "Authorization":"Bearer \(tokenAPI.token)"
         ]
         let url = "https://api.dimigo.in/ingang/"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
