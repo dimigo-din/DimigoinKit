@@ -16,9 +16,6 @@ public struct Timetable {
 }
 
 public class TimetableAPI: ObservableObject {
-    public init() {
-        
-    }
     public let data: [[Timetable]] = [[Timetable(data: [["통합사회", "음악", "영어", "한국사", "컴그", "컴그", "수학"],
                                                  ["상경", "사회", "국어", "과학", "체육"],
                                                  ["영어", "상경", "음악", "한국사", "과학", "수학"],
