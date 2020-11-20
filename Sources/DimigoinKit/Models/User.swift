@@ -8,7 +8,9 @@
 import SwiftUI
 import Alamofire
 import SwiftyJSON
+import Kingfisher
 
+/// User Model
 public struct User: Codable, Identifiable {
     public init() {
         
@@ -36,8 +38,11 @@ public class UserAPI: ObservableObject {
         getUserData()
         getUserTicket()
     }
+    
+    /// EndPoint: https://api.dimigo.in/user/jwt/
+    /// 사용자 정보 조회
     public func getUserData() {
-        print("get User Data")
+        LOG("get User Data")
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(tokenAPI.token)"
         ]
@@ -61,8 +66,11 @@ public class UserAPI: ObservableObject {
             }
         }
     }
+    
+    /// EndPoint: https://api.dimigo.in/ingang/
+    /// 사용자 티켓 정보 조회
     public func getUserTicket() {
-        print("get user ticket status")
+        LOG("get user ticket status")
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.token)"
         ]
@@ -83,16 +91,18 @@ public class UserAPI: ObservableObject {
                 }
             }
         }
-        
     }
+    
+    /// 티켓정보 디버그
     public func debugTicket() {
-        print("weekly_ticket_num : \(user.weekly_ticket_num)")
-        print("weekly_request_count : \(user.weekly_request_count)")
-        print("daily_ticket_num : \(user.daily_ticket_num)")
-        print("daily_request_count : \(user.daily_request_count)")
+        LOG("weekly_ticket_num : \(user.weekly_ticket_num)")
+        LOG("weekly_request_count : \(user.weekly_request_count)")
+        LOG("daily_ticket_num : \(user.daily_ticket_num)")
+        LOG("daily_request_count : \(user.daily_request_count)")
     }
 }
 
+/// 반에 따라 학과 반환
 public func getMajor(klass: Int) -> String {
     switch klass {
         case 1: return "이비즈니스과"
@@ -106,17 +116,4 @@ public func getMajor(klass: Int) -> String {
 }
 
 public let dummyUser: User = User()
-//                    User(name: "변경민",
-//                          id: "bkmchangemin",
-//                          idx: 2121,
-//                          grade: 2,
-//                          klass: 4,
-//                          number: "13",
-//                          serial: "2413",
-//                          email: "bkm.change.min@gmail.com",
-//                          photo: "",
-//                          weekly_request_count: 0,
-//                          daily_request_count: 0,
-//                          weekly_ticket_num: 5,
-//                          daily_ticket_num: 2)
 
