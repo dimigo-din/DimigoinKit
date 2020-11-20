@@ -15,6 +15,11 @@ public struct Notice: Hashable, Codable, Identifiable {
         self.registered = registered
         self.description = description
     }
+    public init() {
+        self.type = "-"
+        self.registered = "-"
+        self.description = "-"
+    }
     public var id = UUID()
     public var type: String
     public var registered: String
@@ -22,13 +27,16 @@ public struct Notice: Hashable, Codable, Identifiable {
 }
 
 public class NoticeAPI: ObservableObject {
-    @Published public var notice = Notice(type: "-", registered: "-", description: "-")
+    @Published public var notice = Notice()
     public var tokenAPI: TokenAPI = TokenAPI()
+    
     public init() {
         getNotice()
     }
+    
+    /// 공지사항 조회
     public func getNotice() {
-        print("get notice")
+        LOG("get notice")
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.token)"
         ]
@@ -39,10 +47,7 @@ public class NoticeAPI: ObservableObject {
                 case 200:
                     let json = JSON(response.value!!)
                     self.notice.description = json["notice"][0]["description"].string!
-                    /// temp data until api update
-                    self.notice.type = "학과"
-                    self.notice.registered = "2020년 7월 10일"
-//                    self.debugNotice()
+                    self.debugNotice()
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
@@ -51,8 +56,10 @@ public class NoticeAPI: ObservableObject {
             }
         }
     }
+    
+    /// 공지사항 출력
     public func debugNotice() {
-        print(notice.description)
+        LOG(notice.description)
     }
 }
 
