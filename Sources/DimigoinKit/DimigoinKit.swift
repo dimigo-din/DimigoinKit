@@ -2,7 +2,8 @@ import SwiftUI
 import Alamofire
 import SwiftyJSON
 
-public struct DimigoinKit {
+public class DimigoinKit {
+    @Published var mealAPI: MealAPI = MealAPI()
     init() {
         
     }
