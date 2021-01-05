@@ -94,7 +94,8 @@ public class TokenAPI: ObservableObject {
 
     /// 토큰을 출력합니다.
     public func debugToken() {
-        LOG("accessToken : \(accessToken)\nrefreshToken : \(refreshToken)")
+        LOG("accessToken : \(accessToken)")
+        LOG("refreshToken : \(refreshToken)")
     }
     
     /// 토큰을 기기에 저장합니다.

@@ -85,7 +85,7 @@ public func get8DigitDateString(weekday: Weekday) -> String {
     let calendar = Calendar.current
     let date = calendar.date(byAdding: .day, value: amount, to: Date())
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyyMMdd"
+    dateFormatter.dateFormat = "yyyy-MM-dd"
     return dateFormatter.string(from: date!)
 }
 
@@ -93,7 +93,7 @@ public func get8DigitDateString(weekday: Weekday) -> String {
 public func getToday8DigitDateString() -> String {
     let date = Date()
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyyMMdd"
+    dateFormatter.dateFormat = "yyyy-MM-dd"
     return dateFormatter.string(from: date)
 }
 

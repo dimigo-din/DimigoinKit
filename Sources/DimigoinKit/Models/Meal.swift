@@ -26,7 +26,7 @@ public struct Dimibob: Codable, Identifiable {
     public var dinner: String
 }
 
-/// 아침, 점심, 저녁 종류
+/// 급식 종류(아침, 점심, 저녁) Enum
 public enum MealType {
     case breakfast
     case lunch
@@ -34,12 +34,13 @@ public enum MealType {
 }
 
 public class MealAPI: ObservableObject {
-    @Published var meals = [Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob()]
+    @Published public var meals = [Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob()]
+    public var tokenAPI: TokenAPI = TokenAPI()
     public init() {
         getWeeklyMeals()
     }
     
-    /// 일주일치 급식 조회
+    /// 일주일치 급식을 조회합니다.
     public func getWeeklyMeals() {
         getMeals(from: .mon)
         getMeals(from: .tue)
@@ -50,31 +51,66 @@ public class MealAPI: ObservableObject {
         getMeals(from: .sun)
     }
     
-    /// 급식 조회
+    /// http://edison.dimigo.hs.kr/meal/yyyy-mm-dd
+    /// 같은 주의 N요일의 급식을 가져옵니다.
     public func getMeals(from weekDay: Weekday){
         LOG("get meals from \(get8DigitDateString(weekday: weekDay))")
-        let url = "https://api.dimigo.in/dimibobs/\(get8DigitDateString(weekday: weekDay))"
-        AF.request(url, method: .get, encoding: JSONEncoding.default).responseData { response in
-            let json = JSON(response.value ?? "")
-            self.meals[weekDay.rawValue-1].breakfast = json["breakfast"].string ?? "급식 정보가 없습니다."
-            self.meals[weekDay.rawValue-1].lunch = json["lunch"].string ?? "급식 정보가 없습니다."
-            self.meals[weekDay.rawValue-1].dinner = json["dinner"].string ?? "급식 정보가 없습니다."
-            self.dubugMeal()
+        let headers: HTTPHeaders = [
+            "Authorization":"Bearer \(tokenAPI.accessToken)"
+        ]
+        let url = "http://edison.dimigo.hs.kr/meal/\(get8DigitDateString(weekday: weekDay))"
+        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).responseData { response in
+            if let status = response.response?.statusCode {
+                switch(status) {
+                case 200:
+                    let json = JSON(response.value ?? "")
+                    
+                    self.meals[weekDay.rawValue-1].breakfast = self.bindingMenus(menu: json["meal"]["breakfast"])
+                    self.meals[weekDay.rawValue-1].lunch = self.bindingMenus(menu: json["meal"]["breakfast"])
+                    self.meals[weekDay.rawValue-1].dinner = self.bindingMenus(menu: json["meal"]["breakfast"])
+//                    self.dubugMeal()
+                case 404:
+                    self.meals[weekDay.rawValue-1].breakfast = "급식 정보가 없습니다."
+                    self.meals[weekDay.rawValue-1].lunch = "급식 정보가 없습니다."
+                    self.meals[weekDay.rawValue-1].dinner =  "급식 정보가 없습니다."
+//                    self.dubugMeal()
+                default:
+                    self.tokenAPI.refreshTokens()
+                    self.getMeals(from: weekDay)
+                }
+            }
         }
     }
     
-    /// 오늘의 급식 조회
+    /// 오늘의 급식을 조회합니다.
     public func getTodayMeal() -> Dimibob{
         return meals[getTodayDayOfWeekInt()-1]
     }
     
-    /// 급식 출력
+    /// 급식을 출력합니다.
     public func dubugMeal() {
-        LOG(meals)
+        for i in 0..<meals.count {
+            LOG("\(meals[i].breakfast), \(meals[i].lunch), \(meals[i].dinner)")
+        }
+    }
+    
+    /// 모든 메뉴를 한개의 문자열로 묶습니다.
+    public func bindingMenus(menu json: JSON) -> String{
+        var str = ""
+        if(json.count == 0) {
+            return "급식 정보가 없습니다."
+        }
+        for i in 0..<json.count {
+            str += json[i].string!
+            if(i != json.count - 1) {
+                str += " | "
+            }
+        }
+        return str
     }
 }
 
-/// 급식 모델에서 끼니별 급식 추출
+/// 급식 모델에서 끼니별로 급식을 반환합니다.
 public func getMealMenu(meal: Dimibob, mealType: MealType) -> String{
     switch mealType {
         case .breakfast: return meal.breakfast
@@ -83,7 +119,7 @@ public func getMealMenu(meal: Dimibob, mealType: MealType) -> String{
     }
 }
 
-/// 시간대 별로 어떤 끼니가 다음 끼니인지를 반환
+/// 시간대 별로 어떤 끼니가 다음 끼니인지를 반환합니다.
 public func getMealType() -> MealType {
     let hour = Calendar.current.component(.hour, from: Date())
     if Int(hour) <= 9 || Int(hour) >= 21 { // 오후 9시 ~ 오전 9시 -> 아침
