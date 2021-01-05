@@ -27,14 +27,14 @@ public class TokenAPI: ObservableObject {
         checkTokenStatus()
     }
     
-    /// ID와 Password를 설정
+    /// Username과 Password를 설정
     public func setUsernamePassword(username: String, password: String) -> Void{
         self.username = username
         self.password = password
     }
     
-    /// EndPoint:[POST] https://edison.dimigo.hs.kr/auth
-    /// 토큰 가져오기
+    /// https://edison.dimigo.hs.kr/auth
+    /// 토큰을 가져옵니다. ([POST] /auth)
     public func getTokens() -> Void {
         LOG("get token")
         let parameters: [String: String] = [
@@ -63,8 +63,8 @@ public class TokenAPI: ObservableObject {
         }
     }
     
-    /// EndPoint: http://edison.dimigo.hs.kr/auth/refresh
-    /// 토큰 새로고침
+    /// http://edison.dimigo.hs.kr/auth/refresh
+    /// 토큰을 새로고침 합니다.([POST] /auth/refresh)
     public func refreshTokens() {
         LOG("refresh tokens")
         let headers: HTTPHeaders = [
@@ -83,43 +83,45 @@ public class TokenAPI: ObservableObject {
                     self.tokenStatus = .exist
                 default:
                     LOG("refresh token failed")
+                    if debugMode {
+                        debugPrint(response)
+                    }
                     self.refreshTokens()
                 }
             }
         }
     }
 
-    /// 토큰 디버그 출력
+    /// 토큰을 출력합니다.
     public func debugToken() {
-        LOG("accessToken : \(accessToken)")
-        LOG("refreshToken : \(refreshToken)")
+        LOG("accessToken : \(accessToken)\nrefreshToken : \(refreshToken)")
     }
     
-    /// 토큰 저장
+    /// 토큰을 기기에 저장합니다.
     public func saveTokens() {
         LOG("save tokens")
         UserDefaults.standard.setValue(self.accessToken, forKey: "accessToken")
         UserDefaults.standard.setValue(self.refreshToken, forKey: "refreshToken")
     }
     
-    /// 저장된 토큰 로드
+    /// 저장된 토큰을 불러옵니다.
     public func loadTokens() {
         LOG("load tokens")
         self.accessToken = UserDefaults.standard.string(forKey: "accessToken") ?? ""
         self.refreshToken = UserDefaults.standard.string(forKey: "refreshToken") ?? ""
     }
     
-    /// 저장된 토큰의 여부검사 (=로그인 여부 검사)
+    /// 저장된 토큰 유무를 확인합니다. (= 로그인 이력 조회)
     public func checkTokenStatus(){
         if UserDefaults.standard.string(forKey: "accessToken") != nil {
-            self.tokenStatus = .exist
             self.loadTokens()
+            self.tokenStatus = .exist
         } else {
             tokenStatus = .none
         }
     }
     
-    /// 저장된 토큰 삭제
+    /// 저장된 토큰을 삭제합니다. (로그아웃)
     public func clearTokens() {
         LOG("Remove tokens")
         UserDefaults.standard.removeObject(forKey: "accessToken")

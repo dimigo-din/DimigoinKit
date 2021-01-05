@@ -8,7 +8,6 @@
 import SwiftUI
 import Alamofire
 import SwiftyJSON
-import Kingfisher
 
 /// User Model
 public struct User: Codable, Identifiable {
@@ -20,45 +19,42 @@ public struct User: Codable, Identifiable {
     public var idx: Int = 0
     public var grade: Int = 4
     public var klass: Int = 1
-    public var number: String = ""
-    public var serial: String = ""
-    public var email: String = ""
+    public var number: Int = 0
+    public var serial: Int = 0
     public var photo: String = ""
-    public var weekly_request_count: Int = 0
-    public var daily_request_count: Int = 0
-    public var weekly_ticket_num: Int = 0
-    public var daily_ticket_num: Int = 0
+    public var weeklyTicketCount: Int = 0
+    public var weeklyUsedTicket: Int = 0
+    public var weeklyTicketLeft: Int = 0
 }
 
 public class UserAPI: ObservableObject {
     @Published public var user = User()
-//    @Published var photo = KFImage(URL(string: "https://api.dimigo.hs.kr/user_photo/")!)
     public var tokenAPI: TokenAPI = TokenAPI()
     public init() {
         getUserData()
         getUserTicket()
     }
     
-    /// EndPoint: https://api.dimigo.in/user/jwt/
-    /// 사용자 정보 조회
+    /// http://edison.dimigo.hs.kr/user/me
+    /// 사용자 정보를 조회합니다.([GET] /user/me)
     public func getUserData() {
         LOG("get User Data")
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(tokenAPI.accessToken)"
         ]
-        let url: String = "https://api.dimigo.in/user/jwt/"
+        let url: String = "http://edison.dimigo.hs.kr/user/me"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
                     let json = JSON(response.value!!)
-                    self.user.idx = json["idx"].int!
-                    self.user.name = json["name"].string!
-                    self.user.grade = Int(json["grade"].string!)!
-                    self.user.klass = Int(json["klass"].string!)!
-                    self.user.number = json["number"].string!
-                    self.user.serial = json["serial"].string!
-                    self.user.email = json["email"].string!
+                    self.user.idx = json["identity"]["idx"].int!
+                    self.user.name = json["identity"]["name"].string!
+                    self.user.grade = json["identity"]["grade"].int!
+                    self.user.klass = json["identity"]["class"].int!
+                    self.user.number = json["identity"]["number"].int!
+                    self.user.serial = json["identity"]["serial"].int!
+                    self.user.photo = json["identity"]["photo"][0].string!
                 default:
                     self.tokenAPI.refreshTokens()
                     self.getUserData()
@@ -67,23 +63,22 @@ public class UserAPI: ObservableObject {
         }
     }
     
-    /// EndPoint: https://api.dimigo.in/ingang/
-    /// 사용자 티켓 정보 조회
+    /// http://edison.dimigo.hs.kr/ingang-application/status
+    /// 사용자 티켓 정보를 조회합니다.([GET] /ingang-application/status)
     public func getUserTicket() {
         LOG("get user ticket status")
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "https://api.dimigo.in/ingang/"
+        let url = "http://edison.dimigo.hs.kr/ingang-application/status"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
                     let json = JSON(response.value!!)
-                    self.user.weekly_request_count = json["weekly_request_count"].int!
-                    self.user.daily_request_count = json["daily_request_count"].int!
-                    self.user.weekly_ticket_num = json["weekly_ticket_num"].int!
-                    self.user.daily_ticket_num = json["daily_ticket_num"].int!
+                    self.user.weeklyTicketCount = json["weeklyTicketCount"].int!
+                    self.user.weeklyUsedTicket = json["weeklyUsedTicket"].int!
+                    self.user.weeklyTicketLeft = self.user.weeklyTicketCount - self.user.weeklyUsedTicket
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
@@ -93,16 +88,13 @@ public class UserAPI: ObservableObject {
         }
     }
     
-    /// 티켓정보 디버그
+    /// 사용자의 티켓 정보를 출력합니다.
     public func debugTicket() {
-        LOG("weekly_ticket_num : \(user.weekly_ticket_num)")
-        LOG("weekly_request_count : \(user.weekly_request_count)")
-        LOG("daily_ticket_num : \(user.daily_ticket_num)")
-        LOG("daily_request_count : \(user.daily_request_count)")
+        LOG("weeklyUsedTicket : \(user.weeklyUsedTicket) \n weeklyTicketLeft : \(user.weeklyTicketLeft)")
     }
 }
 
-/// 반에 따라 학과 반환
+/// 반에 따른 학과를 반환합니다.
 public func getMajor(klass: Int) -> String {
     switch klass {
         case 1: return "이비즈니스과"
