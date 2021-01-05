@@ -85,7 +85,7 @@ public class IngangAPI: ObservableObject {
         LOG("get ingang list")
         self.ingangs = []
         let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.token)"
+            "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
         let url = "https://api.dimigo.in/ingang/"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
@@ -121,7 +121,7 @@ public class IngangAPI: ObservableObject {
     /// 개인 인강 신청 가능 정보(티켓 수) 가져오기
     public func getTickets() {
         let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.token)"
+            "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
         let url = "https://api.dimigo.in/ingang/"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
@@ -151,7 +151,7 @@ public class IngangAPI: ObservableObject {
         LOG("get applicant list")
         self.applicants = []
         let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.token)"
+            "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
         let url = "https://api.dimigo.in/ingang/users/myklass"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
@@ -183,7 +183,7 @@ public class IngangAPI: ObservableObject {
     public func applyIngang(idx: Int) -> IngangStatus{
         LOG("apply ingang : \(idx)")
         let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.token)"
+            "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
         let parameters: [String: String] = [
             "ingang_idx": "\(String(idx))"
@@ -231,7 +231,7 @@ public class IngangAPI: ObservableObject {
     public func cancelIngang(idx: Int) -> IngangStatus{
         LOG("cancel ingang : \(idx)")
         let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.token)"
+            "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
         let parameters: [String: String] = [
             "ingang_idx": "\(String(idx))"

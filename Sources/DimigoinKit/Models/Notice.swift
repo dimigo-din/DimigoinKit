@@ -38,7 +38,7 @@ public class NoticeAPI: ObservableObject {
     public func getNotice() {
         LOG("get notice")
         let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.token)"
+            "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
         let url = "https://api.dimigo.in/notice/latest"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
