@@ -8,6 +8,7 @@
 import SwiftUI
 import Alamofire
 import SwiftyJSON
+import SDWebImageSwiftUI
 
 /// User Model
 public struct User: Codable, Identifiable {
@@ -29,6 +30,7 @@ public struct User: Codable, Identifiable {
 
 public class UserAPI: ObservableObject {
     @Published public var user = User()
+    @Published public var userPhoto: WebImage = WebImage(url: URL(string: ""))
     public var tokenAPI: TokenAPI = TokenAPI()
     public init() {
         getUserData()
@@ -55,6 +57,7 @@ public class UserAPI: ObservableObject {
                     self.user.number = json["identity"]["number"].int!
                     self.user.serial = json["identity"]["serial"].int!
                     self.user.photo = json["identity"]["photo"][0].string!
+                    self.getUserPhoto()
                 default:
                     self.tokenAPI.refreshTokens()
                     self.getUserData()
@@ -87,7 +90,11 @@ public class UserAPI: ObservableObject {
             }
         }
     }
-    
+    /// 사용자의 프로필 사진을 불러옵니다.
+    public func getUserPhoto() {
+        self.userPhoto = WebImage(url: URL(string: "https://api.dimigo.hs.kr/user_photo/\(user.photo)"))
+
+    }
     /// 사용자의 티켓 정보를 출력합니다.
     public func debugTicket() {
         LOG("weeklyUsedTicket : \(user.weeklyUsedTicket) \n weeklyTicketLeft : \(user.weeklyTicketLeft)")

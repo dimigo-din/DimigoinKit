@@ -72,9 +72,9 @@ public class IngangAPI: ObservableObject {
     public var weekly_ticket_num: Int = 0
     
     public init() {
-        self.getIngangList()
-        self.getApplicantList()
-        self.getTickets()
+//        self.getIngangList()
+//        self.getApplicantList()
+//        self.getTickets()
     }
     
     /// EndPoint : https://api.dimigo.in/ingang/
@@ -108,8 +108,8 @@ public class IngangAPI: ObservableObject {
                     if debugMode {
                         debugPrint(response)
                     }
-                    self.tokenAPI.refreshTokens()
-                    self.getIngangList()
+//                    self.tokenAPI.refreshTokens()
+//                    self.getIngangList()
                 }
             }
         }
@@ -134,8 +134,8 @@ public class IngangAPI: ObservableObject {
                     if debugMode {
                         debugPrint(response)
                     }
-                    self.tokenAPI.refreshTokens()
-                    self.getTickets()
+//                    self.tokenAPI.refreshTokens()
+//                    self.getTickets()
                 }
             }
         }
@@ -167,8 +167,8 @@ public class IngangAPI: ObservableObject {
                     }
                 default:
                     debugPrint(response)
-                    self.tokenAPI.refreshTokens()
-                    self.getApplicantList()
+//                    self.tokenAPI.refreshTokens()
+//                    self.getApplicantList()
                 }
             }
         }
@@ -214,8 +214,8 @@ public class IngangAPI: ObservableObject {
                     if debugMode {
                         debugPrint(response)
                     }
-                    self.tokenAPI.refreshTokens()
-                    ingangStatus = self.applyIngang(idx: idx)
+//                    self.tokenAPI.refreshTokens()
+//                    ingangStatus = self.applyIngang(idx: idx)
                 }
             }
         }
@@ -249,8 +249,8 @@ public class IngangAPI: ObservableObject {
                     if debugMode {
                         debugPrint(response)
                     }
-                    self.tokenAPI.refreshTokens()
-                    ingangStatus = self.cancelIngang(idx: idx)
+//                    self.tokenAPI.refreshTokens()
+//                    ingangStatus = self.cancelIngang(idx: idx)
                 }
             }
         }
