@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Notice.swift
 //  
 //
 //  Created by 변경민 on 2020/11/15.
@@ -10,43 +10,43 @@ import Alamofire
 import SwiftyJSON
 
 public struct Notice: Hashable, Codable, Identifiable {
-    public init(type: String, registered: String, description: String) {
-        self.type = type
-        self.registered = registered
-        self.description = description
+    public init(title: String, content: String) {
+        self.title = title
+        self.content = content
     }
     public init() {
-        self.type = "-"
-        self.registered = "-"
-        self.description = "-"
+        self.title = "-"
+        self.content = "-"
     }
     public var id = UUID()
-    public var type: String
-    public var registered: String
-    public var description: String
+    public var title: String
+    public var content: String
 }
 
 public class NoticeAPI: ObservableObject {
-    @Published public var notice = Notice()
+    @Published public var notices: [Notice] = []
     public var tokenAPI: TokenAPI = TokenAPI()
     
     public init() {
         getNotice()
     }
     
-    /// 공지사항 조회
+    /// http://edison.dimigo.hs.kr/notice/currnet
+    /// 최근 공지사항을 불러옵니다.
     public func getNotice() {
         LOG("get notice")
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "https://api.dimigo.in/notice/latest"
+        let url = "http://edison.dimigo.hs.kr/notice/current"
         AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
                     let json = JSON(response.value!!)
-                    self.notice.description = json["notice"][0]["description"].string!
+                    for i in 0..<json.count {
+                        self.notices.append(Notice(title: json["notices"][i]["title"].string!, content: json["notices"][i]["content"].string!))
+                    }
                     self.debugNotice()
                 default:
                     debugPrint(response)
@@ -57,9 +57,8 @@ public class NoticeAPI: ObservableObject {
         }
     }
     
-    /// 공지사항 출력
+    /// 공지사항을 출력합니다.
     public func debugNotice() {
-        LOG(notice.description)
+        LOG(notices)
     }
 }
-
