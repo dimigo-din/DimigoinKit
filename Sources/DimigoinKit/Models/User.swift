@@ -92,6 +92,11 @@ public class UserAPI: ObservableObject {
     public func debugTicket() {
         LOG("weeklyUsedTicket : \(user.weeklyUsedTicket) \n weeklyTicketLeft : \(user.weeklyTicketLeft)")
     }
+    
+    /// 사용자의 학번과 이름 문자열을 반환합니다. 예) 1234 홍길동
+    public func getUserNumberAndName() -> String {
+        return "\(self.user.number) \(self.user.name)"
+    }
 }
 
 /// 반에 따른 학과를 반환합니다.

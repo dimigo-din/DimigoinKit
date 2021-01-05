@@ -69,9 +69,7 @@ public class IngangAPI: ObservableObject {
     
     public var tokenAPI = TokenAPI()
     public var weekly_request_count: Int = 0
-    public var daily_request_count: Int = 0
     public var weekly_ticket_num: Int = 0
-    public var daily_ticket_num: Int = 0
     
     public init() {
         self.getIngangList()
@@ -130,9 +128,7 @@ public class IngangAPI: ObservableObject {
                 case 200:
                     let json = JSON(response.value!!)
                     self.weekly_request_count = json["weekly_request_count"].int!
-                    self.daily_request_count = json["daily_request_count"].int!
                     self.weekly_ticket_num = json["weekly_ticket_num"].int!
-                    self.daily_ticket_num = json["daily_ticket_num"].int!
                     LOG("get ticket status \(self.weekly_request_count) \(self.weekly_ticket_num)")
                 default:
                     if debugMode {
