@@ -37,6 +37,7 @@ public enum MealType {
 public class MealAPI: ObservableObject {
     @Published public var meals = [Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob()]
     public var tokenAPI: TokenAPI = TokenAPI()
+    
     public init() {
         getWeeklyMeals()
     }

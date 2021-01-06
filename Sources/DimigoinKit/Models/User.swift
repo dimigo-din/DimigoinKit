@@ -33,6 +33,7 @@ public class UserAPI: ObservableObject {
     @Published public var user = User()
     @Published public var userPhoto: WebImage = WebImage(url: URL(string: ""))
     public var tokenAPI: TokenAPI = TokenAPI()
+    
     public init() {
         getUserData()
         getUserTicket()

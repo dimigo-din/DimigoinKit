@@ -15,7 +15,7 @@ public enum TokenStatus {
     case none
 }
 
-/// 디미고인 유저 토큰 관련 API
+/// 디미고인 유저 토큰 관련
 public class TokenAPI: ObservableObject {
     @Published public var accessToken: String = ""
     @Published public var refreshToken: String = ""

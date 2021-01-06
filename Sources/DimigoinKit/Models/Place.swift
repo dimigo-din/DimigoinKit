@@ -62,7 +62,7 @@ public class PlaceAPI: ObservableObject {
     
     /// API부터 전달 받은 JSON파일을 장소 데이터로 변환하여 차곡차곡 정리합니다.
     public func sortPlaces(places: JSON) {
-        for i in 0..<places.count {
+        for i in 0..<places["places"].count {
             self.places.append(Place(id: places["places"][i]["_id"].string!,
                                      name: places["places"][i]["name"].string!,
                                      location: places["places"][i]["location"].string!,
