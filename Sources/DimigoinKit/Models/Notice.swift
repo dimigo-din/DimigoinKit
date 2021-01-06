@@ -23,6 +23,7 @@ public struct Notice: Hashable, Codable, Identifiable {
     public var content: String
 }
 
+/// 디미고인 공지사항 관련 API
 public class NoticeAPI: ObservableObject {
     @Published public var notices: [Notice] = []
     public var tokenAPI: TokenAPI = TokenAPI()
@@ -59,6 +60,10 @@ public class NoticeAPI: ObservableObject {
     
     /// 공지사항을 출력합니다.
     public func debugNotice() {
-        LOG(notices)
+        for notice in notices {
+            var str = ""
+            str += "title : \(notice.title), content: \(notice.content)"
+            LOG(str)
+        }
     }
 }

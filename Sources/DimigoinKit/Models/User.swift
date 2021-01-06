@@ -10,7 +10,7 @@ import Alamofire
 import SwiftyJSON
 import SDWebImageSwiftUI
 
-/// User Model
+/// 사용자 모델 정의
 public struct User: Codable, Identifiable {
     public init() {
         
@@ -25,9 +25,10 @@ public struct User: Codable, Identifiable {
     public var photo: String = ""
     public var weeklyTicketCount: Int = 0
     public var weeklyUsedTicket: Int = 0
-    public var weeklyTicketLeft: Int = 0
+    public var weeklyRemainTicket: Int = 0
 }
 
+/// 디미고인 사용자 정보 관련 API
 public class UserAPI: ObservableObject {
     @Published public var user = User()
     @Published public var userPhoto: WebImage = WebImage(url: URL(string: ""))
@@ -81,7 +82,7 @@ public class UserAPI: ObservableObject {
                     let json = JSON(response.value!!)
                     self.user.weeklyTicketCount = json["weeklyTicketCount"].int!
                     self.user.weeklyUsedTicket = json["weeklyUsedTicket"].int!
-                    self.user.weeklyTicketLeft = self.user.weeklyTicketCount - self.user.weeklyUsedTicket
+                    self.user.weeklyRemainTicket = self.user.weeklyTicketCount - self.user.weeklyUsedTicket
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
@@ -97,7 +98,7 @@ public class UserAPI: ObservableObject {
     }
     /// 사용자의 티켓 정보를 출력합니다.
     public func debugTicket() {
-        LOG("weeklyUsedTicket : \(user.weeklyUsedTicket) \n weeklyTicketLeft : \(user.weeklyTicketLeft)")
+        LOG("weeklyUsedTicket : \(user.weeklyUsedTicket) \n weeklyRemainTicket : \(user.weeklyRemainTicket)")
     }
     
     /// 사용자의 학번과 이름 문자열을 반환합니다. 예) 1234 홍길동
@@ -119,5 +120,6 @@ public func getMajor(klass: Int) -> String {
     }
 }
 
+/// 테스트용 더미 유저
 public let dummyUser: User = User()
 

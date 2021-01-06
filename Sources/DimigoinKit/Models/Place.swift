@@ -28,8 +28,34 @@ public struct Place: Codable, Identifiable {
     }
 }
 
+/// 디미고인 장소 관련 API
 public class PlaceAPI: ObservableObject {
     @Published var places: [Place] = []
+    
+    /// API에 저장된 모든 장소 정보를 불러옵니다. ([GET] /place)
+    public func getAllPlaces() {
+        LOG("get all place data")
+        let headers: HTTPHeaders = [
+            "Authorization":"Bearer \(tokenAPI.accessToken)"
+        ]
+        let url = "http://edison.dimigo.hs.kr/place"
+        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+            if let status = response.response?.statusCode {
+                switch(status) {
+                case 200:
+                    let json = JSON(response.value!!)
+                    for i in 0..<json.count {
+                        self.notices.append(Notice(title: json["notices"][i]["title"].string!, content: json["notices"][i]["content"].string!))
+                    }
+                    self.debugNotice()
+                default:
+                    debugPrint(response)
+                    self.tokenAPI.refreshTokens()
+                    self.getNotice()
+                }
+            }
+        }
+    }
     
     public func getMatchedPlaceName(id: String) -> String {
         var placeName = ""
@@ -51,9 +77,7 @@ public class PlaceAPI: ObservableObject {
         return plc
     }
     
-    public func getAllPlaces() {
-        
-    }
+    
 }
 
 

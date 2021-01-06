@@ -13,6 +13,7 @@ public struct Timetable: Codable{
     public var data: [[String]]
 }
 
+/// 디미고인 시간표 관련 API
 public class TimetableAPI: ObservableObject {
     public init() {
         

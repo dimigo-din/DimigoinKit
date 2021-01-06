@@ -33,6 +33,7 @@ public enum MealType {
     case dinner
 }
 
+/// 디미고인 급식 관련 API
 public class MealAPI: ObservableObject {
     @Published public var meals = [Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob()]
     public var tokenAPI: TokenAPI = TokenAPI()
