@@ -72,7 +72,7 @@ public class PlaceAPI: ObservableObject {
     
     /// 장소 정보들을 출력합니다.
     public func debugPlace() -> Void {
-        LOG(places)
+        LOG("\(places.count) places were found")
     }
     
     /// Place ID를 통해 장소의 이름을 반환합니다.
@@ -93,7 +93,7 @@ public class PlaceAPI: ObservableObject {
                 return place
             }
         }
-        return Place()
+        return getMatchedPlace(name: "교실")
     }
     
     /// 장소 이름을 통해 장소를 반환합니다.

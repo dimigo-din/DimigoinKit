@@ -38,7 +38,7 @@ public class AttendanceLogAPI: ObservableObject {
     }
     
     /// 사용자의 위치를 설정합니다 ([POST] /attendance-log)
-    public func setUserLocation(place: Place) {
+    public func setMyLocation(place: Place) {
         LOG("set user location")
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
@@ -53,19 +53,23 @@ public class AttendanceLogAPI: ObservableObject {
                 switch(status) {
                 case 200:
                     LOG("set user location to \(place.name)")
+                case 400:
+                    LOG("Place 못찾음")
+                case 423:
+                    LOG("출입인증을 할 수 있는 시간이 아님")
                 default:
                     if debugMode {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    self.setUserLocation(place: place)
+                    self.setMyLocation(place: place)
                 }
             }
         }
     }
     
     /// 간단한 메세지와 함께 사용자의 위치를 설정합니다 ([POST] /attendance-log)
-    public func setUserLocation(place: Place, remark: String) {
+    public func setMyLocation(place: Place, remark: String) {
         LOG("set user location")
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
@@ -80,12 +84,16 @@ public class AttendanceLogAPI: ObservableObject {
                 switch(status) {
                 case 200:
                     LOG("set user location to \(place.name)")
+                case 400:
+                    LOG("Place 못찾음")
+                case 423:
+                    LOG("출입인증을 할 수 있는 시간이 아님")
                 default:
                     if debugMode {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    self.setUserLocation(place: place)
+                    self.setMyLocation(place: place)
                 }
             }
         }
@@ -134,7 +142,7 @@ public class AttendanceLogAPI: ObservableObject {
                 switch(status) {
                 case 200:
                     let json = JSON(response.value!!)
-                    self.myCurrentLocation = self.placeAPI.getMatchedPlace(id: json["myLogs"][0]["place"]["_id"].string!)
+                    self.myCurrentLocation = self.placeAPI.getMatchedPlace(name: json["myLogs"][0]["place"]["name"].string ?? "교실")
                     self.debugMyLocation()
                 default:
                     if debugMode {

@@ -239,6 +239,22 @@ public class IngangAPI: ObservableObject {
             LOG(str)
         }
     }
+    
+    /// 인강 신청자들을 문자열로 정리해서 반환
+    public func getApplicantStringList(time: IngangTime) -> String {
+        var str = ""
+        for i in 0...1 {
+            if(ingangs[i].time == time) {
+                for applicant in ingangs[i].applicants {
+                    str += "\(applicant.name)"
+                    if i != ingangs[i].applicants.count {
+                        str += " "
+                    }
+                }
+            }
+        }
+        return str
+    }
 }
 
 /// 야자 1, 2타임 시간

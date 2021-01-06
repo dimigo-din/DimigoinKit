@@ -60,6 +60,7 @@ public class UserAPI: ObservableObject {
                     self.user.serial = json["identity"]["serial"].int!
                     self.user.photo = json["identity"]["photo"][0].string!
                     self.getUserPhoto()
+                    LOG("User num : \(self.user.serial)")
                 default:
                     self.tokenAPI.refreshTokens()
                     self.getUserData()
