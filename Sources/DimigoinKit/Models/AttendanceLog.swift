@@ -19,10 +19,10 @@ public class AttendanceLogAPI: ObservableObject {
     public var userAPI = UserAPI()
     public var tokenAPI = TokenAPI()
     
-    public func getUserCurrentLocation() -> Place {
-        //
-        return Place()
-    }
+//    public func getUserCurrentLocation() -> Place {
+//        //
+//        return Place()
+//    }
     
     public func setUserLocation(place: Place) {
         

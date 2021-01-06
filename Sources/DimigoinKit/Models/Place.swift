@@ -14,23 +14,28 @@ public struct Place: Codable, Identifiable {
     var name: String
     var location: String
     var description: String
-    public init(id: String, name: String, location: String, description: String) {
-        self.id = id
-        self.name = name
-        self.location = location
-        self.description = description
-    }
     public init() {
         self.id = ""
         self.name = ""
         self.location = ""
         self.description = ""
     }
+    public init(id: String, name: String, location: String, description: String) {
+        self.id = id
+        self.name = name
+        self.location = location
+        self.description = description
+    }
 }
 
 /// 디미고인 장소 관련 API
 public class PlaceAPI: ObservableObject {
     @Published var places: [Place] = []
+    public var tokenAPI = TokenAPI()
+    
+    public init() {
+        getAllPlaces()
+    }
     
     /// API에 저장된 모든 장소 정보를 불러옵니다. ([GET] /place)
     public func getAllPlaces() {
@@ -44,19 +49,33 @@ public class PlaceAPI: ObservableObject {
                 switch(status) {
                 case 200:
                     let json = JSON(response.value!!)
-                    for i in 0..<json.count {
-                        self.notices.append(Notice(title: json["notices"][i]["title"].string!, content: json["notices"][i]["content"].string!))
-                    }
-                    self.debugNotice()
+                    self.sortPlaces(places: json)
+                    self.debugPlace()
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
-                    self.getNotice()
+                    self.getAllPlaces()
                 }
             }
         }
     }
     
+    /// API부터 전달 받은 JSON파일을 장소 데이터로 변환하여 차곡차곡 정리합니다.
+    public func sortPlaces(places: JSON) {
+        for i in 0..<places.count {
+            self.places.append(Place(id: places["places"][i]["_id"].string!,
+                                     name: places["places"][i]["name"].string!,
+                                     location: places["places"][i]["location"].string!,
+                                     description: places["places"][i]["description"].string!))
+        }
+    }
+    
+    /// 장소 정보들을 출력합니다.
+    public func debugPlace() -> Void {
+        LOG(places)
+    }
+    
+    /// Place ID를 통해 장소의 이름을 반환합니다.
     public func getMatchedPlaceName(id: String) -> String {
         var placeName = ""
         for place in places {
@@ -67,17 +86,25 @@ public class PlaceAPI: ObservableObject {
         return placeName
     }
     
-    public func getPlace(name: String) -> Place {
-        var plc = Place()
+    /// Place ID를 통해 장소를 반환합니다.
+    public func getMatchedPlace(id: String) -> Place {
         for place in places {
-            if(place.name == name) {
-                plc = place
+            if(place.id == id) {
+                return place
             }
         }
-        return plc
+        return Place()
     }
     
-    
+    /// 장소 이름을 통해 장소를 반환합니다.
+    public func getMatchedPlace(name: String) -> Place {
+        for place in places {
+            if(place.name == name) {
+                return place
+            }
+        }
+        return Place()
+    }
 }
 
 
