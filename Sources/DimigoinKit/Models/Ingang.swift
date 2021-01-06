@@ -23,6 +23,19 @@ public struct Ingang: Hashable, Codable {
     public var applicants: [Applicant] = []
     public var title: String = ""
     public var timeString: String = ""
+    public func getApplicantStringList() -> String {
+        var str = ""
+        for i in 0...1 {
+            for applicant in applicants {
+                str += "\(applicant.name)"
+                if i != applicants.count {
+                    str += " "
+                }
+            }
+            
+        }
+        return str
+    }
 }
 
 /// 인강 신청자 모델
