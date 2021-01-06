@@ -25,15 +25,13 @@ public struct Ingang: Hashable, Codable {
     public var timeString: String = ""
     public func getApplicantStringList() -> String {
         var str = ""
-        for i in 0...1 {
-            for applicant in applicants {
-                str += "\(applicant.name)"
-                if i != applicants.count {
-                    str += " "
-                }
+        for applicant in applicants {
+            str += "\(applicant.name)"
+            if i != applicants.count {
+                str += " "
             }
-            
         }
+
         return str
     }
 }
