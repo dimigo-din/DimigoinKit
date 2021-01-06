@@ -17,9 +17,12 @@ public enum IngangTime: String, Hashable, Codable {
 
 /// 인강 모델
 public struct Ingang: Hashable, Codable {
-    var date: String = ""
-    var time: IngangTime
-    var applicants: [Applicant] = []
+    public var date: String = ""
+    public var time: IngangTime
+    public var isApplied: Bool = false
+    public var applicants: [Applicant] = []
+    public var title: String = ""
+    public var timeString: String = ""
 }
 
 /// 인강 신청자 모델
@@ -49,6 +52,7 @@ public class IngangAPI: ObservableObject {
     ]
     
     public var tokenAPI = TokenAPI()
+    public var userAPI = UserAPI()
     public var weeklyTicketCount: Int = 0
     public var weeklyUsedTicket: Int = 0
     public var weeklyRemainTicket: Int = 0
@@ -56,6 +60,7 @@ public class IngangAPI: ObservableObject {
     
     public init() {
         self.getIngangStatus()
+        self.setIngangTitles()
     }
     
     /// 신청자를 받아서 인강에 차곡차곡 정리합니다.
@@ -75,10 +80,38 @@ public class IngangAPI: ObservableObject {
                 ingangs[1].applicants.append(newApplicant)
             }
         }
+        
+            
     }
+    /// 인강 신청자 내역 중 자신의 이름이 있는지 검사하고, 맞다면 신청된 상태로 만듭니다.
+    public func checkIsApplied() {
+        for i in 0..<ingangs.count {
+            for applicant in ingangs[i].applicants {
+                if(applicant.name == userAPI.user.name) {
+                    print("😍😍😍")
+                    ingangs[i].isApplied = true
+                }
+            }
+        }
+    }
+    
+    /// 인강 신청자 내역을 비웁니다.
     public func clearApplicantList() {
         ingangs[0].applicants.removeAll()
         ingangs[1].applicants.removeAll()
+    }
+    
+    /// 인강의 이름을 설정합니다.
+    public func setIngangTitles() {
+        for i in 0...1 {
+            ingangs[i].timeString = "\(ingangTime[i])"
+            if(ingangs[i].time == .NSS1) {
+                ingangs[i].title = "야간자율학습 1타임"
+            }
+            else if(ingangs[i].time == .NSS2) {
+                ingangs[i].title = "야간자율학습 2타임"
+            }
+        }
     }
     
     /// 모든 인강정보(티켓, 신청자) 조회 ([GET] /ingang-application/status)
@@ -97,6 +130,8 @@ public class IngangAPI: ObservableObject {
                     self.weeklyRemainTicket = json["weeklyRemainTicket"].int!
                     self.ingangMaxApplier = json["ingangMaxApplier"].int!
                     self.sortApplicants(applicants: json["applicationsInClass"])
+                    self.setIngangTitles()
+                    self.checkIsApplied()
                     self.debugIngangs()
                 default:
                     if debugMode {
@@ -208,7 +243,6 @@ public class IngangAPI: ObservableObject {
 
 /// 야자 1, 2타임 시간
 public let ingangTime = [
-    "",
     "19:50 - 21:10",
     "21:30 - 22:30"
 ]
