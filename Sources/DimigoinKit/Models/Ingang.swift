@@ -25,13 +25,12 @@ public struct Ingang: Hashable, Codable {
     public var timeString: String = ""
     public func getApplicantStringList() -> String {
         var str = ""
-        for applicant in applicants {
-            str += "\(applicant.name)"
-            if i != applicants.count {
+        for i in 0..<applicants.count {
+            str += "\(applicants[i].name)"
+            if  i != applicants.count {
                 str += " "
             }
         }
-
         return str
     }
 }
@@ -99,7 +98,6 @@ public class IngangAPI: ObservableObject {
         for i in 0..<ingangs.count {
             for applicant in ingangs[i].applicants {
                 if(applicant.name == userAPI.user.name) {
-                    print("😍😍😍")
                     ingangs[i].isApplied = true
                 }
             }

@@ -67,9 +67,9 @@ public class MealAPI: ObservableObject {
                 case 200:
                     let json = JSON(response.value ?? "")
                     
-                    self.meals[weekDay.rawValue-1].breakfast = self.bindingMenus(menu: json["meal"]["breakfast"])
-                    self.meals[weekDay.rawValue-1].lunch = self.bindingMenus(menu: json["meal"]["breakfast"])
-                    self.meals[weekDay.rawValue-1].dinner = self.bindingMenus(menu: json["meal"]["breakfast"])
+                    self.meals[weekDay.rawValue-1].breakfast = bindingMenus(menu: json["meal"]["breakfast"])
+                    self.meals[weekDay.rawValue-1].lunch = bindingMenus(menu: json["meal"]["lunch"])
+                    self.meals[weekDay.rawValue-1].dinner = bindingMenus(menu: json["meal"]["dinner"])
 //                    self.dubugMeal()
                 case 404:
                     self.meals[weekDay.rawValue-1].breakfast = "급식 정보가 없습니다."
@@ -96,22 +96,24 @@ public class MealAPI: ObservableObject {
         }
     }
     
-    /// 모든 메뉴를 한개의 문자열로 묶습니다.
-    public func bindingMenus(menu json: JSON) -> String{
-        var str = ""
-        if(json.count == 0) {
-            return "급식 정보가 없습니다."
-        }
-        for i in 0..<json.count {
-            str += json[i].string!
-            if(i != json.count - 1) {
-                str += " | "
-            }
-        }
-        return str
-    }
+    
+
 }
 
+/// 모든 메뉴를 한개의 문자열로 묶습니다.
+public func bindingMenus(menu json: JSON) -> String{
+    var str = ""
+    if(json.count == 0) {
+        return "급식 정보가 없습니다."
+    }
+    for i in 0..<json.count {
+        str += json[i].string!
+        if(i != json.count - 1) {
+            str += " | "
+        }
+    }
+    return str
+}
 /// 급식 모델에서 끼니별로 급식을 반환합니다.
 public func getMealMenu(meal: Dimibob, mealType: MealType) -> String{
     switch mealType {
