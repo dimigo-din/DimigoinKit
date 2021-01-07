@@ -1,8 +1,9 @@
 //
-//  SwiftUIView.swift
-//  
+//  Debug.swift
+//  dimigoin
 //
-//  Created by 변경민 on 2020/11/20.
+//  Created by 변경민 on 2021/01/07.
+//  Copyright © 2021 seohun. All rights reserved.
 //
 
 import Foundation
