@@ -10,17 +10,20 @@ import Alamofire
 import SwiftyJSON
 
 public struct Notice: Hashable, Codable, Identifiable {
-    public init(title: String, content: String) {
+    public init(title: String, content: String, targetGrade: [Int]) {
         self.title = title
         self.content = content
+        self.targetGrade = targetGrade
     }
     public init() {
         self.title = "-"
         self.content = "-"
+        self.targetGrade = []
     }
     public var id = UUID()
     public var title: String
     public var content: String
+    public var targetGrade: [Int]
 }
 
 /// 디미고인 공지사항 관련 API
@@ -46,7 +49,9 @@ public class NoticeAPI: ObservableObject {
                 case 200:
                     let json = JSON(response.value!!)
                     for i in 0..<json.count {
-                        self.notices.append(Notice(title: json["notices"][i]["title"].string!, content: json["notices"][i]["content"].string!))
+                        self.notices.append(Notice(title: json["notices"][i]["title"].string!,
+                                                   content: json["notices"][i]["content"].string!,
+                                                   targetGrade: self.getTargetGrade(json: json["notices"][i]["targetGrade"])))
                     }
                     self.debugNotice()
                 default:
@@ -85,15 +90,25 @@ public class NoticeAPI: ObservableObject {
     
     /// 모든 공지사항 중 자신의 학년에 맞는 공지사항만 추려내고 차곡차곡 정리합니다. ㅎㅎ
     public func sortNotices(notices: JSON) {
-        for i in 0..<notices["notices"].count {
+        for i in (0..<notices["notices"].count).reversed() {
             for j in 0..<notices["notices"][i]["targetGrade"].count {
                 if(notices["notices"][i]["targetGrade"][j].int! == userAPI.user.grade) {
-                    self.notices.append(Notice(title: notices["notices"][i]["title"].string!, content: notices["notices"][i]["content"].string!))
+                    self.notices.append(Notice(title: notices["notices"][i]["title"].string!,
+                                               content: notices["notices"][i]["content"].string!,
+                                               targetGrade: getTargetGrade(json: notices["notices"][i]["targetGrade"])))
                 }
             }
             
         }
         debugNotice()
+    }
+    
+    public func getTargetGrade(json: JSON) -> [Int] {
+        var targetGrade: [Int] = []
+        for i in 0..<json.count {
+            targetGrade.append(json[i].int!)
+        }
+        return targetGrade
     }
     
     /// 공지사항을 출력합니다.
