@@ -109,11 +109,8 @@ public class TokenAPI: ObservableObject {
         UserDefaults.standard.setValue(self.refreshToken, forKey: "refreshToken")
         
         // for dimigoin App service only
-        print("Token saved to appgroup")
         UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.accessToken, forKey: "accessToken")
         UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.refreshToken, forKey: "refreshToken")
-        
-        
     }
     
     /// 저장된 토큰을 불러옵니다.

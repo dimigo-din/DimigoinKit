@@ -58,7 +58,7 @@ public class NoticeAPI: ObservableObject {
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
-                    self.getCurrentNotice()
+//                    self.getCurrentNotice()
                 }
             }
         }
@@ -84,7 +84,7 @@ public class NoticeAPI: ObservableObject {
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
-                    self.getCurrentNotice()
+//                    self.getCurrentNotice()
                 }
             }
         }

@@ -63,7 +63,7 @@ public class AttendanceLogAPI: ObservableObject {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    self.setMyLocation(place: place)
+//                    self.setMyLocation(place: place)
                 }
             }
         }
@@ -95,7 +95,7 @@ public class AttendanceLogAPI: ObservableObject {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    self.setMyLocation(place: place)
+//                    self.setMyLocation(place: place)
                 }
             }
         }
@@ -120,7 +120,7 @@ public class AttendanceLogAPI: ObservableObject {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    self.getClassmatesStatus()
+//                    self.getClassmatesStatus()
                 }
             }
         }
@@ -153,7 +153,7 @@ public class AttendanceLogAPI: ObservableObject {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    self.getMyCurrentLocation()
+//                    self.getMyCurrentLocation()
                 }
             }
         }

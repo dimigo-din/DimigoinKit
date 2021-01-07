@@ -158,7 +158,7 @@ public class IngangAPI: ObservableObject {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    self.getIngangStatus()
+//                    self.getIngangStatus()
                 
                 }
             }
@@ -200,7 +200,7 @@ public class IngangAPI: ObservableObject {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    ingangStatus = self.applyIngang(time: time)
+//                    ingangStatus = self.applyIngang(time: time)
                 }
             }
         }
@@ -242,7 +242,7 @@ public class IngangAPI: ObservableObject {
                         debugPrint(response)
                     }
                     self.tokenAPI.refreshTokens()
-                    ingangStatus = self.applyIngang(time: time)
+//                    ingangStatus = self.cancelIngang(time: time)
                 }
             }
         }

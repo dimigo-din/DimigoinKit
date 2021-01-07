@@ -37,6 +37,7 @@ public class UserAPI: ObservableObject {
     public init() {
         getUserData()
         getUserTicket()
+        saveUserData()
     }
     
     /// http://edison.dimigo.hs.kr/user/me
@@ -60,6 +61,7 @@ public class UserAPI: ObservableObject {
                     self.user.number = json["identity"]["number"].int!
                     self.user.serial = json["identity"]["serial"].int!
                     self.user.photo = json["identity"]["photo"][0].string ?? ""
+                    self.saveUserData()
                     self.getUserPhoto()
                     LOG("User num : \(self.user.serial)")
                 default:
@@ -108,6 +110,13 @@ public class UserAPI: ObservableObject {
     /// 사용자의 학번과 이름 문자열을 반환합니다. 예) 1234 홍길동
     public func getUserNumberAndName() -> String {
         return "\(self.user.number) \(self.user.name)"
+    }
+    
+    /// 사용자의 학년, 반을 로컬에 저장합니다.(위젯)
+    public func saveUserData() {
+        // for dimigoin App service only
+        UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.user.grade, forKey: "user.grade")
+        UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.user.klass, forKey: "user.klass")
     }
 }
 

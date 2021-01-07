@@ -79,7 +79,7 @@ public class MealAPI: ObservableObject {
 //                    self.dubugMeal()
                 default:
                     self.tokenAPI.refreshTokens()
-                    self.getMeals(from: weekDay)
+//                    self.getMeals(from: weekDay)
                 }
             }
         }

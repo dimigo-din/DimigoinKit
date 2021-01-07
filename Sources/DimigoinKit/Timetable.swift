@@ -115,7 +115,6 @@ public class TimetableAPI: ObservableObject {
                                                      ["-", "-", "-", "-", "-", "-", "-"],
                                                      ["-", "-", "-", "-", "-", "-", "-"],
                                                      ["-", "-", "-", "-", "-", "-", "-"]])]]
-
         return data[grade-1][klass-1]
     }
 }

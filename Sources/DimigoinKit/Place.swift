@@ -55,7 +55,7 @@ public class PlaceAPI: ObservableObject {
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
-                    self.getAllPlaces()
+//                    self.getAllPlaces()
                 }
             }
         }
