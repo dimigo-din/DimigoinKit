@@ -47,8 +47,9 @@ public class AttendanceLogAPI: ObservableObject {
             "place": place.id,
             "remark": place.location
         ]
-        let url = "http://edison.dimigo.hs.kr/attendance-log"
-        AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
+        let endPoint = "/attendance-log"
+        let method: HTTPMethod = .post
+        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
@@ -78,8 +79,9 @@ public class AttendanceLogAPI: ObservableObject {
             "place": place.id,
             "remark": remark
         ]
-        let url = "http://edison.dimigo.hs.kr/attendance-log"
-        AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
+        let endPoint = "/attendance-log"
+        let method: HTTPMethod = .post
+        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
@@ -105,8 +107,9 @@ public class AttendanceLogAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "http://edison.dimigo.hs.kr/attendance-log/class-status/date/\(getToday8DigitDateString())/grade/\(userAPI.user.grade)/class/\(userAPI.user.klass)"
-        AF.request(url, method: .get, encoding: URLEncoding.default, headers: headers).response { response in
+        let endPoint = "/attendance-log/class-status/date/\(getToday8DigitDateString())/grade/\(userAPI.user.grade)/class/\(userAPI.user.klass)"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
@@ -136,8 +139,9 @@ public class AttendanceLogAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "http://edison.dimigo.hs.kr/attendance-log/my-status"
-        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+        let endPoint = "/attendance-log/my-status"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:

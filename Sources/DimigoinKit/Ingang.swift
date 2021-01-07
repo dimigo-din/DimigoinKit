@@ -128,8 +128,9 @@ public class IngangAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "http://edison.dimigo.hs.kr/ingang-application/status"
-        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+        let endPoint = "/ingang-application/status"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
@@ -163,9 +164,10 @@ public class IngangAPI: ObservableObject {
         let parameters: [String: String] = [
             "time": "\(time.rawValue)"
         ]
-        let url = "http://edison.dimigo.hs.kr/ingang-application"
+        let endPoint = "/ingang-application"
+        let method: HTTPMethod = .post
         var ingangStatus: IngangStatus = .none
-        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
+        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200: //success
@@ -204,9 +206,10 @@ public class IngangAPI: ObservableObject {
         let parameters: [String: String] = [
             "time": "\(time.rawValue)"
         ]
-        let url = "http://edison.dimigo.hs.kr/ingang-application"
+        let endPoint = "/ingang-application"
+        let method: HTTPMethod = .delete
         var ingangStatus: IngangStatus = .none
-        AF.request(url, method: .delete, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
+        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200: //success

@@ -43,8 +43,9 @@ public class PlaceAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "http://edison.dimigo.hs.kr/place"
-        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+        let endPoint = "/place"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:

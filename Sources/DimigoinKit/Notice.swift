@@ -42,8 +42,9 @@ public class NoticeAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "http://edison.dimigo.hs.kr/notice/current"
-        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+        let endPoint = "/notice/current"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
@@ -70,8 +71,9 @@ public class NoticeAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "http://edison.dimigo.hs.kr/notice"
-        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+        let endPoint = "/notice"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:

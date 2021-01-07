@@ -46,8 +46,9 @@ public class UserAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(tokenAPI.accessToken)"
         ]
-        let url: String = "http://edison.dimigo.hs.kr/user/me"
-        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+        let endPoint = "/user/me"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
@@ -76,8 +77,9 @@ public class UserAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "http://edison.dimigo.hs.kr/ingang-application/status"
-        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+        let endPoint = "/ingang-application/status"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:

@@ -60,8 +60,9 @@ public class MealAPI: ObservableObject {
         let headers: HTTPHeaders = [
             "Authorization":"Bearer \(tokenAPI.accessToken)"
         ]
-        let url = "http://edison.dimigo.hs.kr/meal/\(get8DigitDateString(weekday: weekDay))"
-        AF.request(url, method: .get, encoding: JSONEncoding.default, headers: headers).responseData { response in
+        let endPoint = "/meal/\(get8DigitDateString(weekday: weekDay))"
+        let method: HTTPMethod = .get
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).responseData { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:

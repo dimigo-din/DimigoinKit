@@ -1,10 +1,2 @@
-import SwiftUI
-import Alamofire
-import SwiftyJSON
-
-public class DimigoinKit {
-    @Published var mealAPI: MealAPI = MealAPI()
-    init() {
-        
-    }
-}
+/// API 주소
+public var rootURL: String = "http://edison.dimigo.hs.kr"
