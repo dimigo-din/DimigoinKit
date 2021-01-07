@@ -104,6 +104,16 @@ public class IngangAPI: ObservableObject {
         }
     }
     
+    /// 신청한 인강이 하나 이상이면 true, 아니면 false를 반환합니다.
+    public func isAppliedAnyIngang() -> Bool {
+        for i in 0..<ingangs.count {
+            if(ingangs[i].isApplied == true){
+                return true
+            }
+        }
+        return false
+    }
+    
     /// 인강 신청자 내역을 비웁니다.
     public func clearApplicantList() {
         ingangs[0].applicants.removeAll()
@@ -138,7 +148,7 @@ public class IngangAPI: ObservableObject {
                     self.weeklyTicketCount = json["weeklyTicketCount"].int!
                     self.weeklyUsedTicket = json["weeklyUsedTicket"].int!
                     self.weeklyRemainTicket = json["weeklyRemainTicket"].int!
-                    self.ingangMaxApplier = json["ingangMaxApplier"].int!
+                    self.ingangMaxApplier = json["ingangMaxApplier"].int ?? 6
                     self.sortApplicants(applicants: json["applicationsInClass"])
                     self.setIngangTitles()
                     self.checkIsApplied()

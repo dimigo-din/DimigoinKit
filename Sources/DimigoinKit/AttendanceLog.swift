@@ -141,7 +141,7 @@ public class AttendanceLogAPI: ObservableObject {
         ]
         let endPoint = "/attendance-log/my-status"
         let method: HTTPMethod = .get
-        AF.request(rootURL+endPoint, method: .get, encoding: JSONEncoding.default, headers: headers).response { response in
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:

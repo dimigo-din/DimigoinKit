@@ -26,6 +26,7 @@ public class TokenAPI: ObservableObject {
     
     public init() {
         checkTokenStatus()
+        saveTokens()
     }
     
     /// Username과 Password를 설정
@@ -106,6 +107,13 @@ public class TokenAPI: ObservableObject {
         LOG("save tokens")
         UserDefaults.standard.setValue(self.accessToken, forKey: "accessToken")
         UserDefaults.standard.setValue(self.refreshToken, forKey: "refreshToken")
+        
+        // for dimigoin App service only
+        print("Token saved to appgroup")
+        UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.accessToken, forKey: "accessToken")
+        UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.refreshToken, forKey: "refreshToken")
+        
+        
     }
     
     /// 저장된 토큰을 불러옵니다.
@@ -130,6 +138,10 @@ public class TokenAPI: ObservableObject {
         LOG("Remove tokens")
         UserDefaults.standard.removeObject(forKey: "accessToken")
         UserDefaults.standard.removeObject(forKey: "refreshToken")
+        
+        // for dimigoin App service only
+        UserDefaults(suiteName: "group.com.dimigoin.v3")?.removeObject(forKey: "accessToken")
+        UserDefaults(suiteName: "group.com.dimigoin.v3")?.removeObject(forKey: "refreshToken")
         self.tokenStatus = .none
     }
     

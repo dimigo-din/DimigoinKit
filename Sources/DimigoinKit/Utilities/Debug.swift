@@ -8,7 +8,7 @@
 
 import Foundation
 
-public var debugMode: Bool = true
+public var debugMode: Bool = false
 
 public func LOG(line: Int = #line, funcname: String = #function, _ output:Any...) {
     if debugMode {
