@@ -67,7 +67,7 @@ public class PlaceAPI: ObservableObject {
             self.places.append(Place(id: places["places"][i]["_id"].string!,
                                      name: places["places"][i]["name"].string!,
                                      location: places["places"][i]["location"].string!,
-                                     description: places["places"][i]["description"].string!))
+                                     description: places["places"][i]["description"].string ?? ""))
         }
     }
     
