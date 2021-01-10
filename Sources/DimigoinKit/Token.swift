@@ -15,6 +15,11 @@ public enum TokenStatus {
     case none
 }
 
+public enum TokenError: Error {
+    case authFailed
+    case unknown
+}
+
 /// 디미고인 유저 토큰 관련
 public class TokenAPI: ObservableObject {
     @Published public var accessToken: String = ""
@@ -66,6 +71,32 @@ public class TokenAPI: ObservableObject {
         }
     }
     
+    public func getTokens(_ username: String, _ password: String, completion: @escaping (Result<(accessToken: String, refreshToken: String), TokenError>) -> Void) {
+        LOG("get token")
+        let parameters: [String: String] = [
+            "username": "\(username)",
+            "password": "\(password)"
+        ]
+        let endPoint = "/auth"
+        let method: HTTPMethod = .post
+        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default).response { response in
+            if let status = response.response?.statusCode {
+                switch(status) {
+                case 200:
+                    let json = JSON(response.value!!)
+                    let accessToken = json["accessToken"].string!
+                    let refreshToken = json["refreshToken"].string!
+                    self.debugToken()
+                    self.saveTokens()
+                    self.tokenStatus = .exist
+                    completion(.success((accessToken, refreshToken)))
+                case 401: completion(.failure(.authFailed))
+                default: completion(.failure(.unknown))
+                }
+            }
+        }
+    }
+    
     /// http://edison.dimigo.hs.kr/auth/refresh
     /// 토큰을 새로고침 합니다.([POST] /auth/refresh)
     public func refreshTokens() {
@@ -109,8 +140,8 @@ public class TokenAPI: ObservableObject {
         UserDefaults.standard.setValue(self.refreshToken, forKey: "refreshToken")
         
         // for dimigoin App service only
-        UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.accessToken, forKey: "accessToken")
-        UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.refreshToken, forKey: "refreshToken")
+        UserDefaults(suiteName: appGroupName)?.setValue(self.accessToken, forKey: "accessToken")
+        UserDefaults(suiteName: appGroupName)?.setValue(self.refreshToken, forKey: "refreshToken")
     }
     
     /// 저장된 토큰을 불러옵니다.
@@ -137,10 +168,21 @@ public class TokenAPI: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "refreshToken")
         
         // for dimigoin App service only
-        UserDefaults(suiteName: "group.com.dimigoin.v3")?.removeObject(forKey: "accessToken")
-        UserDefaults(suiteName: "group.com.dimigoin.v3")?.removeObject(forKey: "refreshToken")
+        UserDefaults(suiteName: appGroupName)?.removeObject(forKey: "accessToken")
+        UserDefaults(suiteName: appGroupName)?.removeObject(forKey: "refreshToken")
         self.tokenStatus = .none
     }
     
 }
 
+
+/// 토큰을 기기에 저장합니다.
+public func saveTokens(_ accessToken: String, _ refreshToken: String) {
+    LOG("save tokens")
+    UserDefaults.standard.setValue(accessToken, forKey: "accessToken")
+    UserDefaults.standard.setValue(refreshToken, forKey: "refreshToken")
+    
+    // for dimigoin App service only
+    UserDefaults(suiteName: appGroupName)?.setValue(accessToken, forKey: "accessToken")
+    UserDefaults(suiteName: appGroupName)?.setValue(refreshToken, forKey: "refreshToken")
+}
