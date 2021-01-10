@@ -92,7 +92,7 @@ public class UserAPI: ObservableObject {
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
-                    self.getUserTicket()
+//                    self.getUserTicket()
                 }
             }
         }
@@ -117,6 +117,10 @@ public class UserAPI: ObservableObject {
         // for dimigoin App service only
         UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.user.grade, forKey: "user.grade")
         UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.user.klass, forKey: "user.klass")
+    }
+    
+    public func isCreditMember() -> Bool{
+        return creditMember.contains(self.user.name) ? true : false
     }
 }
 
