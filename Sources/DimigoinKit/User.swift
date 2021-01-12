@@ -115,8 +115,8 @@ public class UserAPI: ObservableObject {
     /// 사용자의 학년, 반을 로컬에 저장합니다.(위젯)
     public func saveUserData() {
         // for dimigoin App service only
-        UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.user.grade, forKey: "user.grade")
-        UserDefaults(suiteName: "group.com.dimigoin.v3")?.setValue(self.user.klass, forKey: "user.klass")
+        UserDefaults(suiteName: appGroupName)?.setValue(self.user.grade, forKey: "user.grade")
+        UserDefaults(suiteName: appGroupName)?.setValue(self.user.klass, forKey: "user.klass")
     }
     
     public func isCreditMember() -> Bool{

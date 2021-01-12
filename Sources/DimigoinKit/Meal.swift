@@ -85,8 +85,18 @@ public class MealAPI: ObservableObject {
         }
     }
     
-    /// 오늘의 급식을 조회합니다.
+    /// 오늘의 급식을 조회합니다. (저녁 10시가 넘어가면 다음날 급식을 반환합니다.)
     public func getTodayMeal() -> Dimibob{
+        let hour = Calendar.current.component(.hour, from: Date())
+        if Int(hour) >= 22 { // 오후 9시 ~ 오전 9시 -> 아침
+            if getTodayDayOfWeekInt() == 7 {
+                return meals[getTodayDayOfWeekInt()-1]
+            }
+            else {
+                return meals[getTodayDayOfWeekInt()]
+            }
+            
+        }
         return meals[getTodayDayOfWeekInt()-1]
     }
     
