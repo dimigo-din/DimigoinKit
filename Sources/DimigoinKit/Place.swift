@@ -52,6 +52,10 @@ public class PlaceAPI: ObservableObject {
                     let json = JSON(response.value!!)
                     self.sortPlaces(places: json)
                     self.debugPlace()
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()

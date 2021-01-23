@@ -56,6 +56,10 @@ public class AttendanceLogAPI: ObservableObject {
                     LOG("set user location to \(place.name)")
                 case 400:
                     LOG("Place 못찾음")
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 case 423:
                     LOG("출입인증을 할 수 있는 시간이 아님")
                 default:
@@ -88,6 +92,10 @@ public class AttendanceLogAPI: ObservableObject {
                     LOG("set user location to \(place.name)")
                 case 400:
                     LOG("Place 못찾음")
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 case 423:
                     LOG("출입인증을 할 수 있는 시간이 아님")
                 default:
@@ -115,6 +123,10 @@ public class AttendanceLogAPI: ObservableObject {
                 case 200:
                     let json = JSON(response.value!!)
                     self.sortAttendances(attendances: json)
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 default:
                     if debugMode {
                         debugPrint(response)
@@ -148,6 +160,10 @@ public class AttendanceLogAPI: ObservableObject {
                     let json = JSON(response.value!!)
                     self.myCurrentLocation = self.placeAPI.getMatchedPlace(name: json["myLogs"][0]["place"]["name"].string ?? "교실")
                     self.debugMyLocation()
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 default:
                     if debugMode {
                         debugPrint(response)

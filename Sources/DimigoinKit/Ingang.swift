@@ -153,6 +153,10 @@ public class IngangAPI: ObservableObject {
                     self.setIngangTitles()
                     self.checkIsApplied()
                     self.debugIngangs()
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 default:
                     if debugMode {
                         debugPrint(response)
@@ -183,6 +187,10 @@ public class IngangAPI: ObservableObject {
                 case 200: //success
                     ingangStatus = .success
                     LOG("인강 신청 성공 : 200")
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 case 403: // 최대 인강실 인원을 초과했습니다.
                     ingangStatus = .full
                     LOG("인강 신청 실패 : 403")
@@ -225,6 +233,10 @@ public class IngangAPI: ObservableObject {
                 case 200: //success
                     ingangStatus = .success
                     LOG("인강 취소 성공 : 200")
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 case 403: // 최대 인강실 인원을 초과했습니다.
                     ingangStatus = .full
                     LOG("인강 취소 실패 : 403")

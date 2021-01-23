@@ -55,6 +55,10 @@ public class NoticeAPI: ObservableObject {
                                                    targetGrade: self.getTargetGrade(json: json["notices"][i]["targetGrade"])))
                     }
                     self.debugNotice()
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
@@ -81,6 +85,10 @@ public class NoticeAPI: ObservableObject {
 //                    print(json)
                     self.sortNotices(notices: json)
 //                    self.debugNotice()
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()

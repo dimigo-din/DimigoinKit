@@ -115,13 +115,16 @@ public class TokenAPI: ObservableObject {
                     self.refreshToken = json["refreshToken"].string!
                     self.debugToken()
                     self.saveTokens()
-                    self.tokenStatus = .exist
+                    withAnimation() {
+                        self.tokenStatus = .exist
+                    }
+                case 400:
+                    LOG("어딧냐 토큰??")
                 default:
                     LOG("refresh token failed")
                     if debugMode {
                         debugPrint(response)
                     }
-                    self.refreshTokens()
                 }
             }
         }
@@ -153,7 +156,7 @@ public class TokenAPI: ObservableObject {
     
     /// 저장된 토큰 유무를 확인합니다. (= 로그인 이력 조회)
     public func checkTokenStatus(){
-        if UserDefaults.standard.string(forKey: "accessToken") != nil {
+        if UserDefaults.standard.string(forKey: "accessToken") != nil && UserDefaults.standard.string(forKey: "refreshToken") != nil {
             self.loadTokens()
             self.tokenStatus = .exist
         } else {
@@ -164,13 +167,17 @@ public class TokenAPI: ObservableObject {
     /// 저장된 토큰을 삭제합니다. (로그아웃)
     public func clearTokens() {
         LOG("Remove tokens")
+        
         UserDefaults.standard.removeObject(forKey: "accessToken")
         UserDefaults.standard.removeObject(forKey: "refreshToken")
+        
         
         // for dimigoin App service only
         UserDefaults(suiteName: appGroupName)?.removeObject(forKey: "accessToken")
         UserDefaults(suiteName: appGroupName)?.removeObject(forKey: "refreshToken")
-        self.tokenStatus = .none
+        withAnimation() {
+            self.tokenStatus = .none
+        }
     }
     
 }

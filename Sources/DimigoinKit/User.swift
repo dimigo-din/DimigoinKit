@@ -54,7 +54,7 @@ public class UserAPI: ObservableObject {
                 switch(status) {
                 case 200:
                     let json = JSON(response.value!!)
-                    self.user.idx = json["identity"]["idx"].int!
+                    self.user.idx = json["identity"]["idx"].int ?? 1111
                     self.user.name = json["identity"]["name"].string!
                     self.user.grade = json["identity"]["grade"].int!
                     self.user.klass = json["identity"]["class"].int!
@@ -64,9 +64,12 @@ public class UserAPI: ObservableObject {
                     self.saveUserData()
                     self.getUserPhoto()
                     LOG("User num : \(self.user.serial)")
-                default:
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
                     self.tokenAPI.refreshTokens()
-                    self.getUserData()
+                default:
+                    LOG("앙댕")
                 }
             }
         }
@@ -89,6 +92,10 @@ public class UserAPI: ObservableObject {
                     self.user.weeklyTicketCount = json["weeklyTicketCount"].int!
                     self.user.weeklyUsedTicket = json["weeklyUsedTicket"].int!
                     self.user.weeklyRemainTicket = self.user.weeklyTicketCount - self.user.weeklyUsedTicket
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
+                    self.tokenAPI.refreshTokens()
                 default:
                     debugPrint(response)
                     self.tokenAPI.refreshTokens()
@@ -97,6 +104,11 @@ public class UserAPI: ObservableObject {
             }
         }
     }
+    /// 사용자의 학년, 반을 문자열로 반환합니다.
+    public func getUserStringClass() -> String{
+        return "\(user.grade)학년 \(user.klass)반"
+    }
+    
     /// 사용자의 프로필 사진을 불러옵니다.
     public func getUserPhoto() {
         self.userPhoto = WebImage(url: URL(string: "https://api.dimigo.hs.kr/user_photo/\(user.photo)"))

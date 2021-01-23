@@ -36,7 +36,6 @@ public enum MealType {
 /// 디미고인 급식 관련 API
 public class MealAPI: ObservableObject {
     @Published public var meals = [Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob()]
-    public var tokenAPI: TokenAPI = TokenAPI()
     
     public init() {
         getWeeklyMeals()
@@ -57,12 +56,9 @@ public class MealAPI: ObservableObject {
     /// 같은 주의 N요일의 급식을 가져옵니다.
     public func getMeals(from weekDay: Weekday){
         LOG("get meals from \(get8DigitDateString(weekday: weekDay))")
-        let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.accessToken)"
-        ]
         let endPoint = "/meal/\(get8DigitDateString(weekday: weekDay))"
         let method: HTTPMethod = .get
-        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).responseData { response in
+        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default).responseData { response in
             if let status = response.response?.statusCode {
                 switch(status) {
                 case 200:
@@ -72,13 +68,16 @@ public class MealAPI: ObservableObject {
                     self.meals[weekDay.rawValue-1].lunch = bindingMenus(menu: json["meal"]["lunch"])
                     self.meals[weekDay.rawValue-1].dinner = bindingMenus(menu: json["meal"]["dinner"])
 //                    self.dubugMeal()
+                case 401:
+                    // MARK: Token Expired
+                    LOG("토큰 만료")
                 case 404:
                     self.meals[weekDay.rawValue-1].breakfast = "급식 정보가 없습니다."
                     self.meals[weekDay.rawValue-1].lunch = "급식 정보가 없습니다."
                     self.meals[weekDay.rawValue-1].dinner =  "급식 정보가 없습니다."
 //                    self.dubugMeal()
                 default:
-                    self.tokenAPI.refreshTokens()
+                    LOG("급식 가져오기 실패")
 //                    self.getMeals(from: weekDay)
                 }
             }
