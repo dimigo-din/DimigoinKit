@@ -1,11 +1,12 @@
 //
-//  File.swift
-//  
+//  DimigoinAPI.swift
+//  DimigoinKit
 //
 //  Created by 변경민 on 2021/01/26.
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 public var rootURL = "http://edison.dimigo.hs.kr"
 
@@ -13,18 +14,10 @@ public class DimigoinAPI: ObservableObject {
     @Published var accessToken = ""
     @Published var refreshToken = ""
     @Published var isFirstLogin = true
+    @Published var user = User()
 
     public init() {
-        loadSavedTokens() { result in
-            switch result {
-            case .success((let accessToken, let refreshToken)):
-                self.isFirstLogin = false
-                self.accessToken = accessToken
-                self.refreshToken = refreshToken
-            case .failure(_):
-                self.isFirstLogin = true
-            }
-        }
+        fetchAllData()
     }
     
     public func logout() {
@@ -48,6 +41,28 @@ public class DimigoinAPI: ObservableObject {
     }
     
     public func fetchAllData() {
-        
+        loadSavedTokens() { result in
+            switch result {
+            case .success((let accessToken, let refreshToken)):
+                self.isFirstLogin = false
+                self.accessToken = accessToken
+                self.refreshToken = refreshToken
+            case .failure(_):
+                self.isFirstLogin = true
+            }
+        }
+        fetchUserData(accessToken) { result in
+            switch result {
+            case .success((let user)):
+                self.user = user
+            case .failure(let error):
+                switch error {
+                case .tokenExpired:
+                    print("tokenExpired")
+                default:
+                    print("unknown")
+                }
+            }
+        }
     }
 }
