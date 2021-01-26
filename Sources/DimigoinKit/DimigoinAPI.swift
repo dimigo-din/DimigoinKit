@@ -40,7 +40,9 @@ public class DimigoinAPI: ObservableObject {
     /// 로그아웃
     public func logout() {
         removeTokens {
-            self.isFirstLogin = true
+            withAnimation() {
+                self.isFirstLogin = true
+            }
         }
     }
     
@@ -49,7 +51,9 @@ public class DimigoinAPI: ObservableObject {
         fetchTokens(username, password) { result in
             switch result {
                 case .success((let accessToken, let refreshToken)):
-                    self.isFirstLogin = false
+                    withAnimation() {
+                        self.isFirstLogin = false
+                    }
                     self.accessToken = accessToken
                     self.refreshToken = refreshToken
                     completion(true)
