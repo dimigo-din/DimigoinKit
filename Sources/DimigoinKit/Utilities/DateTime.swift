@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  Datetime.swift
+//  DimigoinKitDemo
 //
-//  Created by 변경민 on 2020/11/15.
+//  Created by 변경민 on 2021/01/26.
 //
 
 import Foundation
@@ -80,7 +80,7 @@ public func getDateString() -> String {
 }
 
 /// weekday에 따른 8 Digit date 반환(yyyyMMdd)
-public func get8DigitDateString(weekday: Weekday) -> String {
+public func get8DigitDateString(_ weekday: Weekday) -> String {
     let amount = weekday.rawValue - getTodayDayOfWeekInt()
     let calendar = Calendar.current
     let date = calendar.date(byAdding: .day, value: amount, to: Date())
@@ -96,4 +96,5 @@ public func getToday8DigitDateString() -> String {
     dateFormatter.dateFormat = "yyyy-MM-dd"
     return dateFormatter.string(from: date)
 }
+
 
