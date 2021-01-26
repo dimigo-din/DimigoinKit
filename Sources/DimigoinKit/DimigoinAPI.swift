@@ -62,7 +62,7 @@ public class DimigoinAPI: ObservableObject {
     // MARK: 급식 API 관련
     /// 오늘의 급식을 반환 합니다.
     public func getTodayMeal() -> Meal {
-        Meal()
+        meals[getTodayDayOfWeekInt()-1]
     }
     
     // MARK: 인강 API 관련

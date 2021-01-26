@@ -18,7 +18,7 @@ public struct User {
     public var klass: Int = 1
     public var number: Int = 0
     public var serial: Int = 0
-    public var photoURL: String = ""
+    public var photoURL: URL = URL(string: "https://api.dimigo.hs.kr/")!
 }
 
 /// 유저 타입(선생님, 학생)
@@ -52,7 +52,7 @@ public func fetchUserData(_ accessToken: String, completion: @escaping (Result<(
                      klass: json["identity"]["class"].int!,
                      number: json["identity"]["number"].int!,
                      serial: json["identity"]["serial"].int!,
-                     photoURL: "https://api.dimigo.hs.kr/user_photo/\(json["identity"]["photo"][0].string)")
+                     photoURL: URL(string: "https://api.dimigo.hs.kr/user_photo/\(json["identity"]["photo"][0].string!)")!)
                 completion(.success(user))
             case 401:
                 completion(.failure(.tokenExpired))
