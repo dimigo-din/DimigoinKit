@@ -17,21 +17,22 @@ public var appGroupName: String = "group.in.dimigo.ios"
 public var rootURL = "http://edison.dimigo.hs.kr"
 
 public class DimigoinAPI: ObservableObject {
-    @Published var accessToken = ""
-    @Published var refreshToken = ""
-    @Published var isFirstLogin = true
-    @Published var user = User()
-    @Published var meals = [Meal](repeating: Meal(), count: 7)
-    @Published var myPlaces: [Place] = []
-    @Published var allPlaces: [Place] = []
-    @Published var currentPlace: Place = Place()
-    @Published var ingangs: [Ingang] = [
+    @Published public var accessToken = ""
+    @Published public var refreshToken = ""
+    @Published public var isFirstLogin = true
+    @Published public var user = User()
+    @Published public var userPhoto: WebImage = WebImage(url: "")
+    @Published public var meals = [Meal](repeating: Meal(), count: 7)
+    @Published public var myPlaces: [Place] = []
+    @Published public var allPlaces: [Place] = []
+    @Published public var currentPlace: Place = Place()
+    @Published public var ingangs: [Ingang] = [
        Ingang(date: getToday8DigitDateString(), time: .NSS1, applicants: []),
        Ingang(date: getToday8DigitDateString(), time: .NSS2, applicants: [])
     ]
-    @Published var weeklyTicketCount: Int = 0
-    @Published var weeklyUsedTicket: Int = 0
-    @Published var weeklyRemainTicket: Int = 0
+    @Published public var weeklyTicketCount: Int = 0
+    @Published public var weeklyUsedTicket: Int = 0
+    @Published public var weeklyRemainTicket: Int = 0
     
     public init() {
         fetchAllData()
