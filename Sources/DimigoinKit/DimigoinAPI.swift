@@ -23,6 +23,7 @@ public class DimigoinAPI: ObservableObject {
     @Published var meals = [Meal](repeating: Meal(), count: 7)
     @Published var myPlaces: [Place] = []
     @Published var allPlaces: [Place] = []
+    @Published var currentPlace: Place = Place()
     @Published var ingangs: [Ingang] = [
        Ingang(date: getToday8DigitDateString(), time: .NSS1, applicants: []),
        Ingang(date: getToday8DigitDateString(), time: .NSS2, applicants: [])
@@ -123,11 +124,11 @@ public class DimigoinAPI: ObservableObject {
         }
     }
     
-    // MARK: 장소 API 관련
-    public func changeUserPlace(placeName: String, description: String, completion: @escaping (Result<(Bool), PlaceError>) -> Void) {
-        setUserPlace(accessToken, placeName: placeName, description: description, places: allPlaces) { result in
+    // MARK: Attendance Log API 관련
+    public func changeUserPlace(placeName: String, remark: String, completion: @escaping (Result<(Bool), AttendanceError>) -> Void) {
+        setUserPlace(accessToken, placeName: placeName, places: allPlaces, remark: remark) { result in
             switch result {
-            case .success(()):
+            case .success(_):
                 completion(.success(true))
             case .failure(let error):
                 completion(.failure(error))
@@ -197,6 +198,19 @@ public class DimigoinAPI: ObservableObject {
             switch result {
             case .success((let places)):
                 self.allPlaces = places
+            case .failure(let error):
+                switch error {
+                case .tokenExpired:
+                    print("tokenExpired")
+                default:
+                    print("unknown")
+                }
+            }
+        }
+        fetchMyCurrentPlace(accessToken, places: allPlaces, myPlaces: myPlaces) { result in
+            switch result {
+            case .success((let place)):
+                self.currentPlace = place
             case .failure(let error):
                 switch error {
                 case .tokenExpired:

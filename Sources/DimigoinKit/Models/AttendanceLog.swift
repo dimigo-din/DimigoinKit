@@ -1,14 +1,15 @@
 //
-//  File.swift
-//  
+//  AttendanceLog.swift
+//  DimigoinKit
 //
-//  Created by 변경민 on 2021/01/05.
+//  Created by 변경민 on 2021/01/26.
 //
 
 import Foundation
 import Alamofire
 import SwiftyJSON
 
+/// Attendance 모델 정의
 public struct Attendance {
     public var id: String
     var name: String
@@ -25,157 +26,126 @@ public struct Attendance {
     }
 }
 
-public class AttendanceLogAPI: ObservableObject {
-    @Published var attendances: [Attendance] = []
-    @Published var myCurrentLocation: Place = Place()
-    public var placeAPI = PlaceAPI()
-    public var userAPI = UserAPI()
-    public var tokenAPI = TokenAPI()
+/// Attendance API 에러 타입 정의
+public enum AttendanceError: Error {
+    case noSuchPlace
+    case notRightTime
+    case tokenExpired
+    case unknown
+}
     
-    public init() {
-        getMyCurrentLocation()
-//        getClassmatesStatus()
-    }
-    
-    /// 사용자의 위치를 설정합니다 ([POST] /attendance-log)
-    public func setMyLocation(place: Place) {
-        LOG("set user location")
-        let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.accessToken)"
-        ]
-        let parameters: [String: String] = [
-            "place": place.id,
-            "remark": place.location
-        ]
-        let endPoint = "/attendance-log"
-        let method: HTTPMethod = .post
-        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200:
-                    LOG("set user location to \(place.name)")
-                case 400:
-                    LOG("Place 못찾음")
-                case 401:
-                    // MARK: Token Expired
-                    LOG("토큰 만료")
-                    self.tokenAPI.refreshTokens()
-                case 423:
-                    LOG("출입인증을 할 수 있는 시간이 아님")
-                default:
-                    if debugMode {
-                        debugPrint(response)
-                    }
-                    self.tokenAPI.refreshTokens()
-//                    self.setMyLocation(place: place)
-                }
+/// 사용자의 위치를 설정합니다 ([POST] /attendance-log)
+public func setUserPlace(_ accessToken:String, placeName: String, places: [Place], completion: @escaping (Result<Bool, AttendanceError>) -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
+    ]
+    let parameters: [String: String] = [
+        "place": name2Place(name: placeName, from: places).id,
+        "remark": name2Place(name: placeName, from: places).label
+    ]
+    let endPoint = "/attendance-log"
+    let method: HTTPMethod = .post
+    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                completion(.success(true))
+            case 400:
+                completion(.failure(.noSuchPlace))
+            case 401:
+                completion(.failure(.tokenExpired))
+            case 423:
+                completion(.failure(.notRightTime))
+            default:
+                completion(.failure(.unknown))
             }
         }
     }
+}
     
-    /// 간단한 메세지와 함께 사용자의 위치를 설정합니다 ([POST] /attendance-log)
-    public func setMyLocation(place: Place, remark: String) {
-        LOG("set user location")
-        let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.accessToken)"
-        ]
-        let parameters: [String: String] = [
-            "place": place.id,
-            "remark": remark
-        ]
-        let endPoint = "/attendance-log"
-        let method: HTTPMethod = .post
-        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200:
-                    LOG("set user location to \(place.name)")
-                case 400:
-                    LOG("Place 못찾음")
-                case 401:
-                    // MARK: Token Expired
-                    LOG("토큰 만료")
-                    self.tokenAPI.refreshTokens()
-                case 423:
-                    LOG("출입인증을 할 수 있는 시간이 아님")
-                default:
-                    if debugMode {
-                        debugPrint(response)
-                    }
-                    self.tokenAPI.refreshTokens()
-//                    self.setMyLocation(place: place)
-                }
+/// 간단한 메세지와 함께 사용자의 위치를 설정합니다 ([POST] /attendance-log)
+public func setUserPlace(_ accessToken:String, placeName: String, places: [Place], remark: String, completion: @escaping (Result<Bool, AttendanceError>) -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
+    ]
+    let parameters: [String: String] = [
+        "place": name2Place(name: placeName, from: places).id,
+        "remark": remark
+    ]
+    let endPoint = "/attendance-log"
+    let method: HTTPMethod = .post
+    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                completion(.success(true))
+            case 400:
+                completion(.failure(.noSuchPlace))
+            case 401:
+                completion(.failure(.tokenExpired))
+            case 423:
+                completion(.failure(.notRightTime))
+            default:
+                completion(.failure(.unknown))
             }
         }
     }
+}
     
-    /// 사용자 교실 학생들의 현황을 불러옵니다. ([GET] /attendance-log/class-status)
-    public func getClassmatesStatus() {
-        LOG("get class mates attendance status")
-        let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.accessToken)"
-        ]
-        let endPoint = "/attendance-log/class-status/date/\(getToday8DigitDateString())/grade/\(userAPI.user.grade)/class/\(userAPI.user.klass)"
-        let method: HTTPMethod = .get
-        AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200:
-                    let json = JSON(response.value!!)
-                    self.sortAttendances(attendances: json)
-                case 401:
-                    // MARK: Token Expired
-                    LOG("토큰 만료")
-                    self.tokenAPI.refreshTokens()
-                default:
-                    if debugMode {
-                        debugPrint(response)
-                    }
-                    self.tokenAPI.refreshTokens()
-//                    self.getClassmatesStatus()
-                }
+/// 사용자 교실 학생들의 현황을 불러옵니다. ([GET] /attendance-log/class-status)
+public func fetchAttandence(_ accessToken: String, user: User, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
+    ]
+    let endPoint = "/attendance-log/class-status/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.klass)"
+    let method: HTTPMethod = .get
+    AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                let json = JSON(response.value!!)
+                completion(.success(json2AttendanceList(attendances: json["classLogs"])))
+            case 401:
+                completion(.failure(.tokenExpired))
+            default:
+                completion(.failure(.unknown))
             }
         }
     }
+}
+ 
+/// json 데이터를 Attendance List로 변환하여 반환해 줍니다.
+public func json2AttendanceList(attendances: JSON) -> [Attendance]{
+//    var attendanceList: [Attendance] = []
+//    for i in 0..<attendanceList.count {
+//        Attendance(id: attendances[i][], name: <#T##String#>, currentLocation: <#T##Place#>)
+//    }
+    return []
+}
     
-    public func sortAttendances(attendances: JSON) {
-        print(attendances)
-//        for i in 0..<attendances["classLogs"].count {
-            print(attendances["classLogs"])
-//        }
-    }
-    
-    /// 자신의 최근 위치를 조회합니다. ([GET] /attendance-log/my-status)
-    public func getMyCurrentLocation() {
-        LOG("get my current Location")
-        let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.accessToken)"
-        ]
-        let endPoint = "/attendance-log/my-status"
-        let method: HTTPMethod = .get
-        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200:
-                    let json = JSON(response.value!!)
-                    self.myCurrentLocation = self.placeAPI.getMatchedPlace(name: json["myLogs"][0]["place"]["name"].string ?? "교실")
-                    self.debugMyLocation()
-                case 401:
-                    // MARK: Token Expired
-                    LOG("토큰 만료")
-                    self.tokenAPI.refreshTokens()
-                default:
-                    if debugMode {
-                        debugPrint(response)
-                    }
-                    self.tokenAPI.refreshTokens()
-//                    self.getMyCurrentLocation()
+/// 자신의 최근 위치를 조회합니다. ([GET] /attendance-log/my-status)
+/// 정보가 없다면, 교실을 default값으로 지정합니다.
+public func fetchMyCurrentPlace(_ accessToken: String, places: [Place], myPlaces: [Place], completion: @escaping (Result<(Place),AttendanceError>) -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
+    ]
+    let endPoint = "/attendance-log/my-status"
+    let method: HTTPMethod = .get
+    AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                let json = JSON(response.value!!)
+                if let myCurrentPlace = json["myLogs"][0]["place"]["_id"].string {
+                    completion(.success(id2Place(id: myCurrentPlace, from: places)))
+                } else {
+                    completion(.success(label2Place(label: "교실", from: myPlaces)))
                 }
+            case 401:
+                completion(.failure(.tokenExpired))
+            default:
+                completion(.failure(.unknown))
             }
         }
-    }
-    
-    public func debugMyLocation() {
-        LOG(self.myCurrentLocation)
     }
 }
