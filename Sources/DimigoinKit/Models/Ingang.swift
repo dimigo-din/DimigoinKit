@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  Ingang.swift
+//  DimigoinKit
 //
-//  Created by 변경민 on 2020/11/15.
+//  Created by 변경민 on 2021/01/26.
 //
 
 import Foundation
@@ -10,33 +10,24 @@ import Alamofire
 import SwiftyJSON
 
 /// 인강 시간대 정의
-public enum IngangTime: String, Hashable, Codable {
+public enum IngangTime: String {
     case NSS1 = "NSS1"
     case NSS2 = "NSS2"
 }
 
 /// 인강 모델
-public struct Ingang: Hashable, Codable {
+public struct Ingang {
     public var date: String = ""
     public var time: IngangTime
     public var isApplied: Bool = false
     public var applicants: [Applicant] = []
+    public var maxApplier: Int = 0
     public var title: String = ""
     public var timeString: String = ""
-    public func getApplicantStringList() -> String {
-        var str = ""
-        for i in 0..<applicants.count {
-            str += "\(applicants[i].name)"
-            if  i != applicants.count {
-                str += " "
-            }
-        }
-        return str
-    }
 }
 
 /// 인강 신청자 모델
-public struct Applicant: Identifiable, Hashable, Codable {
+public struct Applicant {
     public var id = UUID()
     public var name: String = ""
     public var grade: Int = 0
@@ -45,254 +36,130 @@ public struct Applicant: Identifiable, Hashable, Codable {
     public var serial: Int = 0
 }
 
-/// Ingang Status of request
-public enum IngangStatus: Int {
-    case none = 0
-    case success = 200
-    case full = 403
-    case noIngang = 404
-    case alreadyApplied = 409
-    case timeout = 500
+/// 인강 API에러 타입 정의
+public enum IngangError: Error {
+    case full
+    case noIngang
+    case alreadyApplied
+    case timeout
+    case tokenExpired
+    case unknown
 }
-/// 디미고인 인강 관련 API
-public class IngangAPI: ObservableObject {
-    @Published public var ingangs: [Ingang] = [
-        Ingang(date: getToday8DigitDateString(), time: .NSS1, applicants: []),
-        Ingang(date: getToday8DigitDateString(), time: .NSS2, applicants: [])
+/// 모든 인강정보(티켓, 신청자) 조회 ([GET] /ingang-application/status)
+public func fetchIngang(_ accessToken: String, name: String, completion: @escaping (Result<(weeklyTicketCount: Int, weeklyUsedTicket: Int, weeklyRemainTicket: Int, ingangs: [Ingang]), defaultError>) -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
     ]
-    
-    public var tokenAPI = TokenAPI()
-    public var userAPI = UserAPI()
-    public var weeklyTicketCount: Int = 0
-    public var weeklyUsedTicket: Int = 0
-    public var weeklyRemainTicket: Int = 0
-    public var ingangMaxApplier: Int = 0
-    
-    public init() {
-        self.getIngangStatus()
-        self.setIngangTitles()
-    }
-    
-    /// 신청자를 받아서 인강에 차곡차곡 정리합니다.
-    public func sortApplicants(applicants: JSON) {
-        clearApplicantList()
-        for i in 0..<applicants.count {
-            
-            let newApplicant = Applicant(name: applicants[i]["applier"]["name"].string!,
-                                       grade: applicants[i]["applier"]["grade"].int!,
-                                       klass: applicants[i]["applier"]["class"].int!,
-                                       number: applicants[i]["applier"]["number"].int!,
-                                       serial: applicants[i]["applier"]["serial"].int!)
-            if(applicants[i]["time"] == "NSS1") {
-                ingangs[0].applicants.append(newApplicant)
-            }
-            else if(applicants[i]["time"] == "NSS2") {
-                ingangs[1].applicants.append(newApplicant)
-            }
-        }
-        
-            
-    }
-    /// 인강 신청자 내역 중 자신의 이름이 있는지 검사하고, 맞다면 신청된 상태로 만듭니다.
-    public func checkIsApplied() {
-        for i in 0..<ingangs.count {
-            for applicant in ingangs[i].applicants {
-                if(applicant.name == userAPI.user.name) {
-                    ingangs[i].isApplied = true
-                }
+    let endPoint = "/ingang-application/status"
+    let method: HTTPMethod = .get
+    AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                let json = JSON(response.value!!)
+                let weeklyTicketCount = json["weeklyTicketCount"].int!
+                let weeklyUsedTicket = json["weeklyUsedTicket"].int!
+                let weeklyRemainTicket = json["weeklyRemainTicket"].int!
+                let maxApplier = json["ingangMaxApplier"].int!
+                let ingangs = [
+                    Ingang(date: getToday8DigitDateString(),
+                           time: .NSS1,
+                           isApplied: checkIsApplied(json["applicationsInClass"], time: .NSS1, name: name),
+                           applicants: sortApplicants(applicants: json["applicationsInClass"], time: .NSS1),
+                           maxApplier: maxApplier,
+                           title: "야간자율학습 1타임",
+                           timeString: "19:50 - 21:10"),
+                    Ingang(date: getToday8DigitDateString(),
+                           time: .NSS1,
+                           isApplied: checkIsApplied(json["applicationsInClass"], time: .NSS2, name: name),
+                           applicants: sortApplicants(applicants: json["applicationsInClass"], time: .NSS2),
+                           maxApplier: maxApplier,
+                           title: "야간자율학습 2타임",
+                           timeString: "21:30 - 23:00")
+                ]
+                completion(.success((weeklyTicketCount, weeklyUsedTicket, weeklyRemainTicket, ingangs)))
+            case 401:
+                completion(.failure(.tokenExpired))
+            default:
+                completion(.failure(.unknown))
             }
         }
-    }
-    
-    /// 신청한 인강이 하나 이상이면 true, 아니면 false를 반환합니다.
-    public func isAppliedAnyIngang() -> Bool {
-        for i in 0..<ingangs.count {
-            if(ingangs[i].isApplied == true){
-                return true
-            }
-        }
-        return false
-    }
-    
-    /// 인강 신청자 내역을 비웁니다.
-    public func clearApplicantList() {
-        ingangs[0].applicants.removeAll()
-        ingangs[1].applicants.removeAll()
-    }
-    
-    /// 인강의 이름을 설정합니다.
-    public func setIngangTitles() {
-        for i in 0...1 {
-            ingangs[i].timeString = "\(ingangTime[i])"
-            if(ingangs[i].time == .NSS1) {
-                ingangs[i].title = "야간자율학습 1타임"
-            }
-            else if(ingangs[i].time == .NSS2) {
-                ingangs[i].title = "야간자율학습 2타임"
-            }
-        }
-    }
-    
-    /// 모든 인강정보(티켓, 신청자) 조회 ([GET] /ingang-application/status)
-    public func getIngangStatus() {
-        let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.accessToken)"
-        ]
-        let endPoint = "/ingang-application/status"
-        let method: HTTPMethod = .get
-        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200:
-                    let json = JSON(response.value!!)
-                    self.weeklyTicketCount = json["weeklyTicketCount"].int!
-                    self.weeklyUsedTicket = json["weeklyUsedTicket"].int!
-                    self.weeklyRemainTicket = json["weeklyRemainTicket"].int!
-                    self.ingangMaxApplier = json["ingangMaxApplier"].int ?? 6
-                    self.sortApplicants(applicants: json["applicationsInClass"])
-                    self.setIngangTitles()
-                    self.checkIsApplied()
-                    self.debugIngangs()
-                case 401:
-                    // MARK: Token Expired
-                    LOG("토큰 만료")
-                    self.tokenAPI.refreshTokens()
-                default:
-                    if debugMode {
-                        debugPrint(response)
-                    }
-                    self.tokenAPI.refreshTokens()
-//                    self.getIngangStatus()
-                
-                }
-            }
-        }
-    }
-    
-    /// 인강신청하기([POST] /ingang-application)
-    public func applyIngang(time: IngangTime) -> IngangStatus{
-        LOG("apply ingang : \(getToday8DigitDateString())-\(time.rawValue)")
-        let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.accessToken)"
-        ]
-        let parameters: [String: String] = [
-            "time": "\(time.rawValue)"
-        ]
-        let endPoint = "/ingang-application"
-        let method: HTTPMethod = .post
-        var ingangStatus: IngangStatus = .none
-        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200: //success
-                    ingangStatus = .success
-                    LOG("인강 신청 성공 : 200")
-                case 401:
-                    // MARK: Token Expired
-                    LOG("토큰 만료")
-                    self.tokenAPI.refreshTokens()
-                case 403: // 최대 인강실 인원을 초과했습니다.
-                    ingangStatus = .full
-                    LOG("인강 신청 실패 : 403")
-                case 404: // 해당 시간 신청한 인강실이 없습니다.
-                    ingangStatus = .noIngang
-                    LOG("인강이 없음 : 404")
-                case 409: //이미 해당 시간 인강실을 신청했습니다.
-                    ingangStatus = .full
-                    LOG("인강 이미 신청: 409")
-                case 500:
-                    ingangStatus = .timeout
-                    LOG("500")
-                default:
-                    if debugMode {
-                        debugPrint(response)
-                    }
-                    self.tokenAPI.refreshTokens()
-//                    ingangStatus = self.applyIngang(time: time)
-                }
-            }
-        }
-        return ingangStatus
-    }
-    
-    /// 인강취소하기([DELETE] /ingang-application)
-    public func cancelIngang(time: IngangTime) -> IngangStatus{
-        LOG("cancel ingang : \(getToday8DigitDateString())-\(time.rawValue)")
-        let headers: HTTPHeaders = [
-            "Authorization":"Bearer \(tokenAPI.accessToken)"
-        ]
-        let parameters: [String: String] = [
-            "time": "\(time.rawValue)"
-        ]
-        let endPoint = "/ingang-application"
-        let method: HTTPMethod = .delete
-        var ingangStatus: IngangStatus = .none
-        AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200: //success
-                    ingangStatus = .success
-                    LOG("인강 취소 성공 : 200")
-                case 401:
-                    // MARK: Token Expired
-                    LOG("토큰 만료")
-                    self.tokenAPI.refreshTokens()
-                case 403: // 최대 인강실 인원을 초과했습니다.
-                    ingangStatus = .full
-                    LOG("인강 취소 실패 : 403")
-                case 404: // 해당 시간 신청한 인강실이 없습니다.
-                    ingangStatus = .noIngang
-                    LOG("인강이 없음 : 404")
-                case 409: //이미 해당 시간 인강실을 신청했습니다.
-                    ingangStatus = .full
-                    LOG("인강 이미 취소: 409")
-                case 500:
-                    ingangStatus = .timeout
-                    LOG("500")
-                default:
-                    if debugMode {
-                        debugPrint(response)
-                    }
-                    self.tokenAPI.refreshTokens()
-//                    ingangStatus = self.cancelIngang(time: time)
-                }
-            }
-        }
-        return ingangStatus
-    }
-    
-    /// ingang 디버그
-    public func debugIngangs() {
-        LOG("get ticket status \(self.weeklyUsedTicket) / \(self.weeklyTicketCount)")
-        for i in 0...1 {
-            var str = ""
-            str +=  "\(ingangs[i].time.rawValue) : "
-            for applicant in ingangs[i].applicants {
-                str +=  "\(applicant.name) | "
-            }
-            LOG(str)
-        }
-    }
-    
-    /// 인강 신청자들을 문자열로 정리해서 반환
-    public func getApplicantStringList(time: IngangTime) -> String {
-        var str = ""
-        for i in 0...1 {
-            if(ingangs[i].time == time) {
-                for applicant in ingangs[i].applicants {
-                    str += "\(applicant.name)"
-                    if i != ingangs[i].applicants.count {
-                        str += " "
-                    }
-                }
-            }
-        }
-        return str
     }
 }
 
-/// 야자 1, 2타임 시간
-public let ingangTime = [
-    "19:50 - 21:10",
-    "21:30 - 22:30"
-]
+/// 인강신청/취소하기([POST/DELETE] /ingang-application)
+public func manageIngang(_ accessToken: String, time: IngangTime, method: HTTPMethod, completion: @escaping (Result<(Void), IngangError>) -> Void){
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
+    ]
+    let parameters: [String: String] = [
+        "time": "\(time.rawValue)"
+    ]
+    let endPoint = "/ingang-application"
+    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200: //success
+                completion(.success(()))
+            case 401: // 토큰 만료
+                completion(.failure(.tokenExpired))
+            case 403: // 최대 인강실 인원을 초과했습니다.
+                completion(.failure(.full))
+            case 404: // 해당 시간 신청한 인강실이 없습니다.
+                completion(.failure(.noIngang))
+            case 409: //이미 해당 시간 인강실을 신청했습니다.
+                completion(.failure(.alreadyApplied))
+            case 500:
+                completion(.failure(.timeout))
+            default:
+                completion(.failure(.unknown))
+            }
+        }
+    }
+}
+
+/// 인강 신청자 내역 중 자신의 이름이 있는지 검사하고 맞다면 참을 반환합니다.
+public func checkIsApplied(_ applicants: JSON, time: IngangTime, name: String) -> Bool{
+    for applicant in sortApplicants(applicants: applicants, time: time) {
+        if(applicant.name == name) {
+            return true
+        }
+    }
+    return false
+}
+
+/// 인강모델에서 신청자 명단을 추출하여 문자열로 반환합니다.
+public func getApplicantStringList(from ingang: Ingang) -> String {
+    var str = ""
+    for i in 0..<ingang.applicants.count {
+        str += "\(ingang.applicants[i].name)"
+        if  i != ingang.applicants.count {
+            str += " "
+        }
+    }
+    return str
+}
+
+// 신청자를 받아서 인강에 차곡차곡 정리합니다.
+public func sortApplicants(applicants: JSON, time: IngangTime) -> [Applicant]{
+    var applicantsList:[[Applicant]] = [[],[]]
+    for i in 0..<applicants.count {
+        let newApplicant = Applicant(name: applicants[i]["applier"]["name"].string!,
+                                   grade: applicants[i]["applier"]["grade"].int!,
+                                   klass: applicants[i]["applier"]["class"].int!,
+                                   number: applicants[i]["applier"]["number"].int!,
+                                   serial: applicants[i]["applier"]["serial"].int!)
+        if(applicants[i]["time"] == "NSS1") {
+            applicantsList[0].append(newApplicant)
+        }
+        else if(applicants[i]["time"] == "NSS2") {
+            applicantsList[1].append(newApplicant)
+        }
+    }
+    if time == .NSS1 {
+        return applicantsList[0]
+    }
+    else {
+        return applicantsList[1]
+    }
+}
