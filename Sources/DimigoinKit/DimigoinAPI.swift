@@ -21,6 +21,8 @@ public class DimigoinAPI: ObservableObject {
     @Published var isFirstLogin = true
     @Published var user = User()
     @Published var meals = [Meal](repeating: Meal(), count: 7)
+    @Published var myPlaces: [Place] = []
+    @Published var allPlaces: [Place] = []
     @Published var ingangs: [Ingang] = [
        Ingang(date: getToday8DigitDateString(), time: .NSS1, applicants: []),
        Ingang(date: getToday8DigitDateString(), time: .NSS2, applicants: [])
@@ -100,6 +102,38 @@ public class DimigoinAPI: ObservableObject {
             }
         }
     }
+    
+    /// 인강 데이터를 새로고침합니다.
+    public func fetchIngangData() {
+        fetchIngang(accessToken, name: user.name) { result in
+            switch result {
+            case .success((let weeklyTicketCount, let weeklyUsedTicket, let weeklyRemainTicket, let ingangs)):
+                self.weeklyTicketCount = weeklyTicketCount
+                self.weeklyUsedTicket = weeklyUsedTicket
+                self.weeklyRemainTicket = weeklyRemainTicket
+                self.ingangs = ingangs
+            case .failure(let error):
+                switch error {
+                case .tokenExpired:
+                    print("tokenExpired")
+                default:
+                    print("unknown")
+                }
+            }
+        }
+    }
+    
+    // MARK: 장소 API 관련
+    public func changeUserPlace(placeName: String, description: String, completion: @escaping (Result<(Bool), PlaceError>) -> Void) {
+        setUserPlace(accessToken, placeName: placeName, description: description, places: allPlaces) { result in
+            switch result {
+            case .success(()):
+                completion(.success(true))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 
     /// 모든 API데이터를 패치합니다.
     public func fetchAllData() {
@@ -146,17 +180,23 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
-    }
-    
-    /// 인강 데이터를 새로고침합니다.
-    public func fetchIngangData() {
-        fetchIngang(accessToken, name: user.name) { result in
+        fetchMyPlaces(accessToken) { result in
             switch result {
-            case .success((let weeklyTicketCount, let weeklyUsedTicket, let weeklyRemainTicket, let ingangs)):
-                self.weeklyTicketCount = weeklyTicketCount
-                self.weeklyUsedTicket = weeklyUsedTicket
-                self.weeklyRemainTicket = weeklyRemainTicket
-                self.ingangs = ingangs
+            case .success((let places)):
+                self.myPlaces = places
+            case .failure(let error):
+                switch error {
+                case .tokenExpired:
+                    print("tokenExpired")
+                default:
+                    print("unknown")
+                }
+            }
+        }
+        fetchAllPlaces(accessToken) { result in
+            switch result {
+            case .success((let places)):
+                self.allPlaces = places
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
