@@ -72,6 +72,10 @@ func fetchTokens(_ username: String, _ password: String, completion: @escaping (
 public func saveTokens(_ accessToken: String, _ refreshToken: String) {
     UserDefaults.standard.setValue(accessToken, forKey: "accessToken")
     UserDefaults.standard.setValue(refreshToken, forKey: "refreshToken")
+    
+    // for dimigoin App service only
+    UserDefaults(suiteName: appGroupName)?.setValue(accessToken, forKey: "accessToken")
+    UserDefaults(suiteName: appGroupName)?.setValue(refreshToken, forKey: "refreshToken")
 }
 
 /// 저장된 토큰을 불러옵니다. 없다면 TokenError.firstLogin 에러를 반환합니다.
@@ -91,6 +95,10 @@ public func loadSavedTokens(completion: @escaping (Result<(accessToken: String, 
 public func removeTokens(completion: @escaping () -> Void) {
     UserDefaults.standard.removeObject(forKey: "accessToken")
     UserDefaults.standard.removeObject(forKey: "refreshToken")
+    
+    // for dimigoin App service only
+    UserDefaults(suiteName: appGroupName)?.removeObject(forKey: "accessToken")
+    UserDefaults(suiteName: appGroupName)?.removeObject(forKey: "refreshToken")
     completion()
 }
 

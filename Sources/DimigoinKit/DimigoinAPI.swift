@@ -8,12 +8,13 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-public var rootURL = "http://edison.dimigo.hs.kr"
-
 public enum defaultError: Error {
     case tokenExpired
     case unknown
 }
+public var appGroupName: String = "group.in.dimigo.ios"
+
+public var rootURL = "http://edison.dimigo.hs.kr"
 
 public class DimigoinAPI: ObservableObject {
     @Published var accessToken = ""
