@@ -5,7 +5,7 @@
 //  Created by 변경민 on 2021/01/26.
 //
 
-import SwiftUI
+import Foundation
 import SwiftyJSON
 import Alamofire
 

@@ -16,12 +16,11 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/Alamofire/Alamofire", from: "5.2.2"),
-        .package(url: "https://github.com/SwiftyJSON/SwiftyJSON", from: "5.0.0"),
-        .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "1.5.0")
+        .package(url: "https://github.com/SwiftyJSON/SwiftyJSON", from: "5.0.0")
     ],
     targets: [
         .target(
             name: "DimigoinKit",
-            dependencies: ["Alamofire", "SwiftyJSON", "SDWebImageSwiftUI"])
+            dependencies: ["Alamofire", "SwiftyJSON"])
     ]
 )

@@ -16,9 +16,9 @@ public enum IngangTime: String {
 }
 
 /// 인강 모델
-public struct Ingang {
+public struct Ingang: Hashable {
     public var date: String = ""
-    public var time: IngangTime
+    public var time: IngangTime = .NSS1
     public var isApplied: Bool = false
     public var applicants: [Applicant] = []
     public var maxApplier: Int = 0
@@ -27,7 +27,7 @@ public struct Ingang {
 }
 
 /// 인강 신청자 모델
-public struct Applicant {
+public struct Applicant: Codable, Hashable {
     public var id = UUID()
     public var name: String = ""
     public var grade: Int = 0

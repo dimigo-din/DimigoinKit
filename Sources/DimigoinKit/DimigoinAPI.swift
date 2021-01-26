@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 
 public enum defaultError: Error {
     case tokenExpired
@@ -21,7 +20,6 @@ public class DimigoinAPI: ObservableObject {
     @Published public var refreshToken = ""
     @Published public var isFirstLogin = true
     @Published public var user = User()
-    @Published public var userPhoto: WebImage = WebImage(url: "")
     @Published public var meals = [Meal](repeating: Meal(), count: 7)
     @Published public var myPlaces: [Place] = []
     @Published public var allPlaces: [Place] = []

@@ -8,7 +8,6 @@
 import SwiftUI
 import Alamofire
 import SwiftyJSON
-import SDWebImageSwiftUI
 
 /// 사용자 모델 정의
 public struct User {
@@ -19,7 +18,7 @@ public struct User {
     public var klass: Int = 1
     public var number: Int = 0
     public var serial: Int = 0
-    public var photo: String = ""
+    public var photoURL: String = ""
 }
 
 /// 유저 타입(선생님, 학생)
@@ -53,7 +52,7 @@ public func fetchUserData(_ accessToken: String, completion: @escaping (Result<(
                      klass: json["identity"]["class"].int!,
                      number: json["identity"]["number"].int!,
                      serial: json["identity"]["serial"].int!,
-                     photo: json["identity"]["photo"][0].string ?? "")
+                     photoURL: json["identity"]["photo"][0].string ?? "")
                 completion(.success(user))
             case 401:
                 completion(.failure(.tokenExpired))
