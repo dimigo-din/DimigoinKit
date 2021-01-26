@@ -1,16 +1,17 @@
 //
-//  File.swift
-//  
+//  MealAPI.swift
+//  DimigoinKitDemo
 //
-//  Created by 변경민 on 2020/11/15.
+//  Created by 변경민 on 2021/01/26.
 //
 
 import Foundation
 import Alamofire
 import SwiftyJSON
 
-public struct Dimibob: Codable, Identifiable {
-    public init(breakfast: String, lunch: String, dinner: String) {
+/// 급식 모델
+public struct Meal {
+    public init(_ breakfast: String, _ lunch: String, _ dinner: String) {
         self.breakfast = breakfast
         self.lunch = lunch
         self.dinner = dinner
@@ -20,7 +21,6 @@ public struct Dimibob: Codable, Identifiable {
         self.lunch = "급식 정보가 없습니다."
         self.dinner = "급식 정보가 없습니다."
     }
-    public var id = UUID()
     public var breakfast: String
     public var lunch: String
     public var dinner: String
@@ -33,81 +33,36 @@ public enum MealType {
     case dinner
 }
 
-/// 디미고인 급식 관련 API
-public class MealAPI: ObservableObject {
-    @Published public var meals = [Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob(), Dimibob()]
-    
-    public init() {
-        getWeeklyMeals()
+/// yyyy-MM-dd의 급식을 가져옵니다.
+public func getMeal(from date: String, completion: @escaping (Meal) -> Void){
+    let endPoint = "/meal/\(date)"
+    let method: HTTPMethod = .get
+    AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default).responseData { response in
+        let json = JSON(response.value ?? "")
+        completion(Meal(bindingMenus(menu: json["meal"]["breakfast"]),
+                        bindingMenus(menu: json["meal"]["lunch"]),
+                        bindingMenus(menu: json["meal"]["dinner"])))
     }
-    
-    /// 일주일치 급식을 조회합니다.
-    public func getWeeklyMeals() {
-        getMeals(from: .mon)
-        getMeals(from: .tue)
-        getMeals(from: .wed)
-        getMeals(from: .thu)
-        getMeals(from: .fri)
-        getMeals(from: .sat)
-        getMeals(from: .sun)
-    }
-    
-    /// http://edison.dimigo.hs.kr/meal/yyyy-mm-dd
-    /// 같은 주의 N요일의 급식을 가져옵니다.
-    public func getMeals(from weekDay: Weekday){
-        LOG("get meals from \(get8DigitDateString(weekday: weekDay))")
-        let endPoint = "/meal/\(get8DigitDateString(weekday: weekDay))"
-        let method: HTTPMethod = .get
-        AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default).responseData { response in
-            if let status = response.response?.statusCode {
-                switch(status) {
-                case 200:
-                    let json = JSON(response.value ?? "")
-                    
-                    self.meals[weekDay.rawValue-1].breakfast = bindingMenus(menu: json["meal"]["breakfast"])
-                    self.meals[weekDay.rawValue-1].lunch = bindingMenus(menu: json["meal"]["lunch"])
-                    self.meals[weekDay.rawValue-1].dinner = bindingMenus(menu: json["meal"]["dinner"])
-//                    self.dubugMeal()
-                case 401:
-                    // MARK: Token Expired
-                    LOG("토큰 만료")
-                case 404:
-                    self.meals[weekDay.rawValue-1].breakfast = "급식 정보가 없습니다."
-                    self.meals[weekDay.rawValue-1].lunch = "급식 정보가 없습니다."
-                    self.meals[weekDay.rawValue-1].dinner =  "급식 정보가 없습니다."
-//                    self.dubugMeal()
-                default:
-                    LOG("급식 가져오기 실패")
-//                    self.getMeals(from: weekDay)
-                }
-            }
-        }
-    }
-    
-    /// 오늘의 급식을 조회합니다. (저녁 10시가 넘어가면 다음날 급식을 반환합니다.)
-    public func getTodayMeal() -> Dimibob{
-        let hour = Calendar.current.component(.hour, from: Date())
-        if Int(hour) >= 22 { // 오후 9시 ~ 오전 9시 -> 아침
-            if getTodayDayOfWeekInt() == 7 {
-                return meals[getTodayDayOfWeekInt()-1]
-            }
-            else {
-                return meals[getTodayDayOfWeekInt()]
-            }
-            
-        }
-        return meals[getTodayDayOfWeekInt()-1]
-    }
-    
-    /// 급식을 출력합니다.
-    public func dubugMeal() {
-        for i in 0..<meals.count {
-            LOG("\(meals[i].breakfast), \(meals[i].lunch), \(meals[i].dinner)")
-        }
-    }
-    
-    
+}
 
+/// 일주일치 급식을 업데이트 합니다.
+public func fetchWeeklyMeal(completion: @escaping ([Meal]) -> Void) {
+    let dates:[String] = [get8DigitDateString(.mon),
+                          get8DigitDateString(.tue),
+                          get8DigitDateString(.wed),
+                          get8DigitDateString(.thu),
+                          get8DigitDateString(.fri),
+                          get8DigitDateString(.sat)]
+    var meals:[Meal] = []
+    for date in dates {
+        getMeal(from: date) { result in
+            meals.append(result)
+        }
+    }
+    getMeal(from: get8DigitDateString(.sun)) { result in
+        meals.append(result)
+        completion(meals)
+    }
 }
 
 /// 모든 메뉴를 한개의 문자열로 묶습니다.
@@ -124,8 +79,9 @@ public func bindingMenus(menu json: JSON) -> String{
     }
     return str
 }
+
 /// 급식 모델에서 끼니별로 급식을 반환합니다.
-public func getMealMenu(meal: Dimibob, mealType: MealType) -> String{
+public func getMealMenu(meal: Meal, _ mealType: MealType) -> String{
     switch mealType {
         case .breakfast: return meal.breakfast
         case .lunch: return meal.lunch
@@ -149,14 +105,3 @@ public func getMealType() -> MealType {
         return .breakfast
     }
 }
-
-/// 예시 급식
-public let dummyMeal = Dimibob(
-    breakfast: "카레라이스 | 쌀밥 | 콩나물국 | 너비아니조림 | 어묵야채볶음 | 포기김치 | 모듬과일",
-    lunch: "라면&보조밥 | 소떡소떡 | 야끼만두&초간장 | 참나물만다린무침 | 단무지 | 포기김치 | 우유빙수",
-    dinner: "김치참치마요덮밥 | 쌀밥 | 콩나물국 | 치즈스틱 | 실곤약치커리무침 | 깍두기 | 미니딸기파이"
-)
-
-
-
-

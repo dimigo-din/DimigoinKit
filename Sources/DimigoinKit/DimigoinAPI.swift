@@ -15,7 +15,8 @@ public class DimigoinAPI: ObservableObject {
     @Published var refreshToken = ""
     @Published var isFirstLogin = true
     @Published var user = User()
-
+    @Published var meals = [Meal](repeating: Meal(), count: 7)
+    
     public init() {
         fetchAllData()
     }
@@ -26,6 +27,7 @@ public class DimigoinAPI: ObservableObject {
         }
     }
     
+    /// 로그인
     public func login(_ username: String, _ password: String, completion: @escaping (Bool) -> Void) {
         fetchTokens(username, password) { result in
             switch result {
@@ -40,6 +42,12 @@ public class DimigoinAPI: ObservableObject {
         }
     }
     
+    /// 오늘의 급식을 반환 합니다.
+    public func getTodayMeal() -> Meal {
+        Meal()
+    }
+    
+    /// 모든 API데이터를 패치합니다.
     public func fetchAllData() {
         loadSavedTokens() { result in
             switch result {
@@ -51,6 +59,7 @@ public class DimigoinAPI: ObservableObject {
                 self.isFirstLogin = true
             }
         }
+        
         fetchUserData(accessToken) { result in
             switch result {
             case .success((let user)):
@@ -63,6 +72,9 @@ public class DimigoinAPI: ObservableObject {
                     print("unknown")
                 }
             }
+        }
+        fetchWeeklyMeal() { result in
+            self.meals = result
         }
     }
 }
