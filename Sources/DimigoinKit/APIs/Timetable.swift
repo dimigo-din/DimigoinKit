@@ -9,19 +9,6 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-/// 시간표 모델 정의
-public struct Timetable: Codable{
-    public var lectures: [[Lecture]] = [[],[],[],[],[]]
-    
-    public init(_ lectures: [[Lecture]]) {
-        self.lectures = lectures
-    }
-    
-    public init() {
-        
-    }
-}
-
 /// 수업 모델 정의
 public struct Lecture: Codable {
     public var subject: String
@@ -36,7 +23,7 @@ public enum TimetableError: Error {
 }
 
 /// 시간표 데이터를 받아옵니다.
-public func fetchLectureList(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<([Lecture]), TimetableError>) -> Void) {
+public func getLectureList(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<([Lecture]), TimetableError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -58,11 +45,10 @@ public func fetchLectureList(_ accessToken: String, grade: Int, klass: Int, comp
 }
 
 /// json데이터를 강의 리스트 데이터로 반환해줍니다.
-public func json2LectureList(from json: JSON) -> [Lecture]{
+public func json2LectureList(from json: JSON) -> [Lecture] {
     var lectureList: [Lecture] = []
     for i in 0..<json.count {
         let weekDay = getDayOfWeek(json[i]["date"].string![0..<10]) - 1
-        print("\(json[i]["date"].string!) \(json[i]["subject"].string!)")
         if(weekDay != 6 && weekDay != 7) {
             lectureList.append(Lecture(subject: json[i]["subject"].string!, weekDay: weekDay, period: json[i]["period"].int!))
         }

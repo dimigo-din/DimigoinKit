@@ -40,8 +40,8 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
         "Authorization":"Bearer \(accessToken)"
     ]
     let parameters: [String: String] = [
-        "place": name2Place(name: placeName, from: places).id,
-        "remark": name2Place(name: placeName, from: places).label
+        "place": findPlaceByName(name: placeName, from: places).id,
+        "remark": findPlaceByName(name: placeName, from: places).label
     ]
     let endPoint = "/attendance-log"
     let method: HTTPMethod = .post
@@ -69,7 +69,7 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
         "Authorization":"Bearer \(accessToken)"
     ]
     let parameters: [String: String] = [
-        "place": name2Place(name: placeName, from: places).id,
+        "place": findPlaceByName(name: placeName, from: places).id,
         "remark": remark
     ]
     let endPoint = "/attendance-log"
@@ -93,7 +93,7 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
 }
     
 /// 사용자 교실 학생들의 현황을 불러옵니다. ([GET] /attendance-log/class-status)
-public func fetchAttandence(_ accessToken: String, user: User, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
+public func getAttandenceList(_ accessToken: String, user: User, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -125,7 +125,7 @@ public func json2AttendanceList(attendances: JSON) -> [Attendance]{
     
 /// 자신의 최근 위치를 조회합니다. ([GET] /attendance-log/my-status)
 /// 정보가 없다면, 교실을 default값으로 지정합니다.
-public func fetchMyCurrentPlace(_ accessToken: String, places: [Place], myPlaces: [Place], completion: @escaping (Result<(Place),AttendanceError>) -> Void) {
+public func getUserCurrentPlace(_ accessToken: String, places: [Place], myPlaces: [Place], completion: @escaping (Result<(Place),AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -137,9 +137,9 @@ public func fetchMyCurrentPlace(_ accessToken: String, places: [Place], myPlaces
             case 200:
                 let json = JSON(response.value!!)
                 if let myCurrentPlace = json["myLogs"][0]["place"]["_id"].string {
-                    completion(.success(id2Place(id: myCurrentPlace, from: places)))
+                    completion(.success(findPlaceById(id: myCurrentPlace, from: places)))
                 } else {
-                    completion(.success(label2Place(label: "교실", from: myPlaces)))
+                    completion(.success(findPlaceByLabel(label: "교실", from: myPlaces)))
                 }
             case 401:
                 completion(.failure(.tokenExpired))

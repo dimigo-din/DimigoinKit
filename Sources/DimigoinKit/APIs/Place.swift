@@ -40,7 +40,7 @@ public enum PlaceError: Error {
 }
 
 /// API에 저장된 모든 장소 정보를 불러옵니다. ([GET] /place)
-public func fetchAllPlaces(_ accessToken: String, completion: @escaping (Result<[Place], PlaceError>) -> Void) {
+public func getAllPlace(_ accessToken: String, completion: @escaping (Result<[Place], PlaceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -62,7 +62,7 @@ public func fetchAllPlaces(_ accessToken: String, completion: @escaping (Result<
 }
 
 /// 사용자 맞춤 장소 정보를 불러옵니다.
-public func fetchMyPlaces(_ accessToken: String, completion: @escaping (Result<[Place], PlaceError>) -> Void) {
+public func getPrimaryPlace(_ accessToken: String, completion: @escaping (Result<[Place], PlaceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -90,7 +90,7 @@ public func setUserPlace(_ accessToken: String, placeName: String, description: 
     ]
     let parameters: [String: String] = [
         "name": "\(placeName)",
-        "location": "\(name2Place(name: placeName, from: places).location)",
+        "location": "\(findPlaceByName(name: placeName, from: places).location)",
         "description": "\(description)"
     ]
     let endPoint = "/place"
@@ -125,7 +125,7 @@ public func json2PlaceList(places: JSON) -> [Place] {
 }
 
 /// 장소  레이블을 통해 장소를 반환합니다.
-public func label2Place(label: String, from places: [Place]) -> Place {
+public func findPlaceByLabel(label: String, from places: [Place]) -> Place {
     for place in places {
         if(place.label == label) {
             return place
@@ -135,7 +135,7 @@ public func label2Place(label: String, from places: [Place]) -> Place {
 }
 
 /// 장소 이름을 통해 장소를 반환합니다.
-public func name2Place(name: String, from places: [Place]) -> Place {
+public func findPlaceByName(name: String, from places: [Place]) -> Place {
     for place in places {
         if(place.name == name) {
             return place
@@ -145,7 +145,7 @@ public func name2Place(name: String, from places: [Place]) -> Place {
 }
 
 /// 장소 id를 통해 장소를 반환합니다.
-public func id2Place(id: String, from places: [Place]) -> Place {
+public func findPlaceById(id: String, from places: [Place]) -> Place {
     for place in places {
         if(place.id == id) {
             return place

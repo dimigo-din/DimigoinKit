@@ -46,7 +46,7 @@ public enum IngangError: Error {
     case unknown
 }
 /// 모든 인강정보(티켓, 신청자) 조회 ([GET] /ingang-application/status)
-public func fetchIngang(_ accessToken: String, name: String, completion: @escaping (Result<(weeklyTicketCount: Int, weeklyUsedTicket: Int, weeklyRemainTicket: Int, ingangs: [Ingang]), defaultError>) -> Void) {
+public func getIngangData(_ accessToken: String, name: String, completion: @escaping (Result<(weeklyTicketCount: Int, weeklyUsedTicket: Int, weeklyRemainTicket: Int, ingangs: [Ingang]), defaultError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]

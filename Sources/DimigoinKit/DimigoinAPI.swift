@@ -38,6 +38,19 @@ public class DimigoinAPI: ObservableObject {
         fetchAllData()
     }
     
+    /// 모든 API데이터를 패치합니다.
+    public func fetchAllData() {
+        fetchTokens {
+            self.fetchMealData()
+            self.fetchAllPlaceData {}
+            self.fetchUserData() {
+                self.fetchIngangData() {}
+                self.fetchPrimaryPlaceData {}
+                self.fetchUserCurrentPlace {}
+            }
+        }
+    }
+    
     // MARK: 토큰 API 관련
     // FIXME: 로그아웃 시 모든 데이터 삭제, 로그인 시 새로 패치
     /// 로그아웃
@@ -51,7 +64,7 @@ public class DimigoinAPI: ObservableObject {
     
     /// 로그인
     public func login(_ username: String, _ password: String, completion: @escaping (Bool) -> Void) {
-        fetchTokens(username, password) { result in
+        getTokens(username, password) { result in
             switch result {
                 case .success((let accessToken, let refreshToken)):
                     withAnimation() {
@@ -67,6 +80,19 @@ public class DimigoinAPI: ObservableObject {
         fetchAllData()
     }
     
+    public func fetchTokens(completion: @escaping () -> Void) {
+        loadSavedTokens() { result in
+            switch result {
+            case .success((let accessToken, let refreshToken)):
+                self.isFirstLogin = false
+                self.accessToken = accessToken
+                self.refreshToken = refreshToken
+            case .failure(_):
+                self.isFirstLogin = true
+            }
+        }
+    }
+    
     // MARK: 급식 API 관련
     /// 오늘의 급식을 반환 합니다.
     public func getTodayMeal() -> Meal {
@@ -74,7 +100,7 @@ public class DimigoinAPI: ObservableObject {
     }
     
     /// 일주일치 급식을 업데이트 합니다.
-    public func fetchWeeklyMeal() {
+    public func fetchMealData() {
         let dates:[String] = [get8DigitDateString(.mon),
                               get8DigitDateString(.tue),
                               get8DigitDateString(.wed),
@@ -107,8 +133,9 @@ public class DimigoinAPI: ObservableObject {
         manageIngang(accessToken, time: time, method: .post) { result in
             switch result {
             case .success(()):
-                self.fetchIngangData()
-                completion(.success(()))
+                self.fetchIngangData() {
+                    completion(.success(()))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -120,8 +147,9 @@ public class DimigoinAPI: ObservableObject {
         manageIngang(accessToken, time: time, method: .delete) { result in
             switch result {
             case .success(()):
-                self.fetchIngangData()
-                completion(.success(()))
+                self.fetchIngangData() {
+                    completion(.success(()))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -129,8 +157,8 @@ public class DimigoinAPI: ObservableObject {
     }
     
     /// 인강 데이터를 새로고침합니다.
-    public func fetchIngangData() {
-        fetchIngang(accessToken, name: user.name) { result in
+    public func fetchIngangData(completion: @escaping () -> Void) {
+        getIngangData(accessToken, name: user.name) { result in
             switch result {
             case .success((let weeklyTicketCount, let weeklyUsedTicket, let weeklyRemainTicket, let ingangs)):
                 self.weeklyTicketCount = weeklyTicketCount
@@ -170,12 +198,13 @@ public class DimigoinAPI: ObservableObject {
         return ""
     }
 
-    public func fetchLectureData() {
-        fetchLectureList(accessToken, grade: user.grade, klass: user.klass) { result in
+    public func fetchLectureData(completion: @escaping () -> Void) {
+        getLectureList(accessToken, grade: user.grade, klass: user.klass) { result in
             switch result {
             case .success((let lectureList)):
                 print(lectureList)
                 self.lectureList = lectureList
+                completion()
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
@@ -186,23 +215,14 @@ public class DimigoinAPI: ObservableObject {
             }
         }
     }
-    /// 모든 API데이터를 패치합니다.
-    public func fetchAllData() {
-        loadSavedTokens() { result in
-            switch result {
-            case .success((let accessToken, let refreshToken)):
-                self.isFirstLogin = false
-                self.accessToken = accessToken
-                self.refreshToken = refreshToken
-            case .failure(_):
-                self.isFirstLogin = true
-            }
-        }
-        fetchUserData(accessToken) { result in
+    public func fetchUserData(completion: @escaping () -> Void) {
+        getUserData(accessToken) { result in
             switch result {
             case .success((let user)):
                 self.user = user
-                self.fetchLectureData()
+                self.fetchLectureData() {
+                    
+                }
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
@@ -212,24 +232,10 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
-        fetchWeeklyMeal()
-        fetchIngang(accessToken, name: user.name) { result in
-            switch result {
-            case .success((let weeklyTicketCount, let weeklyUsedTicket, let weeklyRemainTicket, let ingangs)):
-                self.weeklyTicketCount = weeklyTicketCount
-                self.weeklyUsedTicket = weeklyUsedTicket
-                self.weeklyRemainTicket = weeklyRemainTicket
-                self.ingangs = ingangs
-            case .failure(let error):
-                switch error {
-                case .tokenExpired:
-                    print("tokenExpired")
-                default:
-                    print("unknown")
-                }
-            }
-        }
-        fetchMyPlaces(accessToken) { result in
+    }
+    
+    public func fetchPrimaryPlaceData(completion: @escaping () -> Void) {
+        getPrimaryPlace(accessToken) { result in
             switch result {
             case .success((let places)):
                 self.myPlaces = places
@@ -242,7 +248,10 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
-        fetchAllPlaces(accessToken) { result in
+    }
+    
+    public func fetchAllPlaceData(completion: @escaping () -> Void) {
+        getAllPlace(accessToken) { result in
             switch result {
             case .success((let places)):
                 self.allPlaces = places
@@ -255,7 +264,9 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
-        fetchMyCurrentPlace(accessToken, places: allPlaces, myPlaces: myPlaces) { result in
+    }
+    private func fetchUserCurrentPlace(completion: @escaping () -> Void) {
+        getUserCurrentPlace(accessToken, places: allPlaces, myPlaces: myPlaces) { result in
             switch result {
             case .success((let place)):
                 self.currentPlace = place
@@ -268,6 +279,5 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
-        
     }
 }
