@@ -69,6 +69,22 @@ public class DimigoinAPI: ObservableObject {
         meals[getTodayDayOfWeekInt()-1]
     }
     
+    /// 일주일치 급식을 업데이트 합니다.
+    public func fetchWeeklyMeal() {
+        let dates:[String] = [get8DigitDateString(.mon),
+                              get8DigitDateString(.tue),
+                              get8DigitDateString(.wed),
+                              get8DigitDateString(.thu),
+                              get8DigitDateString(.fri),
+                              get8DigitDateString(.sat),
+                              get8DigitDateString(.sun)]
+        for index in 0..<dates.count {
+            getMeal(from: dates[index]) { result in
+                self.meals[index] = result
+            }
+        }
+    }
+    
     // MARK: 인강 API 관련
     /// 인강 신청자 내역 중 자신의 이름이 있는지 검사하고, 맞다면 신청된 상태로 만듭니다.
     /// * fetchUserData() 이후에 실행되어야합니다.
@@ -166,9 +182,7 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
-        fetchWeeklyMeal() { result in
-            self.meals = result
-        }
+        fetchWeeklyMeal()
         fetchIngang(accessToken, name: user.name) { result in
             switch result {
             case .success((let weeklyTicketCount, let weeklyUsedTicket, let weeklyRemainTicket, let ingangs)):

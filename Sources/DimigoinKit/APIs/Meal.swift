@@ -45,26 +45,6 @@ public func getMeal(from date: String, completion: @escaping (Meal) -> Void){
     }
 }
 
-/// 일주일치 급식을 업데이트 합니다.
-public func fetchWeeklyMeal(completion: @escaping ([Meal]) -> Void) {
-    let dates:[String] = [get8DigitDateString(.mon),
-                          get8DigitDateString(.tue),
-                          get8DigitDateString(.wed),
-                          get8DigitDateString(.thu),
-                          get8DigitDateString(.fri),
-                          get8DigitDateString(.sat)]
-    var meals:[Meal] = []
-    for date in dates {
-        getMeal(from: date) { result in
-            meals.append(result)
-        }
-    }
-    getMeal(from: get8DigitDateString(.sun)) { result in
-        meals.append(result)
-        completion(meals)
-    }
-}
-
 /// 모든 메뉴를 한개의 문자열로 묶습니다.
 public func bindingMenus(menu json: JSON) -> String{
     var str = ""
