@@ -39,6 +39,7 @@ public class DimigoinAPI: ObservableObject {
     }
     
     // MARK: 토큰 API 관련
+    // FIXME: 로그아웃 시 모든 데이터 삭제, 로그인 시 새로 패치
     /// 로그아웃
     public func logout() {
         removeTokens {
@@ -63,6 +64,7 @@ public class DimigoinAPI: ObservableObject {
                     completion(false)
             }
         }
+        fetchAllData()
     }
     
     // MARK: 급식 API 관련
@@ -168,6 +170,22 @@ public class DimigoinAPI: ObservableObject {
         return ""
     }
 
+    public func fetchLectureData() {
+        fetchLectureList(accessToken, grade: user.grade, klass: user.klass) { result in
+            switch result {
+            case .success((let lectureList)):
+                print(lectureList)
+                self.lectureList = lectureList
+            case .failure(let error):
+                switch error {
+                case .tokenExpired:
+                    print("tokenExpired")
+                default:
+                    print("unknown")
+                }
+            }
+        }
+    }
     /// 모든 API데이터를 패치합니다.
     public func fetchAllData() {
         loadSavedTokens() { result in
@@ -184,6 +202,7 @@ public class DimigoinAPI: ObservableObject {
             switch result {
             case .success((let user)):
                 self.user = user
+                self.fetchLectureData()
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
@@ -249,19 +268,6 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
-        fetchLectureList(accessToken, grade: user.grade, klass: user.klass) { result in
-            switch result {
-            case .success((let lectureList)):
-                print(lectureList)
-                self.lectureList = lectureList
-            case .failure(let error):
-                switch error {
-                case .tokenExpired:
-                    print("tokenExpired")
-                default:
-                    print("unknown")
-                }
-            }
-        }
+        
     }
 }

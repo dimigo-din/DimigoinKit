@@ -14,8 +14,8 @@ public struct User {
     public var name: String = ""
     public var idx: Int = 0
     public var type: UserType = .student
-    public var grade: Int = 1
-    public var klass: Int = 1
+    public var grade: Int = 2
+    public var klass: Int = 4
     public var number: Int = 0
     public var serial: Int = 0
     public var photoURL: URL = URL(string: "https://api.dimigo.hs.kr/")!
