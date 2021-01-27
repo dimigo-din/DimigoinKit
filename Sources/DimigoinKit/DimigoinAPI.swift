@@ -80,6 +80,7 @@ public class DimigoinAPI: ObservableObject {
         fetchAllData()
     }
     
+    /// 토큰을 패치합니다.
     public func fetchTokens(completion: @escaping () -> Void) {
         loadSavedTokens() { result in
             switch result {
@@ -94,6 +95,7 @@ public class DimigoinAPI: ObservableObject {
         }
     }
     
+    /// 토큰을 새로고침 합니다.
     public func refreshTokens(completion: @escaping() -> Void) {
         getTokens(refreshToken) { result in
             switch result {
