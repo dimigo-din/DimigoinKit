@@ -8,6 +8,7 @@
 import Foundation
 
 /// 월요일 ~ 일요일을 1~7 로 맵핑한 Enum
+// FIXME: 월 ~ 일 0~6 리매핑 해야될듯..
 public enum Weekday: Int {
     case today = 0
     case mon = 1
@@ -97,4 +98,12 @@ public func getToday8DigitDateString() -> String {
     return dateFormatter.string(from: date)
 }
 
-
+/// 해당 날짜의 요일을 반환합니다.(월 = 1 ~ 일 = 7 )
+func getDayOfWeek(_ today:String) -> Int {
+    let formatter  = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    let todayDate = formatter.date(from: today)
+    let myCalendar = Calendar(identifier: .gregorian)
+    let weekDay = myCalendar.component(.weekday, from: todayDate!)
+    return weekDay+1
+}
