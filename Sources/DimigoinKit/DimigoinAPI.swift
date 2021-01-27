@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 
 public enum defaultError: Error {
     case tokenExpired
@@ -16,32 +15,37 @@ public var appGroupName: String = "group.in.dimigo.ios"
 
 public var rootURL = "http://edison.dimigo.hs.kr"
 
+/// 디미고인 API(토큰, 유저 정보, 급식, 장소, 인강, 시간표 등)
 public class DimigoinAPI: ObservableObject {
-    @Published var accessToken = ""
-    @Published var refreshToken = ""
-    @Published var isFirstLogin = true
-    @Published var user = User()
-    @Published var meals = [Meal](repeating: Meal(), count: 7)
-    @Published var myPlaces: [Place] = []
-    @Published var allPlaces: [Place] = []
-    @Published var currentPlace: Place = Place()
-    @Published var ingangs: [Ingang] = [
+    @Published public var accessToken = ""
+    @Published public var refreshToken = ""
+    @Published public var isFirstLogin = true
+    @Published public var user = User()
+    @Published public var meals = [Meal](repeating: Meal(), count: 7)
+    @Published public var myPlaces: [Place] = []
+    @Published public var allPlaces: [Place] = []
+    @Published public var currentPlace: Place = Place()
+    @Published public var lectureList: [Lecture] = []
+    @Published public var ingangs: [Ingang] = [
        Ingang(date: getToday8DigitDateString(), time: .NSS1, applicants: []),
        Ingang(date: getToday8DigitDateString(), time: .NSS2, applicants: [])
     ]
-    @Published var weeklyTicketCount: Int = 0
-    @Published var weeklyUsedTicket: Int = 0
-    @Published var weeklyRemainTicket: Int = 0
+    @Published public var weeklyTicketCount: Int = 0
+    @Published public var weeklyUsedTicket: Int = 0
+    @Published public var weeklyRemainTicket: Int = 0
     
     public init() {
         fetchAllData()
     }
     
     // MARK: 토큰 API 관련
+    // FIXME: 로그아웃 시 모든 데이터 삭제, 로그인 시 새로 패치
     /// 로그아웃
     public func logout() {
         removeTokens {
-            self.isFirstLogin = true
+            withAnimation() {
+                self.isFirstLogin = true
+            }
         }
     }
     
@@ -50,7 +54,9 @@ public class DimigoinAPI: ObservableObject {
         fetchTokens(username, password) { result in
             switch result {
                 case .success((let accessToken, let refreshToken)):
-                    self.isFirstLogin = false
+                    withAnimation() {
+                        self.isFirstLogin = false
+                    }
                     self.accessToken = accessToken
                     self.refreshToken = refreshToken
                     completion(true)
@@ -58,12 +64,29 @@ public class DimigoinAPI: ObservableObject {
                     completion(false)
             }
         }
+        fetchAllData()
     }
     
     // MARK: 급식 API 관련
     /// 오늘의 급식을 반환 합니다.
     public func getTodayMeal() -> Meal {
-        Meal()
+        meals[getTodayDayOfWeekInt()-1]
+    }
+    
+    /// 일주일치 급식을 업데이트 합니다.
+    public func fetchWeeklyMeal() {
+        let dates:[String] = [get8DigitDateString(.mon),
+                              get8DigitDateString(.tue),
+                              get8DigitDateString(.wed),
+                              get8DigitDateString(.thu),
+                              get8DigitDateString(.fri),
+                              get8DigitDateString(.sat),
+                              get8DigitDateString(.sun)]
+        for index in 0..<dates.count {
+            getMeal(from: dates[index]) { result in
+                self.meals[index] = result
+            }
+        }
     }
     
     // MARK: 인강 API 관련
@@ -136,7 +159,33 @@ public class DimigoinAPI: ObservableObject {
             }
         }
     }
+    
+    // MARK: 시간표 API관련
+    public func getLectureName(weekDay: Int, period: Int) -> String {
+        for i in 0..<lectureList.count {
+            if(lectureList[i].weekDay == weekDay && lectureList[i].period == period) {
+                return lectureList[i].subject
+            }
+        }
+        return ""
+    }
 
+    public func fetchLectureData() {
+        fetchLectureList(accessToken, grade: user.grade, klass: user.klass) { result in
+            switch result {
+            case .success((let lectureList)):
+                print(lectureList)
+                self.lectureList = lectureList
+            case .failure(let error):
+                switch error {
+                case .tokenExpired:
+                    print("tokenExpired")
+                default:
+                    print("unknown")
+                }
+            }
+        }
+    }
     /// 모든 API데이터를 패치합니다.
     public func fetchAllData() {
         loadSavedTokens() { result in
@@ -149,11 +198,11 @@ public class DimigoinAPI: ObservableObject {
                 self.isFirstLogin = true
             }
         }
-        
         fetchUserData(accessToken) { result in
             switch result {
             case .success((let user)):
                 self.user = user
+                self.fetchLectureData()
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
@@ -163,9 +212,7 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
-        fetchWeeklyMeal() { result in
-            self.meals = result
-        }
+        fetchWeeklyMeal()
         fetchIngang(accessToken, name: user.name) { result in
             switch result {
             case .success((let weeklyTicketCount, let weeklyUsedTicket, let weeklyRemainTicket, let ingangs)):
@@ -221,5 +268,6 @@ public class DimigoinAPI: ObservableObject {
                 }
             }
         }
+        
     }
 }
