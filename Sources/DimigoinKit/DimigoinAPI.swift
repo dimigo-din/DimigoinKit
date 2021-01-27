@@ -43,8 +43,8 @@ public class DimigoinAPI: ObservableObject {
         fetchTokens {
             self.fetchMealData()
             self.fetchAllPlaceData {}
-            self.fetchUserData() {
-                self.fetchIngangData() {}
+            self.fetchUserData {
+                self.fetchIngangData {}
                 self.fetchPrimaryPlaceData {}
                 self.fetchUserCurrentPlace {}
             }
@@ -90,6 +90,21 @@ public class DimigoinAPI: ObservableObject {
             case .failure(_):
                 self.isFirstLogin = true
             }
+            completion()
+        }
+    }
+    
+    public func refreshTokens(completion: @escaping() -> Void) {
+        getTokens(refreshToken) { result in
+            switch result {
+            case .success((let accessToken, let refreshToken)):
+                self.isFirstLogin = false
+                self.accessToken = accessToken
+                self.refreshToken = refreshToken
+            case .failure(_):
+                self.isFirstLogin = true
+            }
+            completion()
         }
     }
     
@@ -168,11 +183,12 @@ public class DimigoinAPI: ObservableObject {
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
-                    print("tokenExpired")
+                    self.refreshTokens {}
                 default:
                     print("unknown")
                 }
             }
+            completion()
         }
     }
     
@@ -202,17 +218,16 @@ public class DimigoinAPI: ObservableObject {
         getLectureList(accessToken, grade: user.grade, klass: user.klass) { result in
             switch result {
             case .success((let lectureList)):
-                print(lectureList)
                 self.lectureList = lectureList
-                completion()
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
-                    print("tokenExpired")
+                    self.refreshTokens {}
                 default:
                     print("unknown")
                 }
             }
+            completion()
         }
     }
     public func fetchUserData(completion: @escaping () -> Void) {
@@ -226,11 +241,12 @@ public class DimigoinAPI: ObservableObject {
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
-                    print("tokenExpired")
+                    self.refreshTokens {}
                 default:
                     print("unknown")
                 }
             }
+            completion()
         }
     }
     
@@ -242,11 +258,12 @@ public class DimigoinAPI: ObservableObject {
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
-                    print("tokenExpired")
+                    self.refreshTokens {}
                 default:
                     print("unknown")
                 }
             }
+            completion()
         }
     }
     
@@ -258,11 +275,12 @@ public class DimigoinAPI: ObservableObject {
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
-                    print("tokenExpired")
+                    self.refreshTokens {}
                 default:
                     print("unknown")
                 }
             }
+            completion()
         }
     }
     private func fetchUserCurrentPlace(completion: @escaping () -> Void) {
@@ -273,11 +291,12 @@ public class DimigoinAPI: ObservableObject {
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
-                    print("tokenExpired")
+                    self.refreshTokens {}
                 default:
                     print("unknown")
                 }
             }
+            completion()
         }
     }
 }
