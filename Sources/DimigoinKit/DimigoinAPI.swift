@@ -5,6 +5,29 @@
 //  Created by 변경민 on 2021/01/26.
 //
 
+/**
+ 간단한 설명
+
+ 메소드에 대한 자세한 설명
+
+ - Parameters:
+    - 이름: 설명
+ 
+ - returns: 무엇을 리턴하는지
+
+ # 주의사항: #
+ 1. 파라미터가 어쩌고 .. **강조**
+ 2. 옵셔널 어쩌고 ..
+
+ # Example #
+```
+사용예시
+```
+*/
+func test(hell: String) {
+    
+}
+
 import SwiftUI
 
 public enum defaultError: Error {
@@ -15,7 +38,6 @@ public var appGroupName: String = "group.in.dimigo.ios"
 
 public var rootURL = "http://edison.dimigo.hs.kr"
 
-/// 디미고인 API(토큰, 유저 정보, 급식, 장소, 인강, 시간표 등)
 public class DimigoinAPI: ObservableObject {
     @Published public var accessToken = ""
     @Published public var refreshToken = ""
