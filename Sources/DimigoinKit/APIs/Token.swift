@@ -17,7 +17,7 @@ public enum TokenError: Error {
 }
 
 /// 토큰을 새로고침 합니다.
-public func fetchTokens(_ refreshToken:String, completion: @escaping (Result<(accessToken: String, refreshToken: String), TokenError>) -> Void) {
+public func getTokens(_ refreshToken:String, completion: @escaping (Result<(accessToken: String, refreshToken: String), TokenError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization": "Bearer \(refreshToken)"
     ]
@@ -44,7 +44,7 @@ public func fetchTokens(_ refreshToken:String, completion: @escaping (Result<(ac
 }
 
 /// username과 password로 토큰을 발급받습니다.
-func fetchTokens(_ username: String, _ password: String, completion: @escaping (Result<(accessToken: String, refreshToken: String), TokenError>) -> Void) {
+public func getTokens(_ username: String, _ password: String, completion: @escaping (Result<(accessToken: String, refreshToken: String), TokenError>) -> Void) {
     let parameters: [String: String] = [
         "username": "\(username)",
         "password": "\(password)"

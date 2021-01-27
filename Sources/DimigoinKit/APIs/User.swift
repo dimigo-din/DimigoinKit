@@ -34,7 +34,7 @@ public enum UserError: Error {
 }
 
 /// 사용자 정보를 가져옵니다.
-public func fetchUserData(_ accessToken: String, completion: @escaping (Result<(User), UserError>) -> Void) {
+public func getUserData(_ accessToken: String, completion: @escaping (Result<(User), UserError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization": "Bearer \(accessToken)"
     ]
@@ -64,7 +64,7 @@ public func fetchUserData(_ accessToken: String, completion: @escaping (Result<(
 }
 
 /// 반에 따른 학과를 반환합니다.
-public func getMajor(klass: Int) -> String {
+public func getMajorByClass(klass: Int) -> String {
     switch klass {
         case 1: return "이비즈니스과"
         case 2: return "디지털컨텐츠과"
