@@ -265,7 +265,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>사용자의 위치를 설정합니다 ([POST] /attendance-log)</p>
+                        <p>사용자 인원체크</p>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>POST</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/attendance-log</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="nf">setUserPlace</span><span class="p">(</span><span class="s">"accessToken here"</span><span class="p">,</span> <span class="nv">placeName</span><span class="p">:</span> <span class="s">"장소 이름"</span><span class="p">,</span> <span class="nv">places</span><span class="p">:</span> <span class="n">places</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -275,6 +286,53 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setUserPlace</span><span class="p">(</span><span class="n">_</span> <span class="nv">accessToken</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">placeName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">places</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="Structs/Place.html">Place</a></span><span class="p">],</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="p">,</span> <span class="kt"><a href="Enums/AttendanceError.html">AttendanceError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>토큰</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>placeName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>장소 이름</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>plalces</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>장소 리스트</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Result<Bool, AttendanceError></p>
                       </div>
                     </section>
                   </div>
@@ -292,7 +350,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>간단한 메세지와 함께 사용자의 위치를 설정합니다 ([POST] /attendance-log)</p>
+                        <p>간단한 메세지와 함께 사용자 인원체크</p>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>POST</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/attendance-log</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="nf">setUserPlace</span><span class="p">(</span><span class="s">"accessToken here"</span><span class="p">,</span> <span class="nv">placeName</span><span class="p">:</span> <span class="s">"장소 이름"</span><span class="p">,</span> <span class="nv">places</span><span class="p">:</span> <span class="n">places</span><span class="p">,</span> <span class="nv">remark</span><span class="p">:</span> <span class="s">"이유"</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -302,6 +371,53 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setUserPlace</span><span class="p">(</span><span class="n">_</span> <span class="nv">accessToken</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">placeName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">places</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="Structs/Place.html">Place</a></span><span class="p">],</span> <span class="nv">remark</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="p">,</span> <span class="kt"><a href="Enums/AttendanceError.html">AttendanceError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>토큰</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>placeName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>장소 이름</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>places</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>장소 리스트</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Result<Bool, AttendanceError></p>
                       </div>
                     </section>
                   </div>
@@ -319,7 +435,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>사용자 교실 학생들의 현황을 불러옵니다. ([GET] /attendance-log/class-status)</p>
+                        <p>사용자 교실 학생들의 현황을 불러옵니다.</p>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>GET</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/attendance-log/class-status/date/{yyyy-MM-dd}/grade/{grade}/class/{class}</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="nf">getAttandenceList</span><span class="p">(</span><span class="s">"accessToken here"</span><span class="p">,</span> <span class="nv">user</span><span class="p">:</span> <span class="kt">User</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -329,6 +456,41 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getAttandenceList</span><span class="p">(</span><span class="n">_</span> <span class="nv">accessToken</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">user</span><span class="p">:</span> <span class="kt"><a href="Structs/User.html">User</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="p">([</span><span class="kt"><a href="Structs/Attendance.html">Attendance</a></span><span class="p">]),</span> <span class="kt"><a href="Enums/AttendanceError.html">AttendanceError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>토큰</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>user</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>사용자 정보</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Result<Bool, AttendanceError></p>
                       </div>
                     </section>
                   </div>
@@ -373,8 +535,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>자신의 최근 위치를 조회합니다. ([GET] /attendance-log/my-status)
-정보가 없다면, 교실을 default값으로 지정합니다.</p>
+                        <p>자신의 최근 위치를 불러옵니다. 없다면, 교실을 반환합니다.</p>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>GET</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/attendance-log/my-status</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="nf">getAttandenceList</span><span class="p">(</span><span class="s">"accessToken here"</span><span class="p">,</span> <span class="nv">places</span><span class="p">:</span> <span class="p">[</span><span class="kt">Place</span><span class="p">],</span> <span class="nv">myPlaces</span><span class="p">:</span> <span class="p">[</span><span class="kt">Place</span><span class="p">])</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -384,6 +556,53 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getUserCurrentPlace</span><span class="p">(</span><span class="n">_</span> <span class="nv">accessToken</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">places</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="Structs/Place.html">Place</a></span><span class="p">],</span> <span class="nv">myPlaces</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="Structs/Place.html">Place</a></span><span class="p">],</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="p">(</span><span class="kt"><a href="Structs/Place.html">Place</a></span><span class="p">),</span> <span class="kt"><a href="Enums/AttendanceError.html">AttendanceError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>토큰</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>places</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>장소 이름</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>myPlaces</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>사용자 맞춤 장소 리스트</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Result<Bool, AttendanceError></p>
                       </div>
                     </section>
                   </div>
