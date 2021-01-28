@@ -442,6 +442,188 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 33,
+      "symbol": "defaultError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 34,
+      "symbol": "defaultError.tokenExpired",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 35,
+      "symbol": "defaultError.unknown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 37,
+      "symbol": "appGroupName",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 39,
+      "symbol": "rootURL",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 41,
+      "symbol": "DimigoinAPI",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 42,
+      "symbol": "DimigoinAPI.accessToken",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 43,
+      "symbol": "DimigoinAPI.refreshToken",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 44,
+      "symbol": "DimigoinAPI.isFirstLogin",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 45,
+      "symbol": "DimigoinAPI.user",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 46,
+      "symbol": "DimigoinAPI.meals",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 47,
+      "symbol": "DimigoinAPI.myPlaces",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 48,
+      "symbol": "DimigoinAPI.allPlaces",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 49,
+      "symbol": "DimigoinAPI.currentPlace",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 50,
+      "symbol": "DimigoinAPI.lectureList",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 51,
+      "symbol": "DimigoinAPI.ingangs",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 55,
+      "symbol": "DimigoinAPI.weeklyTicketCount",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 56,
+      "symbol": "DimigoinAPI.weeklyUsedTicket",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 57,
+      "symbol": "DimigoinAPI.weeklyRemainTicket",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 59,
+      "symbol": "DimigoinAPI.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 220,
+      "symbol": "DimigoinAPI.changeUserPlace(placeName:remark:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 232,
+      "symbol": "DimigoinAPI.getLectureName(weekDay:period:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 241,
+      "symbol": "DimigoinAPI.fetchLectureData(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 257,
+      "symbol": "DimigoinAPI.fetchUserData(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 277,
+      "symbol": "DimigoinAPI.fetchPrimaryPlaceData(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/DimigoinAPI.swift",
+      "line": 294,
+      "symbol": "DimigoinAPI.fetchAllPlaceData(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/Utilities/DateTime.swift",
       "line": 12,
       "symbol": "Weekday",

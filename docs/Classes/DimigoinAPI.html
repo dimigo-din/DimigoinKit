@@ -17,7 +17,7 @@
     <a title="DimigoinAPI Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (39% documented)</p>
+        <p><a href="../index.html"> Docs</a> (55% documented)</p>
         <p class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -253,7 +253,15 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>Swift 에서 디미고인 API를 손쉽게 사용할 수 있습니다. MVVM아키텍쳐 중 ViewModel에 해당하는 부분을 구현해두었습니다 🚀</p>
+<div class="aside aside-version">
+    <p class="aside-title">Version</p>
+    2020 디미고인 백엔드(V3)
+
+</div>
+<h1 id='example' class='heading'>Example</h1>
+<pre class="highlight swift"><code><span class="kd">@ObseredObejct</span> <span class="k">var</span> <span class="nv">api</span><span class="p">:</span> <span class="kt">DimigoinAPI</span> <span class="o">=</span> <span class="kt">DimigoinAPI</span><span class="p">()</span>
+</code></pre>
 
           </section>
           <section class="section task-group-section">
@@ -272,7 +280,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>디미고인 API 전반에 걸쳐 활용되는 JWT토큰</p>
 
                       </div>
                       <div class="declaration">
@@ -300,7 +308,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>토큰 새로고침에 사용되는 <code>refreshToken</code></p>
 
                       </div>
                       <div class="declaration">
@@ -318,9 +326,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11DimigoinKit0A3APIC12isFirstLoginSbvp"></a>
-                    <a name="//apple_ref/swift/Property/isFirstLogin" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11DimigoinKit0A3APIC12isFirstLoginSbvp">isFirstLogin</a>
+                    <a name="/s:11DimigoinKit0A3APIC10isLoggedInSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isLoggedIn" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11DimigoinKit0A3APIC10isLoggedInSbvp">isLoggedIn</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -328,7 +336,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>로그인 이력이 있으면 <code>true</code> 없으면 <code>false</code></p>
 
                       </div>
                       <div class="declaration">
@@ -336,7 +344,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@Published</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">isFirstLogin</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">isLoggedIn</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -356,7 +364,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>이름, 학년, 반 등 사용자에 대한 데이터</p>
 
                       </div>
                       <div class="declaration">
@@ -384,7 +392,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>주간 급식 - <code>meals[0]</code>부터 월요일 급식</p>
 
                       </div>
                       <div class="declaration">
@@ -412,7 +420,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>모바일용 사용자 맞춤 <code><a href="../Structs/Place.html">Place</a></code></p>
 
                       </div>
                       <div class="declaration">
@@ -440,7 +448,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>디미고내 모든 장소 <code><a href="../Structs/Place.html">Place</a></code></p>
 
                       </div>
                       <div class="declaration">
@@ -468,7 +476,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>사용자의 최근 <code><a href="../Structs/Place.html">Place</a></code></p>
 
                       </div>
                       <div class="declaration">
@@ -496,7 +504,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>시간표 리스트 <code>getLectureName()</code> 로 접근 (추천)</p>
 
                       </div>
                       <div class="declaration">
@@ -524,7 +532,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>인강 데이터</p>
 
                       </div>
                       <div class="declaration">
@@ -552,7 +560,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>주간 최대 인강실 신청</p>
 
                       </div>
                       <div class="declaration">
@@ -580,7 +588,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>주간 사용한 인강실 신청 티켓</p>
 
                       </div>
                       <div class="declaration">
@@ -608,7 +616,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>주간 남은 인강실 신청 티켓</p>
 
                       </div>
                       <div class="declaration">
@@ -636,7 +644,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>선언과 동시에 모든 API데이터를 패치합니다.</p>
 
                       </div>
                       <div class="declaration">
@@ -677,19 +685,6 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/%ED%86%A0%ED%81%B0%20API%20%EA%B4%80%EB%A0%A8"></a>
-                <a name="//apple_ref/swift/Section/토큰 API 관련" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/%ED%86%A0%ED%81%B0%20API%20%EA%B4%80%EB%A0%A8"></a>
-                  <h3 class="section-name"><p>토큰 API 관련</p>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -703,7 +698,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>로그아웃</p>
+                        <p>모든 데이터를 삭제하고 로그아웃합니다.</p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">logout</span><span class="p">()</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -730,7 +728,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>로그인</p>
+                        <p>유저네임, 패스워드와 함께 로그인을 하고 토큰을 받습니다.</p>
+
+<p>로그인에 성공하면 <code><a href="../Classes/DimigoinAPI.html#/s:11DimigoinKit0A3APIC11accessTokenSSvp">accessToken</a></code>과  <code><a href="../Classes/DimigoinAPI.html#/s:11DimigoinKit0A3APIC12refreshTokenSSvp">refreshToken</a></code>을 저장합니다.</p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">login</span><span class="p">(</span><span class="s">"username here"</span><span class="p">,</span> <span class="s">"password here"</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+   <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="kc">true</span> <span class="p">{</span>
+       <span class="c1">// 로그인 성공</span>
+   <span class="p">}</span>
+   <span class="k">else</span> <span class="p">{</span>
+       <span class="c1">// 로그인 실패</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -740,6 +750,53 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">login</span><span class="p">(</span><span class="n">_</span> <span class="nv">username</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">password</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>username</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>유저네임</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>password</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>비밀번호</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Bool</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>comletion</code>을 통해 성공하면 <code>true</code>, 실패하면 <code>false</code>를 반환합니다.</p>
                       </div>
                     </section>
                   </div>
@@ -757,7 +814,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>토큰을 패치합니다.</p>
+                        <p>기기에 저장된 토큰을 패치합니다.</p>
+
+<ul>
+<li>completion: Void</li>
+</ul>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="n">fetchTokens</span> <span class="p">{</span>
+   <span class="c1">// 패치 후 작업</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -784,7 +850,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>토큰을 새로고침 합니다.</p>
+                        <p>🔄 토큰을 새로고침 합니다. 🔄</p>
+
+<ul>
+<li>completion: Void</li>
+</ul>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="n">refreshTokens</span> <span class="p">{</span>
+   <span class="c1">// 새로고침 후 작업</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -798,19 +873,6 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/%EA%B8%89%EC%8B%9D%20API%20%EA%B4%80%EB%A0%A8"></a>
-                <a name="//apple_ref/swift/Section/급식 API 관련" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/%EA%B8%89%EC%8B%9D%20API%20%EA%B4%80%EB%A0%A8"></a>
-                  <h3 class="section-name"><p>급식 API 관련</p>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -824,7 +886,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>오늘의 급식을 반환 합니다.</p>
+                        <p>🍴 오늘의 급식 정보를 반환합니다. 🍴</p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">getTodayMeal</span><span class="p">()</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -834,6 +899,10 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getTodayMeal</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/Meal.html">Meal</a></span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Structs/Meal.html">Meal</a></code>타입 급식 정보를 반환합니다.</p>
                       </div>
                     </section>
                   </div>
@@ -851,7 +920,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>일주일치 급식을 업데이트 합니다.</p>
+                        <p>일주일치 급식을 패치합니다.</p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">fetchMealData</span><span class="p">()</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -865,19 +937,6 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/%EC%9D%B8%EA%B0%95%20API%20%EA%B4%80%EB%A0%A8"></a>
-                <a name="//apple_ref/swift/Section/인강 API 관련" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/%EC%9D%B8%EA%B0%95%20API%20%EA%B4%80%EB%A0%A8"></a>
-                  <h3 class="section-name"><p>인강 API 관련</p>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -891,11 +950,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>인강 신청자 내역 중 자신의 이름이 있는지 검사하고, 맞다면 신청된 상태로 만듭니다.</p>
+                        <p>인강 데이터 중 자신이 신청한 인강의 <code>isApplied</code>를 <code>true</code>로 바꿉니다.</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    <code>fetchIngang()</code> 이후에 실행되어야합니다.
 
-<ul>
-<li>fetchUserData() 이후에 실행되어야합니다.</li>
-</ul>
+</div>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">checkIfApplied</span><span class="p">()</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -923,6 +986,16 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>인강을 신청합니다.</p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">applyIngang</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span> <span class="o">.</span><span class="kt">NSS1</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+    <span class="k">switch</span> <span class="n">result</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(()):</span>
+        <span class="c1">// 신청 성공</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+        <span class="c1">// 신청 실패 (error)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -932,6 +1005,41 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">applyIngang</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span> <span class="kt"><a href="../Enums/IngangTime.html">IngangTime</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">Void</span><span class="p">),</span> <span class="kt"><a href="../Enums/IngangError.html">IngangError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>time</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code>.NSS1</code> 또는 <code>.NSS2</code></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code>Result&lt;(Void), IngangError&gt;</code></p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>실패하면 <code><a href="../Enums/IngangError.html">IngangError</a></code>를 반환합니다.</p>
                       </div>
                     </section>
                   </div>
@@ -950,6 +1058,16 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>인강을 취소합니다.</p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">cancelIngang</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span> <span class="o">.</span><span class="kt">NSS1</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+    <span class="k">switch</span> <span class="n">result</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(()):</span>
+        <span class="c1">// 취소 성공</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+        <span class="c1">// 취소 실패 (error)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -959,6 +1077,41 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">cancelIngang</span><span class="p">(</span><span class="nv">time</span><span class="p">:</span> <span class="kt"><a href="../Enums/IngangTime.html">IngangTime</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">Void</span><span class="p">),</span> <span class="kt"><a href="../Enums/IngangError.html">IngangError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>time</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code>.NSS1</code> 또는 <code>.NSS2</code></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code>Result&lt;(Void), IngangError&gt;</code></p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>실패하면 <code><a href="../Enums/IngangError.html">IngangError</a></code>를 반환합니다.</p>
                       </div>
                     </section>
                   </div>
@@ -976,7 +1129,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>인강 데이터를 새로고침합니다.</p>
+                        <p>인강 데이터를 새로고침 합니다.</p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">fetchIngangData</span><span class="p">()</span> <span class="p">{</span>
+   <span class="c1">// 패치 후 작업</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -990,19 +1148,6 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Attendance%20Log%20API%20%EA%B4%80%EB%A0%A8"></a>
-                <a name="//apple_ref/swift/Section/Attendance Log API 관련" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Attendance%20Log%20API%20%EA%B4%80%EB%A0%A8"></a>
-                  <h3 class="section-name"><p>Attendance Log API 관련</p>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -1016,7 +1161,23 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>사용자의 위치를 바꿉니다.</p>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>POST</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/attendance-log</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">changeUserPlace</span><span class="p">(</span><span class="nv">placeName</span><span class="p">:</span> <span class="s">"교장실"</span><span class="p">,</span> <span class="nv">remark</span><span class="p">:</span> <span class="s">"면담좀 .."</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+    <span class="k">switch</span> <span class="n">result</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(()):</span>
+        <span class="c1">// 변경 성공</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+        <span class="c1">// 변경 실패 (error)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -1027,22 +1188,56 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>placeName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>바뀐 장소 이름</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>remark</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>사유</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Bool</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Result&lt;(Bool), AttendanceError&gt;</code></p>
+                      </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/%EC%8B%9C%EA%B0%84%ED%91%9C%20API%EA%B4%80%EB%A0%A8"></a>
-                <a name="//apple_ref/swift/Section/시간표 API관련" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/%EC%8B%9C%EA%B0%84%ED%91%9C%20API%EA%B4%80%EB%A0%A8"></a>
-                  <h3 class="section-name"><p>시간표 API관련</p>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -1056,7 +1251,11 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>사용자의 반의 시간표 중 수업 이름을 가져옵니다.</p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="c1">// 월요일 5교시 수업 이름</span>
+<span class="n">dimigoinAPI</span><span class="o">.</span><span class="nf">getLectureName</span><span class="p">(</span><span class="nv">weekDay</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">period</span><span class="p">:</span> <span class="mi">5</span><span class="p">)</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -1066,6 +1265,41 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getLectureName</span><span class="p">(</span><span class="nv">weekDay</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">period</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>weekDay</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>N요일, 월요일 = 1 부터 금요일 = 5 맵핑</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>period</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>N교시, 데이터가 없다면 비어있는 문자열 반환</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>수업 이름</p>
                       </div>
                     </section>
                   </div>
@@ -1083,7 +1317,23 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>사용자의 학년, 반에 맞는 시간표를 패치 합니다,</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    <code>fetchUserData()</code> 이후에 실행되어야 합니다.
+
+</div>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>GET</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/timetable/weekly/grade/{학년}/class/{반}</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="n">fetchLectureData</span> <span class="p">{</span>
+   <span class="c1">// 패치 후 작업</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -1110,7 +1360,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>사용자 데이터를 패치합니다.</p>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>GET</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/user/me</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="n">fetchUserData</span> <span class="p">{</span>
+   <span class="c1">// 패치 후 작업</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -1137,7 +1398,23 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>사용자 맞춤 장소 데이터를 패치합니다.</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    <code>fetchUserData()</code> 이후에 실행되어야 합니다.
+
+</div>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>GET</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/place/primary</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="n">fetchPrimaryPlaceData</span> <span class="p">{</span>
+   <span class="c1">// 패치 후 작업</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -1164,7 +1441,23 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>디미고 내 모든 장소 데이터를 패치합니다.</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    <code>fetchUserData()</code> 이후에 실행되어야 합니다.
+
+</div>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>GET</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/place</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="n">dimigoinAPI</span><span class="o">.</span><span class="n">fetchAllPlaceData</span> <span class="p">{</span>
+   <span class="c1">// 패치 후 작업</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -1183,7 +1476,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2021-01-27)</p>
+          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2021-01-28)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
