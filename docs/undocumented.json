@@ -37,154 +37,154 @@
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 14,
+      "line": 20,
       "symbol": "IngangTime.NSS1",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 15,
+      "line": 21,
       "symbol": "IngangTime.NSS2",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 20,
+      "line": 36,
       "symbol": "Ingang.date",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 21,
+      "line": 37,
       "symbol": "Ingang.time",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 22,
+      "line": 38,
       "symbol": "Ingang.isApplied",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 23,
+      "line": 39,
       "symbol": "Ingang.applicants",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 24,
+      "line": 40,
       "symbol": "Ingang.maxApplier",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 25,
+      "line": 41,
       "symbol": "Ingang.title",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 26,
+      "line": 42,
       "symbol": "Ingang.timeString",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 31,
+      "line": 56,
       "symbol": "Applicant.id",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 32,
+      "line": 57,
       "symbol": "Applicant.name",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 33,
+      "line": 58,
       "symbol": "Applicant.grade",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 34,
+      "line": 59,
       "symbol": "Applicant.klass",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 35,
+      "line": 60,
       "symbol": "Applicant.number",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 36,
+      "line": 61,
       "symbol": "Applicant.serial",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 41,
+      "line": 75,
       "symbol": "IngangError.full",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 42,
+      "line": 76,
       "symbol": "IngangError.noIngang",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 43,
+      "line": 77,
       "symbol": "IngangError.alreadyApplied",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 44,
+      "line": 78,
       "symbol": "IngangError.timeout",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 45,
+      "line": 79,
       "symbol": "IngangError.tokenExpired",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 46,
+      "line": 80,
       "symbol": "IngangError.unknown",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/Ingang.swift",
-      "line": 144,
+      "line": 220,
       "symbol": "sortApplicants(applicants:time:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"

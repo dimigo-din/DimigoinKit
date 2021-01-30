@@ -9,13 +9,29 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-/// 인강 시간대 정의
+/**
+ 인강 시간대 정의
+ 
+- `.NSS1`: 야간 자율 학습 1타임
+- `.NSS1`: 야간 자율 학습 1타임
+
+*/
 public enum IngangTime: String {
     case NSS1 = "NSS1"
     case NSS2 = "NSS2"
 }
 
-/// 인강 모델
+/**
+ 인강 모델
+ 
+- `date`: yyyy-MM-dd
+- `time`: .NSS1 혹은 .NSS2
+- `isApplied`: 사용자가 신청했으면 true, 아니면 false
+- `applicants`: 교실 내 신청자 목록
+- `maxApplier`: 인강 신청자 명수 제한
+- `title`: 인강 타이틀
+- `timeString`: 몇시 부터 몇시까진지
+*/
 public struct Ingang: Hashable {
     public var date: String = ""
     public var time: IngangTime = .NSS1
@@ -26,7 +42,16 @@ public struct Ingang: Hashable {
     public var timeString: String = ""
 }
 
-/// 인강 신청자 모델
+/**
+ 인강 신청자 모델
+ 
+- `id`: UUID
+- `name`: 이름
+- `grade`: 학년
+- `klass`: 반
+- `number`: 번호
+- `serial`: 학번
+*/
 public struct Applicant: Codable, Hashable {
     public var id = UUID()
     public var name: String = ""
@@ -36,7 +61,16 @@ public struct Applicant: Codable, Hashable {
     public var serial: Int = 0
 }
 
-/// 인강 API에러 타입 정의
+/**
+ 인강 API 에러 타입
+
+ - full: 이미 꽉참
+ - noIngang: 신청할 인강이 없음
+ - alreadyApplied: 이미 신청한 인강
+ - timeout: 요청 시간초과
+ - tokenExpired: 토큰 만료
+ - unknown: 알 수 없는 에러(500)
+ */
 public enum IngangError: Error {
     case full
     case noIngang
@@ -45,7 +79,27 @@ public enum IngangError: Error {
     case tokenExpired
     case unknown
 }
-/// 모든 인강정보(티켓, 신청자) 조회 ([GET] /ingang-application/status)
+
+/**
+ 모든 인강정보(티켓, 신청자) 조회
+ 
+ - Parameters:
+     - accessToken: 토큰
+     - name: 사용자 이름
+ 
+ # API Method #
+ `GET`
+ 
+ # API EndPoint #
+ `{rootURL}/ingang-application/status`
+ 
+ # 사용예시 #
+ ```
+ getIngangData(accessToken, "홍길동") { result in
+ 
+ }
+ ```
+ */
 public func getIngangData(_ accessToken: String, name: String, completion: @escaping (Result<(weeklyTicketCount: Int, weeklyUsedTicket: Int, weeklyRemainTicket: Int, ingangs: [Ingang]), defaultError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
@@ -87,7 +141,29 @@ public func getIngangData(_ accessToken: String, name: String, completion: @esca
     }
 }
 
-/// 인강신청/취소하기([POST/DELETE] /ingang-application)
+/// ([] )
+
+/**
+ 인강신청/취소하기
+ 
+ - Parameters:
+     - accessToken: 토큰
+     - time: 인강시간
+     - method: .post 는 신청, .delete는 취소
+ 
+ # API Method #
+ `POST/DELETE`
+ 
+ # API EndPoint #
+ `{rootURL}/ingang-application`
+ 
+ # 사용예시 #
+ ```
+ manageIngang(accessToken, time: .NSS1, method: .post) { result in
+ 
+ }
+ ```
+ */
 public func manageIngang(_ accessToken: String, time: IngangTime, method: HTTPMethod, completion: @escaping (Result<(Void), IngangError>) -> Void){
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
