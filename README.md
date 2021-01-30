@@ -1,5 +1,5 @@
 # DimigoinKit
-![DimigoinKit](src/DimigoinKit.png)
+![DimigoinKit](imgs/DimigoinKit.png)
 ![License](https://img.shields.io/github/license/dimigoin/DimigoinKit?style=for-the-badge)
 ![Release](https://img.shields.io/github/v/release/dimigoin/DimigoinKit?style=for-the-badge)
 > 디미고인의 iOS/macOS개발을 위한 디미고인 API
@@ -46,7 +46,7 @@ api.logout()
 
 > 로그인 성공시 모든 데이터가 자동으로 패치 됩니다.
 
-### 각종 데이터
+### 사용 가능한 데이터
 
 ```Swift
 /// 디미고인 API 전반에 걸쳐 활용되는 JWT토큰
