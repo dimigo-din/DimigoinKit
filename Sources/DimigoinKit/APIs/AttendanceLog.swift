@@ -122,16 +122,19 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
  ```
  */
 public func setUserPlace(_ accessToken:String, placeName: String, places: [Place], remark: String, completion: @escaping (Result<Bool, AttendanceError>) -> Void) {
+    let endPoint = "/attendance"
+    let requestBody = "{\"place\":\"\(findPlaceByName(name: placeName, from: places).id)\",\"remark\":\"\(remark)\"}"
+    let jsonData = requestBody.data(using: .utf8, allowLossyConversion: false)!
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let parameters: [String: String] = [
-        "place": findPlaceByName(name: placeName, from: places).id,
-        "remark": remark
-    ]
-    let endPoint = "/attendance-log"
-    let method: HTTPMethod = .post
-    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
+    var request = URLRequest(url: URL(string: "\(rootURL)\(endPoint)")!)
+    request.httpMethod = HTTPMethod.post.rawValue
+    request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+    request.httpBody = jsonData
+    request.headers = headers
+    
+    AF.request(request).response { response in
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
@@ -146,6 +149,7 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
                 completion(.failure(.unknown))
             }
         }
+        debugPrint(response)
     }
 }
 
@@ -175,14 +179,14 @@ public func getAttandenceList(_ accessToken: String, user: User, completion: @es
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance-log/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.klass)"
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.klass)"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                completion(.success(json2AttendanceList(attendances: json["classLogs"])))
+                completion(.success(json2AttendanceList(attendances: json["logs"])))
             case 401:
                 completion(.failure(.tokenExpired))
             default:
@@ -228,14 +232,14 @@ public func getUserCurrentPlace(_ accessToken: String, places: [Place], myPlaces
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance/my-status"
+    let endPoint = "/attendance"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                if let myCurrentPlace = json["myLogs"][0]["place"]["_id"].string {
+                if let myCurrentPlace = json["logs"][0]["place"]["_id"].string {
                     completion(.success(findPlaceById(id: myCurrentPlace, from: places)))
                 } else {
                     completion(.failure(.noSuchPlace))

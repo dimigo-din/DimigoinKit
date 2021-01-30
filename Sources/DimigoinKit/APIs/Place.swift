@@ -73,7 +73,6 @@ public func getPrimaryPlace(_ accessToken: String, completion: @escaping (Result
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                print("json: \(json)")
                 completion(.success(json2PlaceList(places: json["places"])))
             case 401:
                 completion(.failure(.tokenExpired))

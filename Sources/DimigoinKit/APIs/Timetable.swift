@@ -47,12 +47,12 @@ public func getLectureList(_ accessToken: String, grade: Int, klass: Int, comple
 /// json데이터를 강의 리스트 데이터로 반환해줍니다.
 public func json2LectureList(from json: JSON) -> [Lecture] {
     var lectureList: [Lecture] = []
-    for i in 0..<json.count {
-        let weekDay = getDayOfWeek(json[i]["date"].string![0..<10]) - 1
-        if(weekDay != 6 && weekDay != 7) {
-            lectureList.append(Lecture(subject: json[i]["subject"].string!, weekDay: weekDay, period: json[i]["period"].int!))
-        }
-    }
+//    for i in 0..<json.count {
+//        let weekDay = getDayOfWeek(json[i]["date"].string![0..<10]) - 1
+//        if(weekDay != 6 && weekDay != 7) {
+//            lectureList.append(Lecture(subject: json[i]["subject"].string!, weekDay: weekDay, period: json[i]["period"].int!))
+//        }
+//    }
     return lectureList
 }
 

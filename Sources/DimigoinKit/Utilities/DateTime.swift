@@ -107,3 +107,73 @@ func getDayOfWeek(_ today:String) -> Int {
     let weekDay = myCalendar.component(.weekday, from: todayDate!)
     return weekDay+1
 }
+
+public func getCurrentTimeString() -> String {
+    let now = Date()
+
+    let date = DateFormatter()
+    date.locale = Locale(identifier: "ko_kr")
+    date.timeZone = TimeZone(abbreviation: "KST") // "2018-03-21 18:07:27"
+    //date.timeZone = TimeZone(abbreviation: "NZST") // "2018-03-21 22:06:39"
+    date.dateFormat = "HH시 mm분"
+
+    return date.string(from: now)
+}
+
+public func getStringTimeZone() -> String {
+    let calendar = Calendar.current
+    let now = Date()
+    
+    let AfterSchool1Start = calendar.date(
+      bySettingHour: 17,
+      minute: 10,
+      second: 0,
+      of: now)!
+    
+    let AfterSchool2Start = calendar.date(
+      bySettingHour: 17,
+      minute: 55,
+      second: 0,
+      of: now)!
+    
+    let DinnerTimeStart = calendar.date(
+      bySettingHour: 18,
+      minute: 35,
+      second: 0,
+      of: now)!
+    
+    let NSS1Start = calendar.date(
+      bySettingHour: 19,
+      minute: 50,
+      second: 0,
+      of: now)!
+
+    let NSS2Start = calendar.date(
+      bySettingHour: 21,
+      minute: 10,
+      second: 0,
+      of: now)!
+    
+    let NSS2End = calendar.date(
+      bySettingHour: 23,
+      minute: 10,
+      second: 0,
+      of: now)!
+    
+    if now >= AfterSchool1Start && now <= AfterSchool2Start {
+        return "방과후 1타임"
+    }
+    else if now >= AfterSchool2Start && now <= DinnerTimeStart {
+        return "방과후 2타임"
+    }
+    else if now >= DinnerTimeStart && now <= NSS1Start {
+        return "져녁시간"
+    }
+    else if now >= NSS1Start && now <= NSS2Start {
+        return "야간자율학습 1타임"
+    }
+    else if now >= NSS2Start && now <=  NSS2End {
+        return "야간자율학습 2타임"
+    }
+    return "학과시간"
+}

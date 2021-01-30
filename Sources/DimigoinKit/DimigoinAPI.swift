@@ -103,6 +103,9 @@ public class DimigoinAPI: ObservableObject {
             self.fetchAllPlaceData {}
             self.fetchUserData {
                 self.fetchIngangData {}
+                self.fetchLectureData {
+//                    print(self.lectureList)
+                }
                 self.fetchPrimaryPlaceData {
                     self.fetchUserCurrentPlace {}
                 }
@@ -284,6 +287,10 @@ public class DimigoinAPI: ObservableObject {
                }
            }
        }
+    }
+    
+    public func getApplicant(_ ingangIdx: Int, _ applicantIdx: Int) -> Applicant {
+        return Applicant()
     }
     
     /**
@@ -549,7 +556,6 @@ public class DimigoinAPI: ObservableObject {
                 withAnimation() {
                     self.primaryPlaces = places
                 }
-                print(self.primaryPlaces)
             case .failure(let error):
                 switch error {
                 case .tokenExpired:

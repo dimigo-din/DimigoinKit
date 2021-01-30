@@ -168,11 +168,8 @@ public func manageIngang(_ accessToken: String, time: IngangTime, method: HTTPMe
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let parameters: [String: String] = [
-        "time": "\(time.rawValue)"
-    ]
-    let endPoint = "/ingang-application"
-    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
+    let endPoint = "/ingang-application/time/\(time.rawValue)"
+    AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
             switch(status) {
             case 200: //success
