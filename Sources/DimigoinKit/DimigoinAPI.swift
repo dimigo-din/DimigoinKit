@@ -64,7 +64,7 @@ public class DimigoinAPI: ObservableObject {
     @Published public var meals = [Meal](repeating: Meal(), count: 7)
     
     /// 모바일용 사용자 맞춤 `Place`
-    @Published public var myPlaces: [Place] = []
+    @Published public var primaryPlaces: [Place] = []
     
     /// 디미고내 모든 장소 `Place`
     @Published public var allPlaces: [Place] = []
@@ -158,12 +158,12 @@ public class DimigoinAPI: ObservableObject {
                     }
                     self.accessToken = accessToken
                     self.refreshToken = refreshToken
+                    self.fetchAllData()
                     completion(true)
                 case.failure(_):
                     completion(false)
             }
         }
-        fetchAllData()
     }
     
     /**
@@ -370,7 +370,7 @@ public class DimigoinAPI: ObservableObject {
                 case .tokenExpired:
                     self.refreshTokens {}
                 default:
-                    print("unknown")
+                    print("fetch Ingang Data error : unknown")
                 }
             }
             completion()
@@ -470,7 +470,7 @@ public class DimigoinAPI: ObservableObject {
                 case .tokenExpired:
                     self.refreshTokens {}
                 default:
-                    print("unknown")
+                    print("fetch Lecture Data error : unknown")
                 }
             }
             completion()
@@ -506,7 +506,7 @@ public class DimigoinAPI: ObservableObject {
                 case .tokenExpired:
                     self.refreshTokens {}
                 default:
-                    print("unknown")
+                    print("fetch User Data error : unknown")
                 }
             }
             completion()
@@ -535,13 +535,13 @@ public class DimigoinAPI: ObservableObject {
         getPrimaryPlace(accessToken) { result in
             switch result {
             case .success((let places)):
-                self.myPlaces = places
+                self.primaryPlaces = places
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
                     self.refreshTokens {}
                 default:
-                    print("unknown")
+                    print("fetch Primary Place Data error : unknown")
                 }
             }
             completion()
@@ -576,7 +576,7 @@ public class DimigoinAPI: ObservableObject {
                 case .tokenExpired:
                     self.refreshTokens {}
                 default:
-                    print("unknown")
+                    print("fetch All Place Data error : unknown")
                 }
             }
             completion()
@@ -599,7 +599,7 @@ public class DimigoinAPI: ObservableObject {
      ```
      */
     private func fetchUserCurrentPlace(completion: @escaping () -> Void) {
-        getUserCurrentPlace(accessToken, places: allPlaces, myPlaces: myPlaces) { result in
+        getUserCurrentPlace(accessToken, places: allPlaces, myPlaces: primaryPlaces) { result in
             switch result {
             case .success((let place)):
                 self.currentPlace = place
@@ -608,7 +608,7 @@ public class DimigoinAPI: ObservableObject {
                 case .tokenExpired:
                     self.refreshTokens {}
                 default:
-                    print("unknown")
+                    print("fetch User Curent Place Data error : unknown")
                 }
             }
             completion()
