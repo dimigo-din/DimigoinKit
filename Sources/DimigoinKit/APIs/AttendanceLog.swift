@@ -175,7 +175,7 @@ public func getAttandenceList(_ accessToken: String, user: User, completion: @es
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance-log/class-status/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.klass)"
+    let endPoint = "/attendance-log/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.klass)"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
@@ -215,7 +215,7 @@ public func json2AttendanceList(attendances: JSON) -> [Attendance]{
  `GET`
  
  # API EndPoint #
- `{rootURL}/attendance-log/my-status`
+ `{rootURL}/attendance/my-status`
  
  # 사용예시 #
  ```
@@ -228,7 +228,7 @@ public func getUserCurrentPlace(_ accessToken: String, places: [Place], myPlaces
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance-log/my-status"
+    let endPoint = "/attendance/my-status"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
@@ -238,7 +238,7 @@ public func getUserCurrentPlace(_ accessToken: String, places: [Place], myPlaces
                 if let myCurrentPlace = json["myLogs"][0]["place"]["_id"].string {
                     completion(.success(findPlaceById(id: myCurrentPlace, from: places)))
                 } else {
-                    completion(.success(findPlaceByLabel(label: "교실", from: myPlaces)))
+                    completion(.failure(.noSuchPlace))
                 }
             case 401:
                 completion(.failure(.tokenExpired))

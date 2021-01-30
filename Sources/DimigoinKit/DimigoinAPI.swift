@@ -98,12 +98,14 @@ public class DimigoinAPI: ObservableObject {
     /// 모든 API데이터를 패치합니다.
     public func fetchAllData() {
         fetchTokens {
+            self.printTokens()
             self.fetchMealData()
             self.fetchAllPlaceData {}
             self.fetchUserData {
                 self.fetchIngangData {}
-                self.fetchPrimaryPlaceData {}
-                self.fetchUserCurrentPlace {}
+                self.fetchPrimaryPlaceData {
+                    self.fetchUserCurrentPlace {}
+                }
             }
         }
     }
@@ -220,6 +222,11 @@ public class DimigoinAPI: ObservableObject {
         }
     }
     
+    public func printTokens() {
+        print("AccessToken: \(accessToken)")
+        print("refreshToken: \(refreshToken)")
+
+    }
     // MARK: -
     /**
      🍴 오늘의 급식 정보를 반환합니다. 🍴
@@ -417,6 +424,10 @@ public class DimigoinAPI: ObservableObject {
         }
     }
     
+    public func findPrimaryPlaceByLabel(label: String) -> Place{
+        return findPlaceByLabel(label: label, from: primaryPlaces)
+    }
+    
     // MARK: -
     /**
      사용자의 반의 시간표 중 수업 이름을 가져옵니다.
@@ -535,7 +546,10 @@ public class DimigoinAPI: ObservableObject {
         getPrimaryPlace(accessToken) { result in
             switch result {
             case .success((let places)):
-                self.primaryPlaces = places
+                withAnimation() {
+                    self.primaryPlaces = places
+                }
+                print(self.primaryPlaces)
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
@@ -607,6 +621,8 @@ public class DimigoinAPI: ObservableObject {
                 switch error {
                 case .tokenExpired:
                     self.refreshTokens {}
+                case .noSuchPlace:
+                    self.currentPlace = findPlaceByLabel(label: "교실", from: self.primaryPlaces)
                 default:
                     print("fetch User Curent Place Data error : unknown")
                 }

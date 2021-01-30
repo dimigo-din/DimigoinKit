@@ -10,12 +10,12 @@ import SwiftyJSON
 import Alamofire
 
 /// Place 모델 정의
-public struct Place {
+public struct Place: Codable, Hashable {
     public var id: String
-    var label: String
-    var name: String
-    var location: String
-    var description: String
+    public var label: String
+    public var name: String
+    public var location: String
+    public var description: String
     public init() {
         self.id = ""
         self.label = ""
@@ -73,6 +73,7 @@ public func getPrimaryPlace(_ accessToken: String, completion: @escaping (Result
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
+                print("json: \(json)")
                 completion(.success(json2PlaceList(places: json["places"])))
             case 401:
                 completion(.failure(.tokenExpired))
