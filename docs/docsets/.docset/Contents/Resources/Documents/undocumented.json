@@ -2,35 +2,35 @@
   "warnings": [
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/AttendanceLog.swift",
-      "line": 14,
+      "line": 20,
       "symbol": "Attendance.id",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/AttendanceLog.swift",
-      "line": 31,
+      "line": 44,
       "symbol": "AttendanceError.noSuchPlace",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/AttendanceLog.swift",
-      "line": 32,
+      "line": 45,
       "symbol": "AttendanceError.notRightTime",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/AttendanceLog.swift",
-      "line": 33,
+      "line": 46,
       "symbol": "AttendanceError.tokenExpired",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/changemin/Desktop/DimigoinKit/Sources/DimigoinKit/APIs/AttendanceLog.swift",
-      "line": 34,
+      "line": 47,
       "symbol": "AttendanceError.unknown",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"

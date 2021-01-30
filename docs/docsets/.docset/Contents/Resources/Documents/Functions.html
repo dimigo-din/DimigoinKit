@@ -620,7 +620,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>모든 인강정보(티켓, 신청자) 조회 ([GET] /ingang-application/status)</p>
+                        <p>모든 인강정보(티켓, 신청자) 조회</p>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>GET</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/ingang-application/status</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="nf">getIngangData</span><span class="p">(</span><span class="n">accessToken</span><span class="p">,</span> <span class="s">"홍길동"</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -630,6 +641,37 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getIngangData</span><span class="p">(</span><span class="n">_</span> <span class="nv">accessToken</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="p">(</span><span class="nv">weeklyTicketCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">weeklyUsedTicket</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">weeklyRemainTicket</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">ingangs</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="Structs/Ingang.html">Ingang</a></span><span class="p">]),</span> <span class="n"><a href="Enums/defaultError.html">defaultError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>토큰</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>사용자 이름</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -647,7 +689,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>인강신청/취소하기([POST/DELETE] /ingang-application)</p>
+                        <p>인강신청/취소하기</p>
+<h1 id='api-method' class='heading'>API Method</h1>
+
+<p><code>POST/DELETE</code></p>
+<h1 id='api-endpoint' class='heading'>API EndPoint</h1>
+
+<p><code>{rootURL}/ingang-application</code></p>
+<h1 id='사용예시' class='heading'>사용예시</h1>
+<pre class="highlight swift"><code><span class="nf">manageIngang</span><span class="p">(</span><span class="n">accessToken</span><span class="p">,</span> <span class="nv">time</span><span class="p">:</span> <span class="o">.</span><span class="kt">NSS1</span><span class="p">,</span> <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">post</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -657,6 +710,49 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">manageIngang</span><span class="p">(</span><span class="n">_</span> <span class="nv">accessToken</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">time</span><span class="p">:</span> <span class="kt"><a href="Enums/IngangTime.html">IngangTime</a></span><span class="p">,</span> <span class="nv">method</span><span class="p">:</span> <span class="kt">HTTPMethod</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">Void</span><span class="p">),</span> <span class="kt"><a href="Enums/IngangError.html">IngangError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>토큰</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>time</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>인강시간</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>method</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>.post 는 신청, .delete는 취소</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -1476,7 +1572,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2021-01-28)</p>
+          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2021-01-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
