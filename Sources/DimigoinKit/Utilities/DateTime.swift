@@ -108,13 +108,13 @@ func getDayOfWeek(_ today:String) -> Int {
     return weekDay+1
 }
 
+/// HH시 mm분을 반환합니다.
 public func getCurrentTimeString() -> String {
     let now = Date()
 
     let date = DateFormatter()
     date.locale = Locale(identifier: "ko_kr")
     date.timeZone = TimeZone(abbreviation: "KST") // "2018-03-21 18:07:27"
-    //date.timeZone = TimeZone(abbreviation: "NZST") // "2018-03-21 22:06:39"
     date.dateFormat = "HH시 mm분"
 
     return date.string(from: now)

@@ -15,20 +15,20 @@ public struct Place: Codable, Hashable {
     public var label: String
     public var name: String
     public var location: String
-    public var description: String
+    public var type: String
     public init() {
         self.id = ""
         self.label = ""
         self.name = ""
         self.location = ""
-        self.description = ""
+        self.type = ""
     }
-    public init(id: String, label: String, name: String, location: String, description: String) {
+    public init(id: String, label: String, name: String, location: String, type: String) {
         self.id = id
         self.label = label
         self.name = name
         self.location = location
-        self.description = description
+        self.type = type
     }
 }
 
@@ -119,9 +119,9 @@ public func json2PlaceList(places: JSON) -> [Place] {
                                label: places[i]["label"].string ?? "",
                                name: places[i]["name"].string!,
                                location: places[i]["location"].string!,
-                               description: places[i]["description"].string ?? ""))
+                               type: ""))
     }
-    return placeList
+    return placeList.sorted(by: {$0.name < $1.name})
 }
 
 /// 장소  레이블을 통해 장소를 반환합니다.

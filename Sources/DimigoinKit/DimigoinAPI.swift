@@ -47,7 +47,8 @@ public var rootURL: String = "http://edison.dimigo.hs.kr"
  @ObseredObejct var api: DimigoinAPI = DimigoinAPI()
  ```
  */
-public class DimigoinAPI: ObservableObject {
+final public class DimigoinAPI: ObservableObject {
+    @Published public var isFetching = false
     /// 디미고인 API 전반에 걸쳐 활용되는 JWT토큰
     @Published public var accessToken = ""
     
@@ -63,6 +64,9 @@ public class DimigoinAPI: ObservableObject {
     /// 주간 급식 - `meals[0]`부터 월요일 급식
     @Published public var meals = [Meal](repeating: Meal(), count: 7)
     
+    /// 인원 체크
+    @Published public var attendanceList: [Attendance] = []
+    
     /// 모바일용 사용자 맞춤 `Place`
     @Published public var primaryPlaces: [Place] = []
     
@@ -72,14 +76,11 @@ public class DimigoinAPI: ObservableObject {
     /// 사용자의 최근 `Place`
     @Published public var currentPlace: Place = Place()
     
-    /// 시간표 리스트 `getLectureName()` 로 접근 (추천)
-    @Published public var lectureList: [Lecture] = []
+    /// 시간표
+    @Published public var timetable = Timetable()
     
     /// 인강 데이터
-    @Published public var ingangs: [Ingang] = [
-       Ingang(date: getToday8DigitDateString(), time: .NSS1, applicants: []),
-       Ingang(date: getToday8DigitDateString(), time: .NSS2, applicants: [])
-    ]
+    @Published public var ingangs: [Ingang] = []
     
     /// 주간 최대 인강실 신청
     @Published public var weeklyTicketCount: Int = 0
@@ -97,17 +98,25 @@ public class DimigoinAPI: ObservableObject {
     
     /// 모든 API데이터를 패치합니다.
     public func fetchAllData() {
+        withAnimation() {
+            isFetching = true
+        }
         fetchTokens {
             self.printTokens()
             self.fetchMealData()
             self.fetchAllPlaceData {}
             self.fetchUserData {
                 self.fetchIngangData {}
-                self.fetchLectureData {
+                self.fetchTimetableData {
 //                    print(self.lectureList)
                 }
                 self.fetchPrimaryPlaceData {
                     self.fetchUserCurrentPlace {}
+                    self.fetchAttendanceListData {
+                        withAnimation() {
+                            self.isFetching = false
+                        }
+                    }
                 }
             }
         }
@@ -420,15 +429,26 @@ public class DimigoinAPI: ObservableObject {
      }
      ```
      */
-    public func changeUserPlace(placeName: String, remark: String, completion: @escaping (Result<(Bool), AttendanceError>) -> Void) {
+    public func changeUserPlace(placeName: String, remark: String, completion: @escaping (Result<Void, AttendanceError>) -> Void) {
         setUserPlace(accessToken, placeName: placeName, places: allPlaces, remark: remark) { result in
             switch result {
             case .success(_):
-                completion(.success(true))
+                self.fetchUserCurrentPlace {
+                    completion(.success(()))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
         }
+    }
+    
+    public func isPrimaryPlace(place: Place) -> Bool {
+        for primaryPlace in primaryPlaces {
+            if primaryPlace.id == place.id {
+                return true
+            }
+        }
+        return false
     }
     
     public func findPrimaryPlaceByLabel(label: String) -> Place{
@@ -451,14 +471,14 @@ public class DimigoinAPI: ObservableObject {
      dimigoinAPI.getLectureName(weekDay: 1, period: 5)
      ```
      */
-    public func getLectureName(weekDay: Int, period: Int) -> String {
-        for i in 0..<lectureList.count {
-            if(lectureList[i].weekDay == weekDay && lectureList[i].period == period) {
-                return lectureList[i].subject
-            }
-        }
-        return ""
-    }
+//    public func getLectureName(weekDay: Int, period: Int) -> String {
+//        for i in 0..<lectureList.count {
+//            if(lectureList[i].weekDay == weekDay && lectureList[i].period == period) {
+//                return lectureList[i].subject
+//            }
+//        }
+//        return ""
+//    }
 
     /**
      사용자의 학년, 반에 맞는 시간표를 패치 합니다,
@@ -478,11 +498,11 @@ public class DimigoinAPI: ObservableObject {
      }
      ```
      */
-    public func fetchLectureData(completion: @escaping () -> Void) {
-        getLectureList(accessToken, grade: user.grade, klass: user.klass) { result in
+    public func fetchTimetableData(completion: @escaping () -> Void) {
+        getTimetable(accessToken, grade: user.grade, klass: user.klass) { result in
             switch result {
-            case .success((let lectureList)):
-                self.lectureList = lectureList
+            case .success((let timetable)):
+                self.timetable = timetable
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
@@ -516,9 +536,6 @@ public class DimigoinAPI: ObservableObject {
             switch result {
             case .success((let user)):
                 self.user = user
-                self.fetchLectureData() {
-                    
-                }
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
@@ -618,22 +635,47 @@ public class DimigoinAPI: ObservableObject {
      }
      ```
      */
-    private func fetchUserCurrentPlace(completion: @escaping () -> Void) {
+    public func fetchUserCurrentPlace(completion: @escaping () -> Void) {
         getUserCurrentPlace(accessToken, places: allPlaces, myPlaces: primaryPlaces) { result in
             switch result {
             case .success((let place)):
                 self.currentPlace = place
+                completion()
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
-                    self.refreshTokens {}
+                    self.refreshTokens {
+                    }
                 case .noSuchPlace:
                     self.currentPlace = findPlaceByLabel(label: "교실", from: self.primaryPlaces)
-                default:
-                    print("fetch User Curent Place Data error : unknown")
+                case .notRightTime:
+                    print("fetch User Current Place Data error : notRightTime")
+                case .unknown:
+                    print("fetch User Current Place Data error : unknown")
                 }
+                completion()
             }
-            completion()
+        }
+    }
+    
+    public func fetchAttendanceListData(completion: @escaping () -> Void) {
+        getAttendenceList(accessToken, user: user, defaultPlace: findPlaceByLabel(label: "교실", from: primaryPlaces)) { result in
+            switch result {
+            case .success((let attendanceList)):
+                self.attendanceList = attendanceList
+                completion()
+            case .failure(let error):
+                switch error {
+                case .tokenExpired:
+                    self.refreshTokens {
+                    }
+                case .noSuchPlace:
+                    print("no Such Place")
+                default:
+                    print("fetch Attendance Data error : unknown")
+                }
+                completion()
+            }
         }
     }
 }

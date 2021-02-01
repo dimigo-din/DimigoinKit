@@ -16,18 +16,21 @@ import SwiftyJSON
  - name: 이름
  - currentLoaction: 장소
  */
-public struct Attendance {
+public struct Attendance: Hashable {
     public var id: String
-    var name: String
-    var currentLocation: Place
+    public var name: String
+    public var number: Int
+    public var currentLocation: Place
     init() {
         self.id = ""
         self.name = ""
+        self.number = 0
         self.currentLocation = Place()
     }
-    init(id: String, name: String, currentLocation: Place) {
+    init(id: String, name: String, number: Int, currentLocation: Place) {
         self.id = id
         self.name = name
+        self.number = number
         self.currentLocation = currentLocation
     }
 }
@@ -78,7 +81,7 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
         "place": findPlaceByName(name: placeName, from: places).id,
         "remark": findPlaceByName(name: placeName, from: places).label
     ]
-    let endPoint = "/attendance-log"
+    let endPoint = "/attendance"
     let method: HTTPMethod = .post
     AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
@@ -149,7 +152,6 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
                 completion(.failure(.unknown))
             }
         }
-        debugPrint(response)
     }
 }
 
@@ -170,12 +172,12 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
  
  # 사용예시 #
  ```
- getAttandenceList("accessToken here", user: User) { result in
+ getAttendenceList("accessToken here", user: User) { result in
     
  }
  ```
  */
-public func getAttandenceList(_ accessToken: String, user: User, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
+public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: Place, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -186,7 +188,7 @@ public func getAttandenceList(_ accessToken: String, user: User, completion: @es
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                completion(.success(json2AttendanceList(attendances: json["logs"])))
+                completion(.success(json2AttendanceList(json: json["logs"], defaultPlace: defaultPlace)))
             case 401:
                 completion(.failure(.tokenExpired))
             default:
@@ -197,12 +199,28 @@ public func getAttandenceList(_ accessToken: String, user: User, completion: @es
 }
  
 /// json 데이터를 Attendance List로 변환하여 반환해 줍니다.
-public func json2AttendanceList(attendances: JSON) -> [Attendance]{
-//    var attendanceList: [Attendance] = []
-//    for i in 0..<attendanceList.count {
-//        Attendance(id: attendances[i][], name: <#T##String#>, currentLocation: <#T##Place#>)
-//    }
-    return []
+public func json2AttendanceList(json: JSON, defaultPlace: Place) -> [Attendance]{
+    var attendanceList: [Attendance] = []
+    for i in 0..<json.count {
+        attendanceList.append(Attendance(id: json[i]["student"]["_id"].string!,
+                   name: json[i]["student"]["name"].string!,
+                   number: json[i]["student"]["number"].int!,
+                   currentLocation: json2AttendannceCurrentPlace(json: json[i]["student"]["logs"], defaultPlace: defaultPlace)))
+    }
+    
+    return attendanceList.sorted(by: {$0.number < $1.number})
+}
+
+public func json2AttendannceCurrentPlace(json: JSON, defaultPlace: Place) -> Place {
+    if json.count == 0 {
+        return defaultPlace
+    } else {
+        return Place(id: json[0]["place"]["_id"].string!,
+                      label: json[0]["place"]["label"].string!,
+                      name: json[0]["place"]["name"].string!,
+                      location: json[0]["place"]["location"].string!,
+                      type: "")
+    }
 }
     
 /**
@@ -223,7 +241,7 @@ public func json2AttendanceList(attendances: JSON) -> [Attendance]{
  
  # 사용예시 #
  ```
- getAttandenceList("accessToken here", places: [Place], myPlaces: [Place]) { result in
+ getAttendenceList("accessToken here", places: [Place], myPlaces: [Place]) { result in
     
  }
  ```

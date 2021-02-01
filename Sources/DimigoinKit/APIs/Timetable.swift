@@ -16,6 +16,16 @@ public struct Lecture: Codable {
     public var period: Int
 }
 
+public struct Timetable: Codable {
+    public var lectures: [[String]] = [[],[],[],[],[]]
+    public init() {
+        
+    }
+    public init(_ lectures: [[String]]) {
+        self.lectures = lectures
+    }
+}
+
 /// 시간표 API 에러타입 정의
 public enum TimetableError: Error {
     case unknown
@@ -23,7 +33,7 @@ public enum TimetableError: Error {
 }
 
 /// 시간표 데이터를 받아옵니다.
-public func getLectureList(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<([Lecture]), TimetableError>) -> Void) {
+public func getTimetable(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<(Timetable), TimetableError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -34,7 +44,7 @@ public func getLectureList(_ accessToken: String, grade: Int, klass: Int, comple
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                completion(.success(json2LectureList(from: json["timetable"])))
+                completion(.success(json2Timetable(from: json["timetable"])))
             case 401:
                 completion(.failure(.tokenExpired))
             default:
@@ -45,15 +55,15 @@ public func getLectureList(_ accessToken: String, grade: Int, klass: Int, comple
 }
 
 /// json데이터를 강의 리스트 데이터로 반환해줍니다.
-public func json2LectureList(from json: JSON) -> [Lecture] {
-    var lectureList: [Lecture] = []
-//    for i in 0..<json.count {
-//        let weekDay = getDayOfWeek(json[i]["date"].string![0..<10]) - 1
-//        if(weekDay != 6 && weekDay != 7) {
-//            lectureList.append(Lecture(subject: json[i]["subject"].string!, weekDay: weekDay, period: json[i]["period"].int!))
-//        }
-//    }
-    return lectureList
+public func json2Timetable(from json: JSON) -> Timetable {
+    var lectures: [[String]] = [[],[],[],[],[]]
+    for i in 0..<json.count {
+        for j in 0..<json[i]["sequence"].count {
+            lectures[i].append(json[i]["sequence"][j].string!)
+        }
+    }
+    let timetable = Timetable(lectures)
+    return timetable
 }
 
 extension String {
