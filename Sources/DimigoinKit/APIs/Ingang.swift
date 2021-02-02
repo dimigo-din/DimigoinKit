@@ -124,7 +124,7 @@ public func getIngangData(_ accessToken: String, name: String, completion: @esca
                            title: "야간자율학습 1타임",
                            timeString: "19:50 - 21:10"),
                     Ingang(date: getToday8DigitDateString(),
-                           time: .NSS1,
+                           time: .NSS2,
                            isApplied: checkIsApplied(json["applicationsInClass"], time: .NSS2, name: name),
                            applicants: sortApplicants(applicants: json["applicationsInClass"], time: .NSS2),
                            maxApplier: maxApplier,
@@ -140,8 +140,6 @@ public func getIngangData(_ accessToken: String, name: String, completion: @esca
         }
     }
 }
-
-/// ([] )
 
 /**
  인강신청/취소하기
@@ -192,6 +190,7 @@ public func manageIngang(_ accessToken: String, time: IngangTime, method: HTTPMe
 }
 
 /// 인강 신청자 내역 중 자신의 이름이 있는지 검사하고 맞다면 참을 반환합니다.
+/// TODO : 로직 수정, 야자 1타임 2타임 구분
 public func checkIsApplied(_ applicants: JSON, time: IngangTime, name: String) -> Bool{
     for applicant in sortApplicants(applicants: applicants, time: time) {
         if(applicant.name == name) {

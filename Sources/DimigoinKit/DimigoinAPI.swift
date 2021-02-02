@@ -298,8 +298,13 @@ final public class DimigoinAPI: ObservableObject {
        }
     }
     
-    public func getApplicant(_ ingangIdx: Int, _ applicantIdx: Int) -> Applicant {
-        return Applicant()
+    public func getApplicant(_ time: IngangTime, _ applicantIdx: Int) -> Applicant {
+        if applicantIdx <= ingangs[time == .NSS1 ? 0 : 1].applicants.count {
+            return ingangs[time == .NSS1 ? 0 : 1].applicants[applicantIdx-1]
+        } else {
+            return Applicant()
+        }
+        
     }
     
     /**
@@ -388,6 +393,7 @@ final public class DimigoinAPI: ObservableObject {
                 self.weeklyUsedTicket = weeklyUsedTicket
                 self.weeklyRemainTicket = weeklyRemainTicket
                 self.ingangs = ingangs
+                print(ingangs)
             case .failure(let error):
                 switch error {
                 case .tokenExpired:
