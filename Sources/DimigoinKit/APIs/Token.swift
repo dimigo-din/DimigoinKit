@@ -74,6 +74,7 @@ public func saveTokens(_ accessToken: String, _ refreshToken: String) {
     UserDefaults.standard.setValue(refreshToken, forKey: "refreshToken")
     
     // for dimigoin App service only
+    UserDefaults(suiteName: appGroupName)?.setValue(true, forKey: "isLoggedIn")
     UserDefaults(suiteName: appGroupName)?.setValue(accessToken, forKey: "accessToken")
     UserDefaults(suiteName: appGroupName)?.setValue(refreshToken, forKey: "refreshToken")
 }
@@ -97,6 +98,7 @@ public func removeTokens(completion: @escaping () -> Void) {
     UserDefaults.standard.removeObject(forKey: "refreshToken")
     
     // for dimigoin App service only
+    UserDefaults(suiteName: appGroupName)?.setValue(false, forKey: "isLoggedIn")
     UserDefaults(suiteName: appGroupName)?.removeObject(forKey: "accessToken")
     UserDefaults(suiteName: appGroupName)?.removeObject(forKey: "refreshToken")
     completion()

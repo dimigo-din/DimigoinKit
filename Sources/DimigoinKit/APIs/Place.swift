@@ -10,26 +10,33 @@ import SwiftyJSON
 import Alamofire
 
 /// Place 모델 정의
-public struct Place: Codable, Hashable {
+public struct Place: Hashable {
     public var id: String
     public var label: String
     public var name: String
     public var location: String
-    public var type: String
+    public var type: PlaceType
     public init() {
         self.id = ""
         self.label = ""
         self.name = ""
         self.location = ""
-        self.type = ""
+        self.type = .etc
     }
-    public init(id: String, label: String, name: String, location: String, type: String) {
+    public init(id: String, label: String, name: String, location: String, type: PlaceType) {
         self.id = id
         self.label = label
         self.name = name
         self.location = location
         self.type = type
     }
+}
+
+public enum PlaceType: Hashable {
+    case etc
+    case classroom
+    case circle
+    case ingang
 }
 
 /// Place API 오류 정의
@@ -119,9 +126,29 @@ public func json2PlaceList(places: JSON) -> [Place] {
                                label: places[i]["label"].string ?? "",
                                name: places[i]["name"].string!,
                                location: places[i]["location"].string!,
-                               type: ""))
+                               type: getPlaceType(places[i]["type"].string!)))
     }
     return placeList.sorted(by: {$0.name < $1.name})
+}
+
+public func getPlaceType(_ placeType: String) -> PlaceType {
+    switch placeType {
+    case "ETC": return .etc
+    case "CLASSROOM": return .classroom
+    case "INGANG": return .ingang
+    case "CIRCLE": return .circle
+    default: return .etc
+    }
+}
+    
+public func placeType2String(_ placeType: PlaceType) -> String {
+    switch placeType {
+    case .etc: return "기타"
+    case .classroom: return "교실"
+    case .ingang: return "인강실"
+    case .circle: return "동아리"
+    }
+    
 }
 
 /// 장소  레이블을 통해 장소를 반환합니다.

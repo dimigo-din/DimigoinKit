@@ -19,19 +19,31 @@ import SwiftyJSON
 public struct Attendance: Hashable {
     public var id: String
     public var name: String
+    public var grade: Int
+    public var klass: Int
     public var number: Int
-    public var currentLocation: Place
-    init() {
+    public var attendanceLog: [Place]
+    public var timeline: [String]
+    public var isEnrolled: Bool
+    public init() {
         self.id = ""
         self.name = ""
+        self.grade = 0
+        self.klass = 0
         self.number = 0
-        self.currentLocation = Place()
+        self.attendanceLog = []
+        self.timeline = []
+        self.isEnrolled = false
     }
-    init(id: String, name: String, number: Int, currentLocation: Place) {
+    public init(id: String, name: String, grade: Int, klass: Int, number: Int, attendanceLog: [Place], timeline: [String], isEnrolled: Bool) {
         self.id = id
         self.name = name
+        self.grade = grade
+        self.klass = klass
         self.number = number
-        self.currentLocation = currentLocation
+        self.attendanceLog = attendanceLog
+        self.timeline = timeline
+        self.isEnrolled = isEnrolled
     }
 }
 
@@ -187,6 +199,7 @@ public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: P
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
+                debugPrint(response)
                 let json = JSON(response.value!!)
                 completion(.success(json2AttendanceList(json: json["logs"], defaultPlace: defaultPlace)))
             case 401:
@@ -203,26 +216,43 @@ public func json2AttendanceList(json: JSON, defaultPlace: Place) -> [Attendance]
     var attendanceList: [Attendance] = []
     for i in 0..<json.count {
         attendanceList.append(Attendance(id: json[i]["student"]["_id"].string!,
-                   name: json[i]["student"]["name"].string!,
-                   number: json[i]["student"]["number"].int!,
-                   currentLocation: json2AttendannceCurrentPlace(json: json[i]["student"]["logs"], defaultPlace: defaultPlace)))
+                               name: json[i]["student"]["name"].string!,
+                               grade: json[i]["student"]["grade"].int!,
+                               klass: json[i]["student"]["class"].int!,
+                               number: json[i]["student"]["number"].int!,
+                               attendanceLog: json2AttendannceLog(json: json[i]["logs"], defaultPlace: defaultPlace),
+                               timeline: json2Timeline(json: json[i]["logs"]),
+                               isEnrolled: json2Timeline(json: json[i]["logs"]).count == 0 ? false : true))
     }
-    
     return attendanceList.sorted(by: {$0.number < $1.number})
 }
 
-public func json2AttendannceCurrentPlace(json: JSON, defaultPlace: Place) -> Place {
+public func json2AttendannceLog(json: JSON, defaultPlace: Place) -> [Place] {
     if json.count == 0 {
-        return defaultPlace
+        return [defaultPlace]
     } else {
-        return Place(id: json[0]["place"]["_id"].string!,
-                      label: json[0]["place"]["label"].string!,
-                      name: json[0]["place"]["name"].string!,
-                      location: json[0]["place"]["location"].string!,
-                      type: "")
+        var logs:[Place] = []
+        for i in 0..<json.count {
+            logs.append(Place(id: json[i]["place"]["_id"].string!,
+                              label: json[i]["place"]["label"].string ?? "",
+                              name: json[i]["place"]["name"].string!,
+                              location: json[i]["place"]["location"].string!,
+                              type: getPlaceType(json[i]["place"]["type"].string!)))
+        }
+        return logs.reversed()
     }
 }
+
+public func json2Timeline(json: JSON) -> [String] {
+    var timeline:[String] = []
+    for i in 0..<json.count {
+        let time = json[i]["createdAt"].string!
+        timeline.append("\(time[11..<13]):\(time[14..<16])")
+    }
+    return timeline.reversed()
+}
     
+
 /**
  자신의 최근 위치를 불러옵니다. 없다면, 교실을 반환합니다.
  

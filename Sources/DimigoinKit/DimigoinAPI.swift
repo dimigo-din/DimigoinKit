@@ -48,7 +48,13 @@ public var rootURL: String = "http://edison.dimigo.hs.kr"
  ```
  */
 final public class DimigoinAPI: ObservableObject {
-    @Published public var isFetching = false
+    @Published public var isFetching = true {
+        didSet {
+            if isFetching == true {
+                self.fetchAllData()
+            }
+        }
+    }
     /// 디미고인 API 전반에 걸쳐 활용되는 JWT토큰
     @Published public var accessToken = ""
     
@@ -98,21 +104,22 @@ final public class DimigoinAPI: ObservableObject {
     
     /// 모든 API데이터를 패치합니다.
     public func fetchAllData() {
-        withAnimation() {
-            isFetching = true
-        }
         fetchTokens {
             self.printTokens()
             self.fetchMealData()
             self.fetchAllPlaceData {}
             self.fetchUserData {
-                self.fetchIngangData {}
+                self.fetchIngangData {
+//                    print(self.ingangs)
+                }
                 self.fetchTimetableData {
-//                    print(self.lectureList)
+                    saveTimetable(self.timetable)
                 }
                 self.fetchPrimaryPlaceData {
+//                    print(self.allPlaces)
                     self.fetchUserCurrentPlace {}
                     self.fetchAttendanceListData {
+//                        print(self.attendanceList)
                         withAnimation() {
                             self.isFetching = false
                         }
@@ -389,11 +396,12 @@ final public class DimigoinAPI: ObservableObject {
         getIngangData(accessToken, name: user.name) { result in
             switch result {
             case .success((let weeklyTicketCount, let weeklyUsedTicket, let weeklyRemainTicket, let ingangs)):
-                self.weeklyTicketCount = weeklyTicketCount
-                self.weeklyUsedTicket = weeklyUsedTicket
-                self.weeklyRemainTicket = weeklyRemainTicket
-                self.ingangs = ingangs
-                print(ingangs)
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    self.weeklyTicketCount = weeklyTicketCount
+                    self.weeklyUsedTicket = weeklyUsedTicket
+                    self.weeklyRemainTicket = weeklyRemainTicket
+                    self.ingangs = ingangs
+                }
             case .failure(let error):
                 switch error {
                 case .tokenExpired:

@@ -66,6 +66,18 @@ public func json2Timetable(from json: JSON) -> Timetable {
     return timetable
 }
 
+public func saveTimetable(_ timetable: Timetable) {
+    // for official dimigoin iOS App only
+    for i in 0..<timetable.lectures.count {
+        UserDefaults(suiteName: appGroupName)?
+            .setValue(timetable.lectures[i], forKey: "timetable-\(i)")
+    }
+}
+
+public func loadTimetable(day: Int) -> [String] {
+    return UserDefaults(suiteName: appGroupName)?.stringArray(forKey: "timetable-\(day)") ?? []
+}
+
 extension String {
     subscript(_ range: CountableRange<Int>) -> String {
         let start = index(startIndex, offsetBy: max(0, range.lowerBound))
@@ -79,3 +91,4 @@ extension String {
          return String(self[start...])
     }
 }
+
