@@ -199,7 +199,6 @@ public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: P
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
-                debugPrint(response)
                 let json = JSON(response.value!!)
                 completion(.success(json2AttendanceList(json: json["logs"], defaultPlace: defaultPlace)))
             case 401:

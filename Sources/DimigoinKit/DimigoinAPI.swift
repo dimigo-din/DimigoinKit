@@ -35,7 +35,7 @@ public var appGroupName: String = "group.in.dimigo.ios"
  let url = URL(string: rootURL)
  ```
 */
-public var rootURL: String = "http://edison.dimigo.hs.kr"
+public var rootURL: String = "https://api.dimigo.in"
 
 /**
  Swift 에서 디미고인 API를 손쉽게 사용할 수 있습니다. MVVM아키텍쳐 중 ViewModel에 해당하는 부분을 구현해두었습니다 🚀
@@ -88,6 +88,9 @@ final public class DimigoinAPI: ObservableObject {
     /// 인강 데이터
     @Published public var ingangs: [Ingang] = []
     
+    /// 공지사항
+    @Published public var notice: String = ""
+    
     /// 주간 최대 인강실 신청
     @Published public var weeklyTicketCount: Int = 0
     
@@ -120,7 +123,7 @@ final public class DimigoinAPI: ObservableObject {
                     self.fetchUserCurrentPlace {}
                     self.fetchAttendanceListData {
 //                        print(self.attendanceList)
-                        withAnimation() {
+                        withAnimation(.easeInOut(duration: 0.75)) {
                             self.isFetching = false
                         }
                     }
@@ -246,6 +249,21 @@ final public class DimigoinAPI: ObservableObject {
         print("refreshToken: \(refreshToken)")
 
     }
+    
+    // MARK: -
+    
+    public func fetchRecentNotice(completion: @escaping() -> Void) {
+        getRecentNotice(accessToken) { result in
+            switch result {
+            case .success((let notice)):
+                self.notice = notice
+            case .failure(_):
+                print("notice fail")
+            }
+            completion()
+        }
+    }
+    
     // MARK: -
     /**
      🍴 오늘의 급식 정보를 반환합니다. 🍴
