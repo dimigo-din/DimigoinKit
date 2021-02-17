@@ -89,7 +89,7 @@ final public class DimigoinAPI: ObservableObject {
     @Published public var ingangs: [Ingang] = []
     
     /// 공지사항
-    @Published public var notice: String = ""
+    @Published public var notices: [Notice] = []
     
     /// 주간 최대 인강실 신청
     @Published public var weeklyTicketCount: Int = 0
@@ -118,12 +118,15 @@ final public class DimigoinAPI: ObservableObject {
                 self.fetchTimetableData {
                     saveTimetable(self.timetable)
                 }
+                self.fetchNotices {
+                    print(self.notices)
+                }
                 self.fetchPrimaryPlaceData {
 //                    print(self.allPlaces)
                     self.fetchUserCurrentPlace {}
                     self.fetchAttendanceListData {
 //                        print(self.attendanceList)
-                        withAnimation(.easeInOut(duration: 0.75)) {
+                        withAnimation(.easeInOut(duration: 0.6)) {
                             self.isFetching = false
                         }
                     }
@@ -252,11 +255,11 @@ final public class DimigoinAPI: ObservableObject {
     
     // MARK: -
     
-    public func fetchRecentNotice(completion: @escaping() -> Void) {
+    public func fetchNotices(completion: @escaping() -> Void) {
         getRecentNotice(accessToken) { result in
             switch result {
-            case .success((let notice)):
-                self.notice = notice
+            case .success((let notices)):
+                self.notices = notices
             case .failure(_):
                 print("notice fail")
             }
