@@ -118,9 +118,7 @@ final public class DimigoinAPI: ObservableObject {
                 self.fetchTimetableData {
                     saveTimetable(self.timetable)
                 }
-                self.fetchNotices {
-                    print(self.notices)
-                }
+                self.fetchNotices { }
                 self.fetchPrimaryPlaceData {
 //                    print(self.allPlaces)
                     self.fetchUserCurrentPlace {}

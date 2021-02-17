@@ -74,6 +74,7 @@ public struct Applicant: Codable, Hashable {
 public enum IngangError: Error {
     case full
     case noIngang
+    case noTicket
     case alreadyApplied
     case timeout
     case tokenExpired
@@ -178,8 +179,8 @@ public func manageIngang(_ accessToken: String, time: IngangTime, method: HTTPMe
                 completion(.failure(.full))
             case 404: // 해당 시간 신청한 인강실이 없습니다.
                 completion(.failure(.noIngang))
-            case 409: //이미 해당 시간 인강실을 신청했습니다.
-                completion(.failure(.alreadyApplied))
+            case 409: // 티켓을 모두 사용
+                completion(.failure(.noTicket))
             case 500:
                 completion(.failure(.timeout))
             default:

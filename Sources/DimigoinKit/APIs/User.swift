@@ -52,7 +52,7 @@ public func getUserData(_ accessToken: String, completion: @escaping (Result<(Us
                      klass: json["identity"]["class"].int!,
                      number: json["identity"]["number"].int!,
                      serial: json["identity"]["serial"].int!,
-                     photoURL: URL(string: "https://api.dimigo.hs.kr/user_photo/\(json["identity"]["photo"][0].string ?? "")")!)
+                     photoURL: URL(string: json["identity"]["photo"][0].string ?? "")!)
                 completion(.success(user))
             case 401:
                 completion(.failure(.tokenExpired))

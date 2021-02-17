@@ -95,7 +95,7 @@ public func setUserPlace(_ accessToken: String, placeName: String, description: 
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let parameters: [String: String] = [
+    let parameters: [String:String] = [
         "name": "\(placeName)",
         "location": "\(findPlaceByName(name: placeName, from: places).location)",
         "description": "\(description)"

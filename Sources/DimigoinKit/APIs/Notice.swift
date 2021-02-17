@@ -15,8 +15,8 @@ public enum NoticeError: Error {
 }
 
 public struct Notice {
-    var title: String
-    var content: String
+    public var title: String
+    public var content: String
 }
 
 public func getRecentNotice(_ accessToken: String, completion: @escaping (Result<[Notice], NoticeError>) -> Void) {
