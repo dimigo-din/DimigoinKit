@@ -47,7 +47,7 @@ public func getUserData(_ accessToken: String, completion: @escaping (Result<(Us
                 let json = JSON(response.value!!)
                 let user = User(name: json["identity"]["name"].string!,
                      idx: json["identity"]["idx"].int!,
-                     type: .student,
+                     type: json["identity"]["userType"].string! == "S" ? .student : .teacher,
                      grade: json["identity"]["grade"].int!,
                      klass: json["identity"]["class"].int!,
                      number: json["identity"]["number"].int!,
