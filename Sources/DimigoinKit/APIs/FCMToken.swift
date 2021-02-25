@@ -16,7 +16,7 @@ public enum DeviceTokenError: Error {
     case unknown
 }
 
-public func registerDeviceToken(_ accessToken: String, _ deviceToken:String, completion: @escaping (Result<(Bool), DeviceTokenError>) -> Void) {
+public func registerFCMToken(_ accessToken: String, _ deviceToken:String, completion: @escaping (Result<Void, DeviceTokenError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization": "Bearer \(accessToken)"
     ]
@@ -29,7 +29,7 @@ public func registerDeviceToken(_ accessToken: String, _ deviceToken:String, com
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
-                completion(.success(true))
+                completion(.success(()))
             case 404:
                 completion(.failure(.noSuchDeviceToken))
             default:
@@ -39,6 +39,22 @@ public func registerDeviceToken(_ accessToken: String, _ deviceToken:String, com
     }
 }
 
-public func deleteDeviceToken(_ refreshToken:String, completion: @escaping (Result<(accessToken: String, refreshToken: String), TokenError>) -> Void) {
-    
+public func deleteFCMToken(_ accessToken:String, completion: @escaping () -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization": "Bearer \(accessToken)"
+    ]
+    let endPoint = "/fcm/token"
+    let method: HTTPMethod = .delete
+    AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                completion()
+            case 404:
+                completion()
+            default:
+                completion()
+            }
+        }
+    }
 }

@@ -18,7 +18,9 @@ public struct User {
     public var klass: Int = 1
     public var number: Int = 0
     public var serial: Int = 0
+    public var birthDay: String = ""
     public var photoURL: URL = URL(string: "https://api.dimigo.hs.kr/")!
+    public var libraryId: String = ""
 }
 
 /// 유저 타입(선생님, 학생)
@@ -48,11 +50,14 @@ public func getUserData(_ accessToken: String, completion: @escaping (Result<(Us
                 let user = User(name: json["identity"]["name"].string!,
                      idx: json["identity"]["idx"].int!,
                      type: json["identity"]["userType"].string! == "S" ? .student : .teacher,
-                     grade: json["identity"]["grade"].int!,
-                     klass: json["identity"]["class"].int!,
-                     number: json["identity"]["number"].int!,
-                     serial: json["identity"]["serial"].int!,
-                     photoURL: URL(string: json["identity"]["photo"][0].string ?? "")!)
+                     grade: json["identity"]["grade"].int ?? 0,
+                     klass: json["identity"]["class"].int ?? 0,
+                     number: json["identity"]["number"].int ?? 0,
+                     serial: json["identity"]["serial"].int ?? 0,
+                     birthDay: json["identity"]["birthdate"].string ?? "",
+                     photoURL: URL(string: json["identity"]["photos"][0].string ?? "https://api.dimigo.hs.kr/")!,
+                     libraryId: json["identity"]["libraryId"].string ?? ""
+                )
                 completion(.success(user))
             case 401:
                 completion(.failure(.tokenExpired))

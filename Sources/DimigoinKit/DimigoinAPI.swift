@@ -73,6 +73,8 @@ final public class DimigoinAPI: ObservableObject {
     /// 인원 체크
     @Published public var attendanceList: [Attendance] = []
     
+    @Published public var allAttendanceList: [[Attendance]] = []
+    
     /// 모바일용 사용자 맞춤 `Place`
     @Published public var primaryPlaces: [Place] = []
     
@@ -112,20 +114,24 @@ final public class DimigoinAPI: ObservableObject {
             self.fetchMealData()
             self.fetchAllPlaceData {}
             self.fetchUserData {
-                self.fetchIngangData {
-//                    print(self.ingangs)
-                }
-                self.fetchTimetableData {
-                    saveTimetable(self.timetable)
-                }
-                self.fetchNotices { }
-                self.fetchPrimaryPlaceData {
-//                    print(self.allPlaces)
-                    self.fetchUserCurrentPlace {}
-                    self.fetchAttendanceListData {
-//                        print(self.attendanceList)
-                        withAnimation(.easeInOut(duration: 0.6)) {
-                            self.isFetching = false
+                if self.user.type == .teacher {
+                    self.fetchAllPlaceData {
+                        self.fetchAllAttendanceListData {
+                            print(self.allAttendanceList)
+                        }
+                    }
+                } else {
+                    self.fetchIngangData { }
+                    self.fetchTimetableData {
+                        saveTimetable(self.timetable)
+                    }
+                    self.fetchNotices { }
+                    self.fetchPrimaryPlaceData {
+                        self.fetchUserCurrentPlace {}
+                        self.fetchAttendanceListData {
+                            withAnimation(.easeInOut(duration: 0.6)) {
+                                self.isFetching = false
+                            }
                         }
                     }
                 }
@@ -174,7 +180,7 @@ final public class DimigoinAPI: ObservableObject {
      }
      ```
      */
-    public func login(_ username: String, _ password: String, completion: @escaping (Bool) -> Void) {
+    public func login(_ username: String, _ password: String, _ fcmToken: String, completion: @escaping (Bool) -> Void) {
         getTokens(username, password) { result in
             switch result {
                 case .success((let accessToken, let refreshToken)):
@@ -183,6 +189,7 @@ final public class DimigoinAPI: ObservableObject {
                     }
                     self.accessToken = accessToken
                     self.refreshToken = refreshToken
+                    self.fetchFCMToken(fcmToken: fcmToken) { }
                     self.fetchAllData()
                     completion(true)
                 case.failure(_):
@@ -218,6 +225,18 @@ final public class DimigoinAPI: ObservableObject {
         }
     }
     
+    public func fetchFCMToken(fcmToken: String, completion: @escaping () -> Void) {
+        deleteFCMToken(accessToken) { 
+            registerFCMToken(self.accessToken, fcmToken) { result in
+                switch result {
+                case .success(()):
+                    completion()
+                case .failure(_):
+                    completion()
+                }
+            }
+        }
+    }
     /**
      🔄 토큰을 새로고침 합니다. 🔄
      
@@ -250,6 +269,8 @@ final public class DimigoinAPI: ObservableObject {
         print("refreshToken: \(refreshToken)")
 
     }
+    
+    
     
     // MARK: -
     
@@ -708,6 +729,31 @@ final public class DimigoinAPI: ObservableObject {
                     print("fetch Attendance Data error : unknown")
                 }
                 completion()
+            }
+        }
+    }
+    
+    public func fetchAllAttendanceListData(completion: @escaping () -> Void) {
+        for grade in 1...3 {
+            for klass in 1...6 {
+                getAttendenceList(accessToken, grade: grade, klass: klass, defaultPlace: findPlaceByLabel(label: "교실", from: primaryPlaces)) { result in
+                    switch result {
+                    case .success((let attendanceList)):
+                        self.attendanceList = attendanceList
+                        completion()
+                    case .failure(let error):
+                        switch error {
+                        case .tokenExpired:
+                            self.refreshTokens {
+                            }
+                        case .noSuchPlace:
+                            print("no Such Place")
+                        default:
+                            print("fetch Attendance Data error : unknown")
+                        }
+                        completion()
+                    }
+                }
             }
         }
     }

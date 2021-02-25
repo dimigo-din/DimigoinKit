@@ -200,13 +200,36 @@ public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: P
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                completion(.success(json2AttendanceList(json: json["logs"], defaultPlace: defaultPlace)))
+                completion(.success(json2AttendanceList(json: json["status"], defaultPlace: defaultPlace)))
             case 401:
                 completion(.failure(.tokenExpired))
             default:
                 completion(.failure(.unknown))
             }
         }
+    }
+}
+
+public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, defaultPlace: Place, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
+    ]
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(grade)/class/\(klass)"
+    let method: HTTPMethod = .get
+    AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
+        debugPrint(response)
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                let json = JSON(response.value!!)
+                completion(.success(json2AttendanceList(json: json["status"], defaultPlace: defaultPlace)))
+            case 401:
+                completion(.failure(.tokenExpired))
+            default:
+                completion(.failure(.unknown))
+            }
+        }
+        
     }
 }
  
@@ -219,24 +242,24 @@ public func json2AttendanceList(json: JSON, defaultPlace: Place) -> [Attendance]
                                grade: json[i]["student"]["grade"].int!,
                                klass: json[i]["student"]["class"].int!,
                                number: json[i]["student"]["number"].int!,
-                               attendanceLog: json2AttendannceLog(json: json[i]["logs"], defaultPlace: defaultPlace),
-                               timeline: json2Timeline(json: json[i]["logs"]),
-                               isEnrolled: json2Timeline(json: json[i]["logs"]).count == 0 ? false : true))
+                               attendanceLog: json2AttendanceLog(json: json["log"], defaultPlace: defaultPlace),
+                               timeline: json2Timeline(json: json["log"]),
+                               isEnrolled: json2Timeline(json: json["log"]).count == 0 ? false : true))
     }
     return attendanceList.sorted(by: {$0.number < $1.number})
 }
 
-public func json2AttendannceLog(json: JSON, defaultPlace: Place) -> [Place] {
+public func json2AttendanceLog(json: JSON, defaultPlace: Place) -> [Place] {
     if json.count == 0 {
         return [defaultPlace]
     } else {
         var logs:[Place] = []
         for i in 0..<json.count {
-            logs.append(Place(id: json[i]["place"]["_id"].string!,
-                              label: json[i]["place"]["label"].string ?? "",
-                              name: json[i]["place"]["name"].string!,
-                              location: json[i]["place"]["location"].string!,
-                              type: getPlaceType(json[i]["place"]["type"].string!)))
+            logs.append(Place(id: json["place"]["_id"].string!,
+                              label: json["place"]["label"].string ?? "",
+                              name: json["place"]["name"].string!,
+                              location: json["place"]["location"].string!,
+                              type: getPlaceType(json["place"]["type"].string!)))
         }
         return logs.reversed()
     }
@@ -245,7 +268,7 @@ public func json2AttendannceLog(json: JSON, defaultPlace: Place) -> [Place] {
 public func json2Timeline(json: JSON) -> [String] {
     var timeline:[String] = []
     for i in 0..<json.count {
-        let time = json[i]["createdAt"].string!
+        let time = json["createdAt"].string!
         timeline.append("\(time[11..<13]):\(time[14..<16])")
     }
     return timeline.reversed()
