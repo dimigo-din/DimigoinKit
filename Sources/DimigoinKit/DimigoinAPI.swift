@@ -702,7 +702,7 @@ final public class DimigoinAPI: ObservableObject {
         getUserCurrentPlace(accessToken, places: allPlaces, myPlaces: primaryPlaces) { result in
             switch result {
             case .success((let place)):
-                self.currentPlace = place
+                withAnimation(.easeInOut) { self.currentPlace = place }
                 completion()
             case .failure(let error):
                 switch error {
@@ -725,7 +725,7 @@ final public class DimigoinAPI: ObservableObject {
         getAttendenceList(accessToken, user: user) { result in
             switch result {
             case .success((let attendanceList)):
-                self.attendanceList = attendanceList
+                withAnimation(.easeInOut) { self.attendanceList = attendanceList }
                 completion()
             case .failure(let error):
                 switch error {
