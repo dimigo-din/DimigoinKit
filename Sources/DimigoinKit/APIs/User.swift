@@ -21,6 +21,7 @@ public struct User {
     public var birthDay: String = ""
     public var photoURL: URL = URL(string: "https://api.dimigo.hs.kr/")!
     public var libraryId: String = ""
+    public var barcode: UIImage = UIImage()
 }
 
 /// 유저 타입(선생님, 학생)
@@ -56,7 +57,8 @@ public func getUserData(_ accessToken: String, completion: @escaping (Result<(Us
                      serial: json["identity"]["serial"].int ?? 0,
                      birthDay: json["identity"]["birthdate"].string ?? "",
                      photoURL: URL(string: json["identity"]["photos"][0].string ?? "https://api.dimigo.hs.kr/")!,
-                     libraryId: json["identity"]["libraryId"].string ?? ""
+                     libraryId: json["identity"]["libraryId"].string ?? "",
+                     barcode: generateBarcode(from: json["identity"]["libraryId"].string ?? "") ?? generateBarcode(from: "error")!
                 )
                 completion(.success(user))
             case 401:
