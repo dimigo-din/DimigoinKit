@@ -62,7 +62,7 @@ final public class DimigoinAPI: ObservableObject {
     @Published public var refreshToken = ""
     
     /// 로그인 이력이 있으면 `true` 없으면 `false`
-    @Published public var isLoggedIn = true
+    @Published public var isLoggedIn = false
     
     /// 이름, 학년, 반 등 사용자에 대한 데이터
     @Published public var user = User()
@@ -129,7 +129,6 @@ final public class DimigoinAPI: ObservableObject {
                     self.fetchPrimaryPlaceData {
                         self.fetchUserCurrentPlace {}
                         self.fetchAttendanceListData {
-                            print(self.attendanceList)
                             withAnimation(.easeInOut(duration: 0.6)) {
                                 self.isFetching = false
                             }
@@ -151,7 +150,7 @@ final public class DimigoinAPI: ObservableObject {
      */
     public func logout() {
         removeTokens {
-            withAnimation() {
+            withAnimation(.easeInOut) {
                 self.isLoggedIn = false
             }
         }
@@ -185,7 +184,7 @@ final public class DimigoinAPI: ObservableObject {
         getTokens(username, password) { result in
             switch result {
                 case .success((let accessToken, let refreshToken)):
-                    withAnimation() {
+                    withAnimation(.easeInOut) {
                         self.isLoggedIn = true
                     }
                     self.accessToken = accessToken
@@ -216,11 +215,11 @@ final public class DimigoinAPI: ObservableObject {
         loadSavedTokens() { result in
             switch result {
             case .success((let accessToken, let refreshToken)):
-                self.isLoggedIn = true
+                withAnimation(.easeInOut) { self.isLoggedIn = true }
                 self.accessToken = accessToken
                 self.refreshToken = refreshToken
             case .failure(_):
-                self.isLoggedIn = false
+                withAnimation(.easeInOut) { self.isLoggedIn = false }
             }
             completion()
         }
