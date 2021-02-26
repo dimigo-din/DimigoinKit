@@ -376,14 +376,18 @@ final public class DimigoinAPI: ObservableObject {
      }
      ```
      */
-    public func applyIngang(time: IngangTime, completion: @escaping (Result<(Void), IngangError>) -> Void) {
-        manageIngang(accessToken, time: time, method: .post) { result in
+    public func applyIngang(ingang: Ingang, completion: @escaping (Result<(Void), IngangError>) -> Void) {
+        let ingangTime:Int = ingang.time == .NSS1 ? 0 : 1
+        withAnimation(.easeInOut) { ingangs[ingangTime].isFetching = true }
+        manageIngang(accessToken, ingang: ingang, method: .post) { result in
             switch result {
             case .success(()):
                 self.fetchIngangData() {
+                    withAnimation(.easeInOut) { self.ingangs[ingangTime].isFetching = false }
                     completion(.success(()))
                 }
             case .failure(let error):
+                withAnimation(.easeInOut) { self.ingangs[ingangTime].isFetching = false }
                 completion(.failure(error))
             }
         }
@@ -410,14 +414,18 @@ final public class DimigoinAPI: ObservableObject {
      }
      ```
      */
-    public func cancelIngang(time: IngangTime, completion: @escaping (Result<(Void), IngangError>) -> Void) {
-        manageIngang(accessToken, time: time, method: .delete) { result in
+    public func cancelIngang(ingang: Ingang, completion: @escaping (Result<(Void), IngangError>) -> Void) {
+        let ingangTime:Int = ingang.time == .NSS1 ? 0 : 1
+        withAnimation(.easeInOut) { ingangs[ingangTime].isFetching = true }
+        manageIngang(accessToken, ingang: ingang, method: .delete) { result in
             switch result {
             case .success(()):
                 self.fetchIngangData() {
+                    withAnimation(.easeInOut) { self.ingangs[ingangTime].isFetching = false }
                     completion(.success(()))
                 }
             case .failure(let error):
+                withAnimation(.easeInOut) { self.ingangs[ingangTime].isFetching = false }
                 completion(.failure(error))
             }
         }

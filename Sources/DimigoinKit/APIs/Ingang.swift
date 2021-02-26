@@ -40,6 +40,7 @@ public struct Ingang: Hashable {
     public var maxApplier: Int = 0
     public var title: String = ""
     public var timeString: String = ""
+    public var isFetching: Bool = false
 }
 
 /**
@@ -163,11 +164,11 @@ public func getIngangData(_ accessToken: String, name: String, completion: @esca
  }
  ```
  */
-public func manageIngang(_ accessToken: String, time: IngangTime, method: HTTPMethod, completion: @escaping (Result<(Void), IngangError>) -> Void){
+public func manageIngang(_ accessToken: String, ingang: Ingang, method: HTTPMethod, completion: @escaping (Result<(Void), IngangError>) -> Void){
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/ingang-application/time/\(time.rawValue)"
+    let endPoint = "/ingang-application/time/\(ingang.time.rawValue)"
     AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
             switch(status) {
