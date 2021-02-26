@@ -129,7 +129,7 @@ final public class DimigoinAPI: ObservableObject {
                     self.fetchPrimaryPlaceData {
                         self.fetchUserCurrentPlace {}
                         self.fetchAttendanceListData {
-//                            print(self.attendanceList)
+                            print(self.attendanceList)
                             withAnimation(.easeInOut(duration: 0.6)) {
                                 self.isFetching = false
                             }

@@ -58,7 +58,7 @@ public func getUserData(_ accessToken: String, completion: @escaping (Result<(Us
                      birthDay: json["identity"]["birthdate"].string ?? "",
                      photoURL: URL(string: json["identity"]["photos"][0].string ?? "https://api.dimigo.hs.kr/")!,
                      libraryId: json["identity"]["libraryId"].string ?? "",
-                     barcode: generateBarcode(from: json["identity"]["libraryId"].string ?? "") ?? generateBarcode(from: "error")!
+                     barcode: generateBarcode(from: json["identity"]["libraryId"].string!) ?? generateBarcode(from: "error")!
                 )
                 completion(.success(user))
             case 401:

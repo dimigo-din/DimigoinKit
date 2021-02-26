@@ -40,9 +40,7 @@ public func generateBarcode(from string: String) -> UIImage? {
             let finalImage = UIImage(cgImage: result)
 
             return finalImage
-
         }
     }
-
     return nil
 }
