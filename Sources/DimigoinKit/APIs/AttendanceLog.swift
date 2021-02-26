@@ -192,7 +192,7 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
  }
  ```
  */
-public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: Place, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
+public func getAttendenceList(_ accessToken: String, user: User, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -203,7 +203,7 @@ public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: P
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                completion(.success(json2AttendanceList(json: json["status"], defaultPlace: defaultPlace)))
+                completion(.success(json2AttendanceList(json: json["status"])))
             case 401:
                 completion(.failure(.tokenExpired))
             default:
@@ -214,7 +214,7 @@ public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: P
 }
 
 // 각 반별 조회
-public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, defaultPlace: Place, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
+public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
@@ -225,7 +225,7 @@ public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, def
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                completion(.success(json2AttendanceList(json: json["status"], defaultPlace: defaultPlace)))
+                completion(.success(json2AttendanceList(json: json["status"])))
             case 401:
                 completion(.failure(.tokenExpired))
             default:
@@ -236,7 +236,7 @@ public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, def
 }
  
 /// json 데이터를 Attendance List로 변환하여 반환해 줍니다.
-public func json2AttendanceList(json: JSON, defaultPlace: Place) -> [Attendance]{
+public func json2AttendanceList(json: JSON) -> [Attendance]{
     var attendanceList: [Attendance] = []
     for i in 0..<json.count {
         attendanceList.append(
@@ -245,31 +245,25 @@ public func json2AttendanceList(json: JSON, defaultPlace: Place) -> [Attendance]
                        grade: json[i]["student"]["grade"].int!,
                        klass: json[i]["student"]["class"].int!,
                        number: json[i]["student"]["number"].int!,
-                       attendanceLog: json2AttendanceLog(json: json["log"], defaultPlace: defaultPlace))
+                       attendanceLog: json2AttendanceLog(json: json[i]["log"]))
         )
     }
     return attendanceList.sorted(by: {$0.number < $1.number})
 }
 
-public func json2AttendanceLog(json: JSON, defaultPlace: Place) -> [AttendanceLog] {
-    if json.count == 0 {
-//        return [AttendanceLog(place: defaultPlace, time: "", remark: "", updatedBy: "")]
+public func json2AttendanceLog(json: JSON) -> [AttendanceLog] {
+    if json.isEmpty {
         return []
     } else {
-        var logs:[AttendanceLog] = []
-        for _ in 0..<json.count {
-            logs.append(
-                AttendanceLog(place: Place(id: json["place"]["_id"].string!,
-                                           label: json["place"]["label"].string ?? "",
-                                           name: json["place"]["name"].string!,
-                                           location: json["place"]["location"].string!,
-                                           type: getPlaceType(json["place"]["type"].string!)),
-                              time: "\(json["createdAt"].string![11..<13]):\(json["createdAt"].string![14..<16])",
-                              remark: json["remark"].string ?? "",
-                              updatedBy: json["updatedBy"]["name"].string ?? "")
-            )
-        }
-        return logs.reversed()
+        return [AttendanceLog(
+                    place: Place(id: json["place"]["_id"].string!,
+                                   label: json["place"]["label"].string ?? "",
+                                   name: json["place"]["name"].string!,
+                                   location: json["place"]["location"].string!,
+                                   type: getPlaceType(json["place"]["type"].string!)),
+                    time: "\(json["createdAt"].string![11..<13]):\(json["createdAt"].string![14..<16])",
+                    remark: json["remark"].string ?? "",
+                    updatedBy: json["updatedBy"]["name"].string ?? "")]
     }
 }  
 

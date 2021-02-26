@@ -722,7 +722,7 @@ final public class DimigoinAPI: ObservableObject {
     }
     
     public func fetchAttendanceListData(completion: @escaping () -> Void) {
-        getAttendenceList(accessToken, user: user, defaultPlace: findPlaceByLabel(label: "교실", from: primaryPlaces)) { result in
+        getAttendenceList(accessToken, user: user) { result in
             switch result {
             case .success((let attendanceList)):
                 self.attendanceList = attendanceList
@@ -745,7 +745,7 @@ final public class DimigoinAPI: ObservableObject {
     public func fetchAllAttendanceListData(completion: @escaping () -> Void) {
         for grade in 1...3 {
             for klass in 1...6 {
-                getAttendenceList(accessToken, grade: grade, klass: klass, defaultPlace: findPlaceByLabel(label: "교실", from: primaryPlaces)) { result in
+                getAttendenceList(accessToken, grade: grade, klass: klass) { result in
                     switch result {
                     case .success((let attendanceList)):
                         self.attendanceList = attendanceList
