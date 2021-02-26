@@ -129,6 +129,7 @@ final public class DimigoinAPI: ObservableObject {
                     self.fetchPrimaryPlaceData {
                         self.fetchUserCurrentPlace {}
                         self.fetchAttendanceListData {
+//                            print(self.attendanceList)
                             withAnimation(.easeInOut(duration: 0.6)) {
                                 self.isFetching = false
                             }
@@ -226,7 +227,7 @@ final public class DimigoinAPI: ObservableObject {
     }
     
     public func fetchFCMToken(fcmToken: String, completion: @escaping () -> Void) {
-        deleteFCMToken(accessToken) { 
+        deleteFCMToken(accessToken) {
             registerFCMToken(self.accessToken, fcmToken) { result in
                 switch result {
                 case .success(()):

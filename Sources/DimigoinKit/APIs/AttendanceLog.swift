@@ -22,9 +22,8 @@ public struct Attendance: Hashable {
     public var grade: Int
     public var klass: Int
     public var number: Int
-    public var attendanceLog: [Place]
-    public var timeline: [String]
-    public var isEnrolled: Bool
+    public var attendanceLog: [AttendanceLog]
+    public var isRegistered: Bool
     public init() {
         self.id = ""
         self.name = ""
@@ -32,21 +31,25 @@ public struct Attendance: Hashable {
         self.klass = 0
         self.number = 0
         self.attendanceLog = []
-        self.timeline = []
-        self.isEnrolled = false
+        self.isRegistered = false
     }
-    public init(id: String, name: String, grade: Int, klass: Int, number: Int, attendanceLog: [Place], timeline: [String], isEnrolled: Bool) {
+    public init(id: String, name: String, grade: Int, klass: Int, number: Int, attendanceLog: [AttendanceLog]) {
         self.id = id
         self.name = name
         self.grade = grade
         self.klass = klass
         self.number = number
         self.attendanceLog = attendanceLog
-        self.timeline = timeline
-        self.isEnrolled = isEnrolled
+        self.isRegistered = (self.attendanceLog.count != 0)
     }
 }
 
+public struct AttendanceLog: Hashable {
+    public var place: Place
+    public var time: String
+    public var remark: String
+    public var updatedBy: String
+}
 /**
  사용자 인원체크 에러 타입
 
@@ -193,7 +196,7 @@ public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: P
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.klass)"
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.klass)/status"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
@@ -210,14 +213,14 @@ public func getAttendenceList(_ accessToken: String, user: User, defaultPlace: P
     }
 }
 
+// 각 반별 조회
 public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, defaultPlace: Place, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(grade)/class/\(klass)"
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(grade)/class/\(klass)/status"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
-        debugPrint(response)
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
@@ -229,7 +232,6 @@ public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, def
                 completion(.failure(.unknown))
             }
         }
-        
     }
 }
  
@@ -237,43 +239,39 @@ public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, def
 public func json2AttendanceList(json: JSON, defaultPlace: Place) -> [Attendance]{
     var attendanceList: [Attendance] = []
     for i in 0..<json.count {
-        attendanceList.append(Attendance(id: json[i]["student"]["_id"].string!,
-                               name: json[i]["student"]["name"].string!,
-                               grade: json[i]["student"]["grade"].int!,
-                               klass: json[i]["student"]["class"].int!,
-                               number: json[i]["student"]["number"].int!,
-                               attendanceLog: json2AttendanceLog(json: json["log"], defaultPlace: defaultPlace),
-                               timeline: json2Timeline(json: json["log"]),
-                               isEnrolled: json2Timeline(json: json["log"]).count == 0 ? false : true))
+        attendanceList.append(
+            Attendance(id: json[i]["student"]["_id"].string!,
+                       name: json[i]["student"]["name"].string!,
+                       grade: json[i]["student"]["grade"].int!,
+                       klass: json[i]["student"]["class"].int!,
+                       number: json[i]["student"]["number"].int!,
+                       attendanceLog: json2AttendanceLog(json: json["log"], defaultPlace: defaultPlace))
+        )
     }
     return attendanceList.sorted(by: {$0.number < $1.number})
 }
 
-public func json2AttendanceLog(json: JSON, defaultPlace: Place) -> [Place] {
+public func json2AttendanceLog(json: JSON, defaultPlace: Place) -> [AttendanceLog] {
     if json.count == 0 {
-        return [defaultPlace]
+//        return [AttendanceLog(place: defaultPlace, time: "", remark: "", updatedBy: "")]
+        return []
     } else {
-        var logs:[Place] = []
-        for i in 0..<json.count {
-            logs.append(Place(id: json["place"]["_id"].string!,
-                              label: json["place"]["label"].string ?? "",
-                              name: json["place"]["name"].string!,
-                              location: json["place"]["location"].string!,
-                              type: getPlaceType(json["place"]["type"].string!)))
+        var logs:[AttendanceLog] = []
+        for _ in 0..<json.count {
+            logs.append(
+                AttendanceLog(place: Place(id: json["place"]["_id"].string!,
+                                           label: json["place"]["label"].string ?? "",
+                                           name: json["place"]["name"].string!,
+                                           location: json["place"]["location"].string!,
+                                           type: getPlaceType(json["place"]["type"].string!)),
+                              time: "\(json["createdAt"].string![11..<13]):\(json["createdAt"].string![14..<16])",
+                              remark: json["remark"].string ?? "",
+                              updatedBy: json["updatedBy"]["name"].string ?? "")
+            )
         }
         return logs.reversed()
     }
-}
-
-public func json2Timeline(json: JSON) -> [String] {
-    var timeline:[String] = []
-    for i in 0..<json.count {
-        let time = json["createdAt"].string!
-        timeline.append("\(time[11..<13]):\(time[14..<16])")
-    }
-    return timeline.reversed()
-}
-    
+}  
 
 /**
  자신의 최근 위치를 불러옵니다. 없다면, 교실을 반환합니다.
