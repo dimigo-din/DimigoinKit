@@ -49,6 +49,7 @@ public struct AttendanceLog: Hashable {
     public var time: String
     public var remark: String
     public var updatedBy: String
+    public var student: User
 }
 /**
  사용자 인원체크 에러 타입
@@ -245,25 +246,26 @@ public func json2AttendanceList(json: JSON) -> [Attendance]{
                        grade: json[i]["student"]["grade"].int!,
                        klass: json[i]["student"]["class"].int!,
                        number: json[i]["student"]["number"].int!,
-                       attendanceLog: json2AttendanceLog(json: json[i]["log"]))
+                       attendanceLog: json2AttendanceLog(json: json[i]))
         )
     }
     return attendanceList.sorted(by: {$0.number < $1.number})
 }
 
 public func json2AttendanceLog(json: JSON) -> [AttendanceLog] {
-    if json.isEmpty {
+    if json["log"].isEmpty {
         return []
     } else {
         return [AttendanceLog(
-                    place: Place(id: json["place"]["_id"].string!,
-                                   label: json["place"]["label"].string ?? "",
-                                   name: json["place"]["name"].string!,
-                                   location: json["place"]["location"].string!,
-                                   type: getPlaceType(json["place"]["type"].string!)),
-                    time: "\(json["createdAt"].string![11..<13]):\(json["createdAt"].string![14..<16])",
-                    remark: json["remark"].string ?? "",
-                    updatedBy: json["updatedBy"]["name"].string ?? "")]
+                    place: Place(id: json["log"]["place"]["_id"].string!,
+                                   label: json["log"]["place"]["label"].string ?? "",
+                                   name: json["log"]["place"]["name"].string!,
+                                   location: json["log"]["place"]["location"].string!,
+                                   type: getPlaceType(json["log"]["place"]["type"].string!)),
+                    time: "\(json["log"]["createdAt"].string![11..<13]):\(json["log"]["createdAt"].string![14..<16])",
+                    remark: json["log"]["remark"].string ?? "",
+                    updatedBy: json["log"]["updatedBy"]["name"].string ?? "",
+                    student: json2User(json: json["student"]))]
     }
 }  
 
@@ -281,7 +283,8 @@ public func json2AttendanceHistory(json: JSON) -> [AttendanceLog] {
                                                    type: getPlaceType(json[i]["place"]["type"].string!)),
                                     time: "\(json[i]["createdAt"].string![11..<13]):\(json[i]["createdAt"].string![14..<16])",
                                     remark: json[i]["remark"].string ?? "",
-                                    updatedBy: json[i]["updatedBy"]["name"].string ?? ""))
+                                    updatedBy: json[i]["updatedBy"]["name"].string ?? "",
+                                    student: json2User(json: json[i]["student"])))
         }
         return attendanceLog
     }
@@ -293,6 +296,28 @@ public func getAttendenceHistory(_ accessToken: String, studentId: String, compl
         "Authorization":"Bearer \(accessToken)"
     ]
     let endPoint = "/attendance/date/\(getToday8DigitDateString())/student/\(studentId)"
+    let method: HTTPMethod = .get
+    AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                let json = JSON(response.value!!)
+                completion(.success(json2AttendanceHistory(json: json["logs"])))
+            case 401:
+                completion(.failure(.tokenExpired))
+            default:
+                completion(.failure(.unknown))
+            }
+        }
+    }
+}
+
+// 반별 조회
+public func getClassHistory(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<([AttendanceLog]), AttendanceError>) -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
+    ]
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(grade)/class/\(klass)/timeline"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {

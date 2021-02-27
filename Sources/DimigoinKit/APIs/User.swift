@@ -10,7 +10,7 @@ import Alamofire
 import SwiftyJSON
 
 /// 사용자 모델 정의
-public struct User {
+public struct User: Hashable {
     public var name: String = ""
     public var idx: Int = 0
     public var type: UserType = .student
@@ -48,18 +48,7 @@ public func getUserData(_ accessToken: String, completion: @escaping (Result<(Us
             switch(status) {
             case 200:
                 let json = JSON(response.value!!)
-                let user = User(name: json["identity"]["name"].string!,
-                     idx: json["identity"]["idx"].int!,
-                     type: json["identity"]["userType"].string! == "S" ? .student : .teacher,
-                     grade: json["identity"]["grade"].int ?? 0,
-                     klass: json["identity"]["class"].int ?? 0,
-                     number: json["identity"]["number"].int ?? 0,
-                     serial: json["identity"]["serial"].int ?? 0,
-                     birthDay: json["identity"]["birthdate"].string ?? "",
-                     photoURL: URL(string: json["identity"]["photos"][0].string ?? "https://api.dimigo.hs.kr/")!,
-                     libraryId: json["identity"]["libraryId"].string ?? "",
-                     barcode: generateBarcode(from: json["identity"]["libraryId"].string ?? "") ?? generateBarcode(from: "error")!
-                )
+                let user = json2User(json: json["identity"])
                 completion(.success(user))
             case 401:
                 completion(.failure(.tokenExpired))
@@ -68,6 +57,21 @@ public func getUserData(_ accessToken: String, completion: @escaping (Result<(Us
             }
         }
     }
+}
+
+public func json2User(json: JSON) -> User {
+    return User(name: json["name"].string!,
+                idx: json["idx"].int!,
+                type: json["userType"].string! == "S" ? .student : .teacher,
+                grade: json["grade"].int ?? 0,
+                klass: json["class"].int ?? 0,
+                number: json["number"].int ?? 0,
+                serial: json["serial"].int ?? 0,
+                birthDay: json["birthdate"].string ?? "",
+                photoURL: URL(string: json["photos"][0].string ?? "https://api.dimigo.hs.kr/")!,
+                libraryId: json["libraryId"].string ?? "",
+                barcode: generateBarcode(from: json["libraryId"].string ?? "") ?? generateBarcode(from: "error")!
+           )
 }
 
 /// 반에 따른 학과를 반환합니다.
