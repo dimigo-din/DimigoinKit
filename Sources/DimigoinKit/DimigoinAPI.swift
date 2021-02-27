@@ -48,13 +48,14 @@ public var rootURL: String = "https://api.dimigo.in"
  ```
  */
 final public class DimigoinAPI: ObservableObject {
-    @Published public var isFetching = true {
-        didSet {
-            if isFetching == true {
-                self.fetchAllData()
-            }
-        }
-    }
+    @Published public var isFetching = true
+//    {
+//        didSet {
+//            if isFetching == true {
+//                self.fetchAllData { }
+//            }
+//        }
+//    }
     /// 디미고인 API 전반에 걸쳐 활용되는 JWT토큰
     @Published public var accessToken = ""
     
@@ -104,11 +105,13 @@ final public class DimigoinAPI: ObservableObject {
     
     /// 선언과 동시에 모든 API데이터를 패치합니다.
     public init() {
-        fetchAllData()
+        fetchAllData {
+            withAnimation(.easeInOut(duration: 0.6)) { self.isFetching = false }
+        }
     }
     
     /// 모든 API데이터를 패치합니다.
-    public func fetchAllData() {
+    public func fetchAllData(completion: @escaping () -> Void) {
         fetchTokens {
             self.printTokens()
             self.fetchMealData()
@@ -116,7 +119,7 @@ final public class DimigoinAPI: ObservableObject {
             self.fetchUserData {
                 if self.user.type == .teacher {
                     self.fetchAllPlaceData {
-                        
+                        completion()
                     }
                 } else {
                     self.fetchIngangData { }
@@ -127,9 +130,7 @@ final public class DimigoinAPI: ObservableObject {
                     self.fetchPrimaryPlaceData {
                         self.fetchUserCurrentPlace {}
                         self.fetchAttendanceListData {
-                            withAnimation(.easeInOut(duration: 0.6)) {
-                                self.isFetching = false
-                            }
+                            completion()
                         }
                     }
                 }
@@ -188,7 +189,7 @@ final public class DimigoinAPI: ObservableObject {
                     self.accessToken = accessToken
                     self.refreshToken = refreshToken
                     self.fetchFCMToken(fcmToken: fcmToken) { }
-                    self.fetchAllData()
+                    self.fetchAllData { }
                     completion(true)
                 case.failure(_):
                     completion(false)

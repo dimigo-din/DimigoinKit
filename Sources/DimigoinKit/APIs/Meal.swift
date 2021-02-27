@@ -35,7 +35,7 @@ public enum MealType {
 
 /// yyyy-MM-dd의 급식을 가져옵니다.
 public func getMeal(from date: String, completion: @escaping (Meal) -> Void){
-    let endPoint = "/meal/\(date)"
+    let endPoint = "/meal/date/\(date)"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default).responseData { response in
         let json = JSON(response.value ?? "")
