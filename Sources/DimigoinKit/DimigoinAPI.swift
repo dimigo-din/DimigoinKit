@@ -116,9 +116,7 @@ final public class DimigoinAPI: ObservableObject {
             self.fetchUserData {
                 if self.user.type == .teacher {
                     self.fetchAllPlaceData {
-                        self.fetchAllAttendanceListData {
-                            print(self.allAttendanceList)
-                        }
+                        
                     }
                 } else {
                     self.fetchIngangData { }

@@ -267,6 +267,48 @@ public func json2AttendanceLog(json: JSON) -> [AttendanceLog] {
     }
 }  
 
+public func json2AttendanceHistory(json: JSON) -> [AttendanceLog] {
+    if json.isEmpty {
+        return []
+    } else {
+        var attendanceLog:[AttendanceLog] = []
+        for i in 0..<json.count  {
+            attendanceLog.append(AttendanceLog(
+                                    place: Place(id: json[i]["place"]["_id"].string!,
+                                                   label: json[i]["place"]["label"].string ?? "",
+                                                   name: json[i]["place"]["name"].string!,
+                                                   location: json[i]["place"]["location"].string!,
+                                                   type: getPlaceType(json[i]["place"]["type"].string!)),
+                                    time: "\(json[i]["createdAt"].string![11..<13]):\(json[i]["createdAt"].string![14..<16])",
+                                    remark: json[i]["remark"].string ?? "",
+                                    updatedBy: json[i]["updatedBy"]["name"].string ?? ""))
+        }
+        return attendanceLog
+    }
+}
+
+// 학생별 조회
+public func getAttendenceHistory(_ accessToken: String, studentId: String, completion: @escaping (Result<([AttendanceLog]), AttendanceError>) -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization":"Bearer \(accessToken)"
+    ]
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/student/\(studentId)"
+    let method: HTTPMethod = .get
+    AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
+        if let status = response.response?.statusCode {
+            switch(status) {
+            case 200:
+                let json = JSON(response.value!!)
+                completion(.success(json2AttendanceHistory(json: json["logs"])))
+            case 401:
+                completion(.failure(.tokenExpired))
+            default:
+                completion(.failure(.unknown))
+            }
+        }
+    }
+}
+
 /**
  자신의 최근 위치를 불러옵니다. 없다면, 교실을 반환합니다.
  
