@@ -106,7 +106,7 @@ final public class DimigoinAPI: ObservableObject {
     /// 선언과 동시에 모든 API데이터를 패치합니다.
     public init() {
         fetchAllData {
-            withAnimation(.easeInOut(duration: 0.6)) { self.isFetching = false }
+            withAnimation(.easeInOut(duration: 0.5)) { self.isFetching = false }
         }
     }
     

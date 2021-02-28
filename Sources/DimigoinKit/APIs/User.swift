@@ -19,7 +19,7 @@ public struct User: Hashable {
     public var number: Int = 0
     public var serial: Int = 0
     public var birthDay: String = ""
-    public var photoURL: URL = URL(string: "https://api.dimigo.hs.kr/")!
+    public var photoURL: URL = URL(string: "https://api.dimigo.hs.kr")!
     public var libraryId: String = ""
     public var barcode: UIImage = UIImage()
 }
@@ -68,9 +68,9 @@ public func json2User(json: JSON) -> User {
                 number: json["number"].int ?? 0,
                 serial: json["serial"].int ?? 0,
                 birthDay: json["birthdate"].string ?? "",
-                photoURL: URL(string: json["photos"][0].string ?? "https://api.dimigo.hs.kr/")!,
+                photoURL: URL(string: json["photos"][0].string ?? "https://api.dimigo.hs.kr")!,
                 libraryId: json["libraryId"].string ?? "",
-                barcode: generateBarcode(from: json["libraryId"].string ?? "") ?? generateBarcode(from: "error")!
+                barcode: generateBarcode(from: json["libraryId"].string ?? "error") ?? generateBarcode(from: "error")!
            )
 }
 
