@@ -262,7 +262,7 @@ public func json2AttendanceLog(json: JSON) -> [AttendanceLog] {
                                    name: json["log"]["place"]["name"].string!,
                                    location: json["log"]["place"]["location"].string!,
                                    type: getPlaceType(json["log"]["place"]["type"].string!)),
-                    time: "\(json["log"]["createdAt"].string![11..<13]):\(json["log"]["createdAt"].string![14..<16])",
+                    time: UTC2KST(h: json["log"]["createdAt"].string![11..<13], m: json["log"]["createdAt"].string![14..<16]),
                     remark: json["log"]["remark"].string ?? "",
                     updatedBy: json["log"]["updatedBy"]["name"].string ?? "",
                     student: json2User(json: json["student"]))]
@@ -281,7 +281,7 @@ public func json2AttendanceHistory(json: JSON) -> [AttendanceLog] {
                                                    name: json[i]["place"]["name"].string!,
                                                    location: json[i]["place"]["location"].string!,
                                                    type: getPlaceType(json[i]["place"]["type"].string!)),
-                                    time: "\(json[i]["createdAt"].string![11..<13]):\(json[i]["createdAt"].string![14..<16])",
+                                    time:UTC2KST(h: json[i]["createdAt"].string![11..<13], m: json[i]["createdAt"].string![14..<16]),
                                     remark: json[i]["remark"].string ?? "",
                                     updatedBy: json[i]["updatedBy"]["name"].string ?? "",
                                     student: json2User(json: json[i]["student"])))

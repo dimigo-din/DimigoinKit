@@ -177,3 +177,13 @@ public func getStringTimeZone() -> String {
     }
     return "학과시간"
 }
+
+public func UTC2KST(h: String, m: String) -> String {
+    var hour: Int = Int(h)!
+    if (hour + 9 >= 24) {
+        hour = hour + 9 - 24
+    } else {
+        hour = hour + 9
+    }
+    return "\(hour):\(m)"
+}
