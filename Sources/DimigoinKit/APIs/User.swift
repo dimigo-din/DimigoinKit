@@ -28,6 +28,7 @@ public struct User: Hashable {
 public enum UserType {
     case teacher
     case student
+    case aramark
 }
 
 /// UserAPI 에러 타입

@@ -72,12 +72,12 @@ public func getTodayDayOfWeekInt() -> Int {
 /// MM월 dd일 N요일 반환
 public func getDateString() -> String {
     let now = Date()
-    let date = DateFormatter()
-    date.locale = Locale(identifier: "ko_kr")
-    date.timeZone = TimeZone(abbreviation: "KST")
-    date.dateFormat = "M월 d일"
+    let dateFormatter = DateFormatter()
+    dateFormatter.locale = Locale(identifier: "ko_kr")
+    dateFormatter.timeZone = TimeZone(abbreviation: "KST")
+    dateFormatter.dateFormat = "M월 d일"
 
-    return "\(date.string(from: now)) \(getTodayDayOfWeekString())요일"
+    return "\(dateFormatter.string(from: now)) \(getTodayDayOfWeekString())요일"
 }
 
 /// weekday에 따른 8 Digit date 반환(yyyyMMdd)
@@ -88,6 +88,18 @@ public func get8DigitDateString(_ weekday: Weekday) -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
     return dateFormatter.string(from: date!)
+}
+
+public func get8DigitDateString(from: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    return dateFormatter.string(from: from)
+}
+
+public func getDateString(from: Date) -> String{
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "M월 d일"
+    return dateFormatter.string(from: from)
 }
 
 /// 오늘의 8 Digit date 반환(yyyyMMdd)
@@ -187,3 +199,5 @@ public func UTC2KST(h: String, m: String) -> String {
     }
     return "\(hour):\(m)"
 }
+
+

@@ -33,6 +33,12 @@ public enum MealType {
     case dinner
 }
 
+public enum MealError: Error {
+    case alreadyExist
+    case unknown
+    case timeout
+}
+
 /// yyyy-MM-dd의 급식을 가져옵니다.
 public func getMeal(from date: String, completion: @escaping (Meal) -> Void){
     let endPoint = "/meal/date/\(date)"
@@ -45,6 +51,10 @@ public func getMeal(from date: String, completion: @escaping (Meal) -> Void){
     }
 }
 
+public func registerMeal(date: Date, meal: Meal, completion: @escaping (Result<[Notice], MealError>) -> Void) {
+    
+}
+
 /// 모든 메뉴를 한개의 문자열로 묶습니다.
 public func bindingMenus(menu json: JSON) -> String{
     var str = ""
@@ -54,6 +64,21 @@ public func bindingMenus(menu json: JSON) -> String{
     for i in 0..<json.count {
         str += json[i].string!
         if(i != json.count - 1) {
+            str += " | "
+        }
+    }
+    return str
+}
+
+/// 모든 메뉴를 한개의 문자열로 묶습니다.
+public func bindingMenus(menu: [String]) -> String{
+    var str = ""
+    if(menu.count == 0) {
+        return "급식 정보가 없습니다."
+    }
+    for i in 0..<menu.count {
+        str += menu[i]
+        if(i != menu.count - 1) {
             str += " | "
         }
     }
