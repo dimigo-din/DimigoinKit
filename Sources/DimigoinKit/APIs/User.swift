@@ -11,6 +11,7 @@ import SwiftyJSON
 
 /// 사용자 모델 정의
 public struct User: Hashable {
+    public var username: String = ""
     public var name: String = ""
     public var idx: Int = 0
     public var type: UserType = .student
@@ -61,7 +62,8 @@ public func getUserData(_ accessToken: String, completion: @escaping (Result<(Us
 }
 
 public func json2User(json: JSON) -> User {
-    return User(name: json["name"].string!,
+    return User(username: json["username"].string!,
+                name: json["name"].string!,
                 idx: json["idx"].int!,
                 type: json["userType"].string! == "S" ? .student : .teacher,
                 grade: json["grade"].int ?? 0,
