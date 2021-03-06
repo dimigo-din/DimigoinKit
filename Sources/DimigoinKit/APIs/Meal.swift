@@ -48,6 +48,11 @@ public struct Meal {
             return bindingMenus(menu: dinner)
         }
     }
+    
+//    public func getBreakfastAnyObject() -> AnyObject {
+//        let anyObject: [AnyObject] = []
+//
+//    }
 }
 
 /// 급식 종류(아침, 점심, 저녁) Enum
@@ -58,7 +63,6 @@ public enum MealType {
 }
 
 public enum MealError: Error {
-    case invalidDate
     case alreadyExist
     case unknown
     case timeout
@@ -95,17 +99,22 @@ public func registerMeal(accessToken: String, date: Date, meal: Meal, completion
     let headers: HTTPHeaders = [
         "Authorization": "Bearer \(accessToken)"
     ]
-    let parameters: [String:String] = [
-        "deviceToken": ""
+    let parameters: [String:Any] = [
+        "breakfast": meal.breakfast,
+        "lunch": meal.lunch,
+        "dinner": meal.dinner
     ]
-    let endPoint = "/meal/date/\(getDateString(from: date))"
+    print(parameters)
+
+    let endPoint = "/meal/date/\(get8DigitDateString(from: date))"
     let method: HTTPMethod = .post
     AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
+        debugPrint(response)
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
                 completion(.success(()))
-            case 443:
+            case 409:
                 completion(.failure(.alreadyExist))
             default:
                 completion(.failure(.unknown))
@@ -114,8 +123,20 @@ public func registerMeal(accessToken: String, date: Date, meal: Meal, completion
     }
 }
 
-public func patchMeal() {
-    
+public func patchMeal(accessToken: String, date: Date, meal: Meal, completion: @escaping () -> Void) {
+    let headers: HTTPHeaders = [
+        "Authorization": "Bearer \(accessToken)"
+    ]
+    let parameters: [String:Any] = [
+        "breakfast": meal.breakfast,
+        "lunch": meal.lunch,
+        "dinner": meal.dinner
+    ]
+    let endPoint = "/meal/date/\(get8DigitDateString(from: date))"
+    let method: HTTPMethod = .patch
+    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
+        completion()
+    }
 }
 
 /// 모든 메뉴를 한개의 문자열로 묶습니다.
