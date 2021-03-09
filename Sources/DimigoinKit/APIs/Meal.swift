@@ -23,10 +23,6 @@ public struct Meal {
         self.breakfast = []
         self.lunch = []
         self.dinner = []
-        self.breakfastImage = UIImage()
-        self.lunchImage = UIImage()
-        self.dinnerImage = UIImage()
-        
     }
     public var breakfast: [String]
     public var lunch: [String]
