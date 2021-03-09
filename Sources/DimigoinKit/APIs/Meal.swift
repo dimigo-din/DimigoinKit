@@ -11,22 +11,29 @@ import SwiftyJSON
 
 /// 급식 모델
 public struct Meal {
-    public init(_ breakfast: [String], _ lunch: [String], _ dinner: [String], image: UIImage) {
+    public init(_ breakfast: [String], _ lunch: [String], _ dinner: [String], breakfastImage: UIImage, lunchImage: UIImage, dinnerImage: UIImage) {
         self.breakfast = breakfast
         self.lunch = lunch
         self.dinner = dinner
-        self.image = image
+        self.breakfastImage = breakfastImage
+        self.lunchImage = lunchImage
+        self.dinnerImage = dinnerImage
     }
     public init() {
         self.breakfast = []
         self.lunch = []
         self.dinner = []
-        self.image = UIImage()
+        self.breakfastImage = UIImage()
+        self.lunchImage = UIImage()
+        self.dinnerImage = UIImage()
+        
     }
     public var breakfast: [String]
     public var lunch: [String]
     public var dinner: [String]
-    public var image: UIImage?
+    public var breakfastImage: UIImage?
+    public var lunchImage: UIImage?
+    public var dinnerImage: UIImage?
     
     public func getBreakfastString() -> String {
         if breakfast.isEmpty {
@@ -214,5 +221,7 @@ public let sampleMeal = Meal(
     ["카레라이스", "쌀밥", "콩나물국", "너비아니조림", "어묵야채볶음", "포기김치", "모듬과일"],
     ["라면&보조밥", "소떡소떡", "야끼만두&초간장", "참나물만다린무침", "단무지", "포기김치", "우유빙수"],
     ["김치참치마요덮밥", "쌀밥", "콩나물국", "치즈스틱", "실곤약치커리무침", "깍두기", "미니딸기파이"],
-    image: UIImage()
+    breakfastImage: UIImage(),
+    lunchImage: UIImage(),
+    dinnerImage: UIImage()
 )
