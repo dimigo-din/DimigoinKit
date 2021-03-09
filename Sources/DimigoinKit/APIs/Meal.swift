@@ -5,25 +5,28 @@
 //  Created by 변경민 on 2021/01/26.
 //
 
-import Foundation
+import SwiftUI
 import Alamofire
 import SwiftyJSON
 
 /// 급식 모델
 public struct Meal {
-    public init(_ breakfast: [String], _ lunch: [String], _ dinner: [String]) {
+    public init(_ breakfast: [String], _ lunch: [String], _ dinner: [String], image: UIImage) {
         self.breakfast = breakfast
         self.lunch = lunch
         self.dinner = dinner
+        self.image = image
     }
     public init() {
         self.breakfast = []
         self.lunch = []
         self.dinner = []
+        self.image = UIImage()
     }
     public var breakfast: [String]
     public var lunch: [String]
     public var dinner: [String]
+    public var image: UIImage?
     
     public func getBreakfastString() -> String {
         if breakfast.isEmpty {
@@ -81,6 +84,19 @@ public func getMeal(from date: String, completion: @escaping (Meal) -> Void){
     }
 }
 
+/// 날짜의 급식을 가져옵니다.
+public func getMeal(from date: Date, completion: @escaping (Meal) -> Void){
+    let endPoint = "/meal/date/\(get8DigitDateString(from: date))"
+    let method: HTTPMethod = .get
+    AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default).responseData { response in
+        let json = JSON(response.value ?? "")
+//        completion(Meal(bindingMenus(menu: json["meal"]["breakfast"]),
+//                        bindingMenus(menu: json["meal"]["lunch"]),
+//                        bindingMenus(menu: json["meal"]["dinner"])))
+        completion(json2Meal(json: json["meal"]))
+    }
+}
+
 public func json2Meal(json: JSON) -> Meal{
     var meal: Meal = Meal()
     for i in 0..<json["breakfast"].count {
@@ -104,12 +120,10 @@ public func registerMeal(accessToken: String, date: Date, meal: Meal, completion
         "lunch": meal.lunch,
         "dinner": meal.dinner
     ]
-    print(parameters)
 
     let endPoint = "/meal/date/\(get8DigitDateString(from: date))"
     let method: HTTPMethod = .post
     AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
-        debugPrint(response)
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
@@ -199,5 +213,6 @@ public func getMealType() -> MealType {
 public let sampleMeal = Meal(
     ["카레라이스", "쌀밥", "콩나물국", "너비아니조림", "어묵야채볶음", "포기김치", "모듬과일"],
     ["라면&보조밥", "소떡소떡", "야끼만두&초간장", "참나물만다린무침", "단무지", "포기김치", "우유빙수"],
-    ["김치참치마요덮밥", "쌀밥", "콩나물국", "치즈스틱", "실곤약치커리무침", "깍두기", "미니딸기파이"]
+    ["김치참치마요덮밥", "쌀밥", "콩나물국", "치즈스틱", "실곤약치커리무침", "깍두기", "미니딸기파이"],
+    image: UIImage()
 )
