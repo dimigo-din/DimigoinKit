@@ -19,6 +19,7 @@ public struct User: Hashable {
     public var klass: Int = 1
     public var number: Int = 0
     public var serial: Int = 0
+    public var permissions: [Permission] = []
     public var birthDay: String = ""
     public var photoURL: URL = URL(string: "https://api.dimigo.hs.kr")!
     public var libraryId: String = ""
@@ -36,6 +37,11 @@ public enum UserType {
 public enum UserError: Error {
     case tokenExpired
     case unknown
+}
+
+public enum Permission {
+    case attendance
+    case none
 }
 
 /// 사용자 정보를 가져옵니다.
@@ -70,11 +76,27 @@ public func json2User(json: JSON) -> User {
                 klass: json["class"].int ?? 0,
                 number: json["number"].int ?? 0,
                 serial: json["serial"].int ?? 0,
+                permissions: json2Permission(json: json["permissions"]),
                 birthDay: json["birthdate"].string ?? "",
                 photoURL: URL(string: json["photos"][0].string ?? "https://api.dimigo.hs.kr")!,
                 libraryId: json["libraryId"].string ?? "",
                 barcode: generateBarcode(from: json["libraryId"].string ?? "error") ?? generateBarcode(from: "error")!
            )
+}
+
+public func json2Permission(json: JSON) -> [Permission] {
+    var permissions: [Permission] = []
+    for i in 0..<json.count {
+        permissions.append(string2Permission(str: json[i].string!))
+    }
+    return permissions.isEmpty ? [.none] : permissions
+}
+
+public func string2Permission(str: String) -> Permission {
+    if str == "attendance" {
+        return .attendance
+    }
+    return .none
 }
 
 /// 반에 따른 학과를 반환합니다.
