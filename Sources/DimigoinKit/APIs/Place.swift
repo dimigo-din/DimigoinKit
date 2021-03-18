@@ -89,34 +89,6 @@ public func getPrimaryPlace(_ accessToken: String, completion: @escaping (Result
         }
     }
 }
-
-/// 사용자 장소를 설정합니다.
-public func setUserPlace(_ accessToken: String, placeName: String, description: String, places: [Place], completion: @escaping (Result<Void, PlaceError>) -> Void) {
-    let headers: HTTPHeaders = [
-        "Authorization":"Bearer \(accessToken)"
-    ]
-    let parameters: [String:String] = [
-        "name": "\(placeName)",
-        "location": "\(findPlaceByName(name: placeName, from: places).location)",
-        "description": "\(description)"
-    ]
-    let endPoint = "/place"
-    let method: HTTPMethod = .post
-    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
-        if let status = response.response?.statusCode {
-            switch(status) {
-            case 200:
-                completion(.success(()))
-            case 401:
-                completion(.failure(.tokenExpired))
-            case 404:
-                completion(.failure(.notRegisteredPlace))
-            default:
-                completion(.failure(.unknown))
-            }
-        }
-    }
-}
     
 /// API부터 전달 받은 JSON파일을 장소 데이터로 변환하여 차곡차곡 정리합니다.
 public func json2PlaceList(places: JSON) -> [Place] {

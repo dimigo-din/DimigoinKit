@@ -57,7 +57,7 @@ public func getTimetable(_ accessToken: String, grade: Int, klass: Int, completi
 /// json데이터를 강의 리스트 데이터로 반환해줍니다.
 public func json2Timetable(from json: JSON) -> Timetable {
     var lectures: [[String]] = [[],[],[],[],[]]
-    for i in 0..<json.count {
+    for i in 0..<5 {
         for j in 0..<json[i]["sequence"].count {
             lectures[i].append(json[i]["sequence"][j].string!)
         }
