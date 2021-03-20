@@ -49,7 +49,7 @@ public struct Ingang: Hashable {
 - `id`: UUID
 - `name`: 이름
 - `grade`: 학년
-- `klass`: 반
+- `class`: 반
 - `number`: 번호
 - `serial`: 학번
 */
@@ -57,7 +57,7 @@ public struct Applicant: Codable, Hashable {
     public var id = UUID()
     public var name: String = ""
     public var grade: Int = 0
-    public var klass: Int = 0
+    public var `class`: Int = 0
     public var number: Int = 0
     public var serial: Int = 0
 }
@@ -220,7 +220,7 @@ public func sortApplicants(applicants: JSON, time: IngangTime) -> [Applicant]{
     for i in 0..<applicants.count {
         let newApplicant = Applicant(name: applicants[i]["applier"]["name"].string!,
                                    grade: applicants[i]["applier"]["grade"].int!,
-                                   klass: applicants[i]["applier"]["class"].int!,
+                                   class: applicants[i]["applier"]["class"].int!,
                                    number: applicants[i]["applier"]["number"].int!,
                                    serial: applicants[i]["applier"]["serial"].int!)
         if(applicants[i]["time"] == "NSS1") {

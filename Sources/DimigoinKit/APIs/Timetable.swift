@@ -33,11 +33,11 @@ public enum TimetableError: Error {
 }
 
 /// 시간표 데이터를 받아옵니다.
-public func getTimetable(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<(Timetable), TimetableError>) -> Void) {
+public func getTimetable(_ accessToken: String, grade: Int, `class`: Int, completion: @escaping (Result<(Timetable), TimetableError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/timetable/weekly/grade/\(grade)/class/\(klass)"
+    let endPoint = "/timetable/weekly/grade/\(grade)/class/\(`class`)"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: JSONEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {

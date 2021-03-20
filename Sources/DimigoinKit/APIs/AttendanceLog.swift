@@ -20,7 +20,7 @@ public struct Attendance: Hashable {
     public var id: String
     public var name: String
     public var grade: Int
-    public var klass: Int
+    public var `class`: Int
     public var number: Int
     public var attendanceLog: [AttendanceLog]
     public var isRegistered: Bool
@@ -28,16 +28,16 @@ public struct Attendance: Hashable {
         self.id = ""
         self.name = ""
         self.grade = 0
-        self.klass = 0
+        self.`class` = 0
         self.number = 0
         self.attendanceLog = []
         self.isRegistered = false
     }
-    public init(id: String, name: String, grade: Int, klass: Int, number: Int, attendanceLog: [AttendanceLog]) {
+    public init(id: String, name: String, grade: Int, `class`: Int, number: Int, attendanceLog: [AttendanceLog]) {
         self.id = id
         self.name = name
         self.grade = grade
-        self.klass = klass
+        self.`class` = `class`
         self.number = number
         self.attendanceLog = attendanceLog
         self.isRegistered = (self.attendanceLog.count != 0)
@@ -227,7 +227,7 @@ public func getAttendenceList(_ accessToken: String, user: User, completion: @es
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.klass)/status"
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(user.grade)/class/\(user.class)/status"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
@@ -245,11 +245,11 @@ public func getAttendenceList(_ accessToken: String, user: User, completion: @es
 }
 
 // 각 반별 조회
-public func getAttendenceList(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
+public func getAttendenceList(_ accessToken: String, grade: Int, `class`: Int, completion: @escaping (Result<([Attendance]), AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(grade)/class/\(klass)/status"
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(grade)/class/\(`class`)/status"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {
@@ -274,7 +274,7 @@ public func json2AttendanceList(json: JSON) -> [Attendance]{
             Attendance(id: json[i]["student"]["_id"].string!,
                        name: json[i]["student"]["name"].string!,
                        grade: json[i]["student"]["grade"].int!,
-                       klass: json[i]["student"]["class"].int!,
+                       class: json[i]["student"]["class"].int!,
                        number: json[i]["student"]["number"].int!,
                        attendanceLog: json2AttendanceLog(json: json[i]))
         )
@@ -343,11 +343,11 @@ public func getAttendenceHistory(_ accessToken: String, studentId: String, compl
 }
 
 // 반별 조회
-public func getClassHistory(_ accessToken: String, grade: Int, klass: Int, completion: @escaping (Result<([AttendanceLog]), AttendanceError>) -> Void) {
+public func getClassHistory(_ accessToken: String, grade: Int, `class`: Int, completion: @escaping (Result<([AttendanceLog]), AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(grade)/class/\(klass)/timeline"
+    let endPoint = "/attendance/date/\(getToday8DigitDateString())/grade/\(grade)/class/\(`class`)/timeline"
     let method: HTTPMethod = .get
     AF.request(rootURL+endPoint, method: method, encoding: URLEncoding.default, headers: headers).response { response in
         if let status = response.response?.statusCode {

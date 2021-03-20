@@ -16,7 +16,7 @@ public struct User: Hashable {
     public var idx: Int = 0
     public var type: UserType = .student
     public var grade: Int = 1
-    public var klass: Int = 1
+    public var `class`: Int = 1
     public var number: Int = 0
     public var serial: Int = 0
     public var permissions: [Permission] = []
@@ -73,7 +73,7 @@ public func json2User(json: JSON) -> User {
                 idx: json["idx"].int!,
                 type: json["userType"].string! == "S" ? .student : .teacher,
                 grade: json["grade"].int ?? 0,
-                klass: json["class"].int ?? 0,
+                class: json["class"].int ?? 0,
                 number: json["number"].int ?? 0,
                 serial: json["serial"].int ?? 0,
                 permissions: json2Permission(json: json["permissions"]),
@@ -100,8 +100,8 @@ public func string2Permission(str: String) -> Permission {
 }
 
 /// 반에 따른 학과를 반환합니다.
-public func getMajorByClass(klass: Int) -> String {
-    switch klass {
+public func getMajorByClass(`class`: Int) -> String {
+    switch `class` {
         case 1: return "이비즈니스과"
         case 2: return "디지털컨텐츠과"
         case 3: return "웹프로그래밍과"

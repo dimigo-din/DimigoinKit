@@ -560,7 +560,7 @@ final public class DimigoinAPI: ObservableObject {
      ```
      */
     public func fetchTimetableData(completion: @escaping () -> Void) {
-        getTimetable(accessToken, grade: user.grade, klass: user.klass) { result in
+        getTimetable(accessToken, grade: user.grade, `class`: user.class) { result in
             switch result {
             case .success((let timetable)):
                 self.timetable = timetable
@@ -742,8 +742,8 @@ final public class DimigoinAPI: ObservableObject {
     
     public func fetchAllAttendanceListData(completion: @escaping () -> Void) {
         for grade in 1...3 {
-            for klass in 1...6 {
-                getAttendenceList(accessToken, grade: grade, klass: klass) { result in
+            for `class` in 1...6 {
+                getAttendenceList(accessToken, grade: grade, class: `class`) { result in
                     switch result {
                     case .success((let attendanceList)):
                         self.attendanceList = attendanceList
