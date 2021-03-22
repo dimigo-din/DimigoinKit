@@ -119,17 +119,19 @@ public func setUserPlace(_ accessToken:String, placeName: String, places: [Place
 
 
 // StudentID 학생의 로그를 생성합니다.
-public func setUserPlace(_ accessToken:String, studentId: String, placeName: String, places: [Place], completion: @escaping (Result<Bool, AttendanceError>) -> Void) {
+public func setUserPlace(_ accessToken:String, studentId: String, placeName: String, remark: String, places: [Place], completion: @escaping (Result<Bool, AttendanceError>) -> Void) {
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
     let parameters: [String: String] = [
         "place": findPlaceByName(name: placeName, from: places).id,
-        "remark": findPlaceByName(name: placeName, from: places).label
+        "remark": remark
     ]
     let endPoint = "/attendance/student/\(studentId)"
     let method: HTTPMethod = .post
     AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
+        debugPrint(response)
+        print(parameters)
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:

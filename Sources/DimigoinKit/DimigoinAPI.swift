@@ -49,13 +49,6 @@ public var rootURL: String = "https://api.dimigo.in"
  */
 final public class DimigoinAPI: ObservableObject {
     @Published public var isFetching = true
-//    {
-//        didSet {
-//            if isFetching == true {
-//                self.fetchAllData { }
-//            }
-//        }
-//    }
     /// 디미고인 API 전반에 걸쳐 활용되는 JWT토큰
     @Published public var accessToken = ""
     
@@ -115,12 +108,10 @@ final public class DimigoinAPI: ObservableObject {
         fetchTokens {
             self.printTokens()
             self.fetchMealData()
-            self.fetchAllPlaceData {}
+            self.fetchAllPlaceData { }
             self.fetchUserData {
                 if self.user.type == .teacher {
-                    self.fetchAllPlaceData {
-                        completion()
-                    }
+                    completion()
                 } else {
                     self.fetchIngangData { }
                     self.fetchTimetableData {
@@ -128,7 +119,7 @@ final public class DimigoinAPI: ObservableObject {
                     }
                     self.fetchNotices { }
                     self.fetchPrimaryPlaceData {
-                        self.fetchUserCurrentPlace {}
+                        self.fetchUserCurrentPlace { }
                         self.fetchAttendanceListData {
                             completion()
                         }
@@ -560,7 +551,7 @@ final public class DimigoinAPI: ObservableObject {
      ```
      */
     public func fetchTimetableData(completion: @escaping () -> Void) {
-        getTimetable(accessToken, grade: user.grade, `class`: user.class) { result in
+        getTimetable(accessToken, grade: user.grade, class: user.class) { result in
             switch result {
             case .success((let timetable)):
                 self.timetable = timetable
