@@ -22,18 +22,18 @@ MVVM아키텍쳐 중 Model과 ViewModel이 구현되어 있습니다.
 ```xml
 <plist version="1.0">
 <dict>
-	<key>NSAllowsArbitraryLoads</key>
-	<true/>
-	<key>NSExceptionDomains</key>
-	<dict>
-		<key>edison.dimigo.hs.kr</key>
-		<dict>
-			<key>NSExceptionAllowsInsecureHTTPLoads</key>
-			<true/>
-			<key>NSIncludesSubdomains</key>
-			<true/>
-		</dict>
-	</dict>
+  <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    <key>NSExceptionDomains</key>
+    <dict>
+        <key>edison.dimigo.hs.kr</key>
+        <dict>
+            <key>NSExceptionAllowsInsecureHTTPLoads</key>
+            <true/>
+            <key>NSIncludesSubdomains</key>
+            <true/>
+        </dict>
+    </dict>
 </dict>
 </plist>
 ```
