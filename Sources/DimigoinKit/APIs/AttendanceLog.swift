@@ -89,49 +89,23 @@ public enum AttendanceError: Error {
  }
  ```
  */
-public func setUserPlace(_ accessToken:String, placeName: String, places: [Place], completion: @escaping (Result<Bool, AttendanceError>) -> Void) {
-    let headers: HTTPHeaders = [
-        "Authorization":"Bearer \(accessToken)"
-    ]
-    let parameters: [String: String] = [
-        "place": findPlaceByName(name: placeName, from: places).id,
-        "remark": findPlaceByName(name: placeName, from: places).label
-    ]
-    let endPoint = "/attendance"
-    let method: HTTPMethod = .post
-    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
-        if let status = response.response?.statusCode {
-            switch(status) {
-            case 200:
-                completion(.success(true))
-            case 400:
-                completion(.failure(.noSuchPlace))
-            case 401:
-                completion(.failure(.tokenExpired))
-            case 423:
-                completion(.failure(.notRightTime))
-            default:
-                completion(.failure(.unknown))
-            }
-        }
-    }
-}
 
 
 // StudentID 학생의 로그를 생성합니다.
 public func setUserPlace(_ accessToken:String, studentId: String, placeName: String, remark: String, places: [Place], completion: @escaping (Result<Bool, AttendanceError>) -> Void) {
+    let endPoint = "/attendance/student/\(studentId)"
+    let requestBody = "{\"place\":\"\(findPlaceByName(name: placeName, from: places).id)\",\"remark\":\"\(remark)\"}"
+    let jsonData = requestBody.data(using: .utf8, allowLossyConversion: false)!
     let headers: HTTPHeaders = [
         "Authorization":"Bearer \(accessToken)"
     ]
-    let parameters: [String: String] = [
-        "place": findPlaceByName(name: placeName, from: places).id,
-        "remark": remark
-    ]
-    let endPoint = "/attendance/student/\(studentId)"
-    let method: HTTPMethod = .post
-    AF.request(rootURL+endPoint, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers).response { response in
-        debugPrint(response)
-        print(parameters)
+    var request = URLRequest(url: URL(string: "\(rootURL)\(endPoint)")!)
+    request.httpMethod = HTTPMethod.post.rawValue
+    request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+    request.httpBody = jsonData
+    request.headers = headers
+    
+    AF.request(request).response { response in
         if let status = response.response?.statusCode {
             switch(status) {
             case 200:
