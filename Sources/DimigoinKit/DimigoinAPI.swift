@@ -67,8 +67,6 @@ final public class DimigoinAPI: ObservableObject {
     /// 인원 체크
     @Published public var attendanceList: [Attendance] = []
     
-    @Published public var allAttendanceList: [[Attendance]] = []
-    
     /// 모바일용 사용자 맞춤 `Place`
     @Published public var primaryPlaces: [Place] = []
     
@@ -727,31 +725,6 @@ final public class DimigoinAPI: ObservableObject {
                     print("fetch Attendance Data error : unknown")
                 }
                 completion()
-            }
-        }
-    }
-    
-    public func fetchAllAttendanceListData(completion: @escaping () -> Void) {
-        for grade in 1...3 {
-            for `class` in 1...6 {
-                getAttendenceList(accessToken, grade: grade, class: `class`) { result in
-                    switch result {
-                    case .success((let attendanceList)):
-                        self.attendanceList = attendanceList
-                        completion()
-                    case .failure(let error):
-                        switch error {
-                        case .tokenExpired:
-                            self.refreshTokens {
-                            }
-                        case .noSuchPlace:
-                            print("no Such Place")
-                        default:
-                            print("fetch Attendance Data error : unknown")
-                        }
-                        completion()
-                    }
-                }
             }
         }
     }
